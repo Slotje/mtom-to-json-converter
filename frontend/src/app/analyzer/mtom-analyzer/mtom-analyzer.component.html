@@ -8,25 +8,16 @@
     <span class="sample-hint">Laadt een voorbeeldbericht met alle standaard Belastingdienst velden</span>
   </div>
 
-  <div class="divider"><span>of upload een eigen bestand</span></div>
-
-  <div class="upload-zone"
-       [class.dragover]="isDragOver"
-       (dragover)="onDragOver($event)"
-       (dragleave)="onDragLeave($event)"
-       (drop)="onDrop($event)">
-    <p>Sleep een MTOM/XML bestand hierheen of</p>
-    <label class="upload-btn">
-      Kies bestand
-      <input type="file" accept=".xml,.msg,.mtom,.mime" (change)="onFileSelect($event)" hidden>
-    </label>
-  </div>
-
   <div *ngIf="loading" class="loading">Bestand analyseren...</div>
 
   <div *ngIf="error" class="error-message">
     <strong>Fout:</strong> {{ error }}
     <p *ngIf="suggestion" class="suggestion">Suggestie: {{ suggestion }}</p>
+  </div>
+
+  <div *ngIf="payloadContent" class="payload-section">
+    <h3>MTOM Payload</h3>
+    <pre class="payload-content"><code>{{ payloadContent }}</code></pre>
   </div>
 
   <div *ngIf="fields.length > 0" class="detected-fields">

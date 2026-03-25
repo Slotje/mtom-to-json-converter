@@ -13,17 +13,26 @@ export class MtomAnalyzerComponent {
   @Output() fieldsDetected = new EventEmitter<DetectedField[]>();
   @Output() fileSelected = new EventEmitter<File>();
 
-  isDragOver = false;
   loading = false;
   fields: DetectedField[] = [];
   error: string | null = null;
   suggestion: string | null = null;
   currentFile: File | null = null;
+  payloadContent: string | null = null;
 
   constructor(
     private converterService: ConverterService,
     private http: HttpClient
   ) {}
+
+  reset() {
+    this.fields = [];
+    this.error = null;
+    this.suggestion = null;
+    this.currentFile = null;
+    this.payloadContent = null;
+    this.loading = false;
+  }
 
   loadSampleMtom() {
     this.loading = true;
@@ -34,6 +43,7 @@ export class MtomAnalyzerComponent {
         const file = new File([blob], 'sample-mtom.xml', { type: 'application/xml' });
         this.currentFile = file;
         this.fileSelected.emit(file);
+        this.readPayloadContent(file);
         this.analyzeFile(file);
       },
       error: () => {
@@ -43,32 +53,12 @@ export class MtomAnalyzerComponent {
     });
   }
 
-  onDragOver(event: DragEvent) {
-    event.preventDefault();
-    this.isDragOver = true;
-  }
-
-  onDragLeave(event: DragEvent) {
-    this.isDragOver = false;
-  }
-
-  onDrop(event: DragEvent) {
-    event.preventDefault();
-    this.isDragOver = false;
-    const file = event.dataTransfer?.files[0];
-    if (file) this.processFile(file);
-  }
-
-  onFileSelect(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-    if (file) this.processFile(file);
-  }
-
-  private processFile(file: File) {
-    this.currentFile = file;
-    this.fileSelected.emit(file);
-    this.analyzeFile(file);
+  private readPayloadContent(file: File) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.payloadContent = reader.result as string;
+    };
+    reader.readAsText(file);
   }
 
   private analyzeFile(file: File) {

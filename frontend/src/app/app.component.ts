@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConfigUploadComponent } from './config/config-upload/config-upload.component';
 import { MtomAnalyzerComponent } from './analyzer/mtom-analyzer/mtom-analyzer.component';
@@ -21,6 +21,8 @@ import { ConverterService, ClientConfig, DetectedField, ConversionResult } from 
   templateUrl: './app.component.html'
 })
 export class AppComponent {
+  @ViewChild(MtomAnalyzerComponent) mtomAnalyzer?: MtomAnalyzerComponent;
+
   steps = [
     { label: 'YAML Config', desc: 'Upload mapping' },
     { label: 'MTOM Analyse', desc: 'Bronbestand' },
@@ -39,6 +41,13 @@ export class AppComponent {
   constructor(private converterService: ConverterService) {}
 
   onConfigLoaded(config: ClientConfig) {
+    // Reset all downstream state when a different config is selected
+    this.detectedFields = [];
+    this.mtomFile = null;
+    this.conversionResult = null;
+    this.converting = false;
+    this.mtomAnalyzer?.reset();
+
     this.config = config;
     this.currentStep = 1;
   }
