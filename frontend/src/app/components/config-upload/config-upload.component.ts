@@ -38,12 +38,13 @@ interface SampleConfig {
         </div>
       </div>
 
-      <div class="divider">
-        <span>of upload een eigen bestand</span>
+      <!-- Collapsible file upload -->
+      <div class="upload-toggle" (click)="showUpload = !showUpload">
+        <span>{{ showUpload ? 'Eigen bestand verbergen' : 'Of upload een eigen YAML bestand' }}</span>
+        <span class="toggle-icon">{{ showUpload ? '&#9660;' : '&#9654;' }}</span>
       </div>
 
-      <!-- File upload zone -->
-      <div class="upload-zone"
+      <div *ngIf="showUpload" class="upload-zone"
            [class.dragover]="isDragOver"
            (dragover)="onDragOver($event)"
            (dragleave)="onDragLeave($event)"
@@ -151,14 +152,16 @@ interface SampleConfig {
     .sample-label { font-weight: 700; font-size: 0.9rem; color: #333; }
     .sample-desc { font-size: 0.75rem; color: #666; }
 
-    /* Divider */
-    .divider {
-      display: flex; align-items: center; gap: 1rem;
-      margin: 1.5rem 0; color: #999; font-size: 0.85rem;
+    /* Upload toggle */
+    .upload-toggle {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.6rem 1rem; margin: 1rem 0 0.5rem;
+      background: #f5f5f5; border-radius: 6px;
+      cursor: pointer; font-size: 0.85rem; color: #666;
+      user-select: none; transition: background 0.2s;
     }
-    .divider::before, .divider::after {
-      content: ''; flex: 1; height: 1px; background: #e0e0e0;
-    }
+    .upload-toggle:hover { background: #eeeeee; }
+    .toggle-icon { font-size: 0.8rem; }
 
     /* Upload zone */
     .upload-zone {
@@ -256,6 +259,7 @@ export class ConfigUploadComponent {
   ];
 
   selectedSample: SampleConfig | null = null;
+  showUpload = false;
   isDragOver = false;
   loading = false;
   config: ClientConfig | null = null;
