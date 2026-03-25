@@ -1,48 +1,50 @@
 # DEMO: Referentie-integriteit Validatie Fouten (Laag 3)
-# Ongeldige XPath expressies en type-incompatibiliteiten
+# Type-incompatibiliteiten en niet-bestaande XPath velden
 clientId: "550e8400-e29b-41d4-a716-446655440002"
 clientName: "Test Client - Referentie Fouten"
 metadataMapping:
   objectStore: "OS_BTE_TEST"
   documentClass: "BTE_Document"
   fields:
-    - sourceField: "//ecmid"
+    # FOUT: ECM_ID is een string maar dataType is integer
+    - sourceField: "//ECM_ID"
       targetProperty: "BBM1"
       dataType: "integer"
       required: true
-    - sourceField: "//value[@key='Eigenaar_L1']"
+    # FOUT: Eigenaar_Niveau_1 is een string maar dataType is boolean
+    - sourceField: "//Eigenaar_Niveau_1"
       targetProperty: "BBM2"
       dataType: "boolean"
       required: true
-    - sourceField: "//value[@key='Eigenaar_L2']"
+    - sourceField: "//Eigenaar_Niveau_2"
       targetProperty: "BBM3"
       dataType: "string"
       required: true
-    - sourceField: "//value[@key='Eigenaar_L3']"
+    - sourceField: "//Eigenaar_Niveau_3"
       targetProperty: "BBM4"
       dataType: "string"
       required: true
-    - sourceField: "//value[@key='KenmerkInhoud']"
+    - sourceField: "//Kenmerk_Inhoud"
       targetProperty: "BBM6"
       dataType: "string"
       required: true
-    - sourceField: "//value[@key='KenmerkType']"
+    - sourceField: "//Kenmerk_Type"
       targetProperty: "BBM10"
       dataType: "string"
       required: true
-    - sourceField: "//value[@key='Documentsoort']"
+    - sourceField: "//Documentsoort"
       targetProperty: "Documentsoort"
       dataType: "string"
       required: true
-    - sourceField: "//value[@key='Kanaal']"
+    - sourceField: "//Kanaal"
       targetProperty: "Kanaal"
       dataType: "string"
       required: true
-    - sourceField: "//value[@key='Middel']"
+    - sourceField: "//Berichtstroom"
       targetProperty: "Middel"
       dataType: "string"
       required: true
-    - sourceField: "//value[@key='Richting']"
+    - sourceField: "//Richting"
       targetProperty: "Richting"
       dataType: "string"
       required: true
@@ -50,11 +52,13 @@ metadataMapping:
       targetProperty: "DocumentTitle"
       dataType: "string"
       required: true
-    - sourceField: "//veld_dat_niet_bestaat"
+    # FOUT: Dit XPath veld bestaat niet in het MTOM bericht
+    - sourceField: "//Veld_Dat_Niet_Bestaat"
       targetProperty: "OnbekendVeld"
       dataType: "string"
       required: true
-    - sourceField: "//value[@key='DekkingBeginDatum']"
+    # FOUT: Dekking_Begin is een datum-string maar dataType is integer
+    - sourceField: "//Dekking_Begin"
       targetProperty: "DekkingBeginDatum"
       dataType: "integer"
       required: false

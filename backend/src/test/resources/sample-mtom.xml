@@ -1,32 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ecm="http://belastingdienst.nl/ecm">
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ecm="http://belastingdienst.nl/ecm" xmlns:mhs="http://belastingdienst.nl/mhs">
   <soapenv:Header/>
   <soapenv:Body>
-    <ecm:StoreDocumentRequest>
-      <ecm:Metadata>
-        <ecm:ecmid>ECM-2024-001234</ecm:ecmid>
-        <ecm:BerichtID>MSG-2024-005678</ecm:BerichtID>
-        <ecm:GebeurtenisID>EVT-2024-009012</ecm:GebeurtenisID>
-        <ecm:Bestandsnaam>aangifte_2024_Q1.pdf</ecm:Bestandsnaam>
+    <ecm:ECM_Bericht>
+      <ecm:ECM_Metadata>
+        <ecm:Berichtklasse>ARC</ecm:Berichtklasse>
+        <ecm:Bron_ID>COS-48b8d098c1fd4b80927309e72dd41ef6-2026-02-09T16:00:57.329Z</ecm:Bron_ID>
+        <ecm:Gemaakt_Door>PERRON</ecm:Gemaakt_Door>
+        <ecm:Aangemaakt>2026-02-09T16:00:57.357Z</ecm:Aangemaakt>
+        <ecm:ECM_ID>48b8d098c1fd4b80927309e72dd41ef6</ecm:ECM_ID>
         <ecm:Eigenschappen>
-          <ecm:value key="Eigenaar_L1">Directoraat-generaal Belastingdienst</ecm:value>
-          <ecm:value key="Eigenaar_L2">Centrale Administratie</ecm:value>
-          <ecm:value key="Eigenaar_L3">Inkomensheffing</ecm:value>
-          <ecm:value key="KenmerkInhoud">Aangifte IB 2024</ecm:value>
-          <ecm:value key="KenmerkType">Aangifte</ecm:value>
-          <ecm:value key="Documentsoort">Belastingaangifte</ecm:value>
-          <ecm:value key="Kanaal">Digitaal</ecm:value>
-          <ecm:value key="Middel">MijnBelastingdienst</ecm:value>
-          <ecm:value key="Richting">Inkomend</ecm:value>
-          <ecm:value key="DekkingBeginDatum">2024-01-01</ecm:value>
-          <ecm:value key="DekkingEindDatum">2024-03-31</ecm:value>
-          <ecm:value key="Taal">Nederlands</ecm:value>
-          <ecm:value key="Referentiecode">REF-IB-2024-001</ecm:value>
+          <ecm:Sjabloon_ID>VRAPP</ecm:Sjabloon_ID>
+          <ecm:Kenmerk_Inhoud>000000000</ecm:Kenmerk_Inhoud>
+          <ecm:Kenmerk_Type>Persoon zonder fi-nummer</ecm:Kenmerk_Type>
+          <ecm:Bestandsformaat>xml</ecm:Bestandsformaat>
+          <ecm:Referentiecode>48b8d098c1fd4b80927309e72dd41ef6</ecm:Referentiecode>
         </ecm:Eigenschappen>
-      </ecm:Metadata>
+        <ecm:Periode>
+          <ecm:Dekking_Begin>2026-01-01</ecm:Dekking_Begin>
+          <ecm:Dekking_Eind>2026-12-31</ecm:Dekking_Eind>
+          <ecm:Archief_Start>2026-02-09T16:00:57.000Z</ecm:Archief_Start>
+        </ecm:Periode>
+        <ecm:Classificatie>
+          <ecm:Kanaal>Message</ecm:Kanaal>
+          <ecm:Systeem>COS</ecm:Systeem>
+          <ecm:Berichtstroom>VRF</ecm:Berichtstroom>
+          <ecm:Documentsoort>Gegevenslevering</ecm:Documentsoort>
+          <ecm:Taal>Nederlands</ecm:Taal>
+          <ecm:Richting>Inkomend</ecm:Richting>
+          <ecm:Activiteit>00</ecm:Activiteit>
+        </ecm:Classificatie>
+        <ecm:Organisatie>
+          <ecm:Eigenaar_Niveau_1>Belastingen</ecm:Eigenaar_Niveau_1>
+          <ecm:Eigenaar_Niveau_2>Omzetbelasting</ecm:Eigenaar_Niveau_2>
+          <ecm:Eigenaar_Niveau_3>Verzoek</ecm:Eigenaar_Niveau_3>
+        </ecm:Organisatie>
+      </ecm:ECM_Metadata>
+      <mhs:MHS_Header>
+        <mhs:UUID>48b8d098c1fd4b80927309e72dd41ef6</mhs:UUID>
+        <mhs:Volgnummer>1</mhs:Volgnummer>
+        <mhs:Tijdstippen>
+          <mhs:Ontvangst>2026-02-09T16:00:57Z</mhs:Ontvangst>
+          <mhs:Identificatie>2026-02-09T16:00:57Z</mhs:Identificatie>
+          <mhs:Aflevering>2026-02-09T16:00:57Z</mhs:Aflevering>
+        </mhs:Tijdstippen>
+        <mhs:Berichttype>
+          <mhs:Kanaalcode>CCN</mhs:Kanaalcode>
+          <mhs:Stroomcode>VREFUND</mhs:Stroomcode>
+          <mhs:Soortcode>VRAPP-MES</mhs:Soortcode>
+        </mhs:Berichttype>
+        <mhs:Kenmerken>
+          <mhs:Berichtkenmerk>42452e56523236303230393136333632303238307c86aae2</mhs:Berichtkenmerk>
+          <mhs:Correlatie_Kenmerk>000000000000000000000000000000000000000000000000</mhs:Correlatie_Kenmerk>
+        </mhs:Kenmerken>
+      </mhs:MHS_Header>
       <ecm:Content>
-        <ecm:BinaryContent>SGVsbG8gV29ybGQgLSBUaGlzIGlzIGEgc2FtcGxlIGJpbmFyeSBjb250ZW50</ecm:BinaryContent>
+        <ecm:Bestandsnaam>message.xml</ecm:Bestandsnaam>
+        <ecm:BinaryContent>UEsDBBQACAgIAByISVwAAAAAAAAAAAAAAAALAAAAbWVzc2FnZS54bWw=</ecm:BinaryContent>
       </ecm:Content>
-    </ecm:StoreDocumentRequest>
+    </ecm:ECM_Bericht>
   </soapenv:Body>
 </soapenv:Envelope>

@@ -1,71 +1,102 @@
 clientId: "550e8400-e29b-41d4-a716-446655440000"
-clientName: "Belastingdienst - Inkomensheffing"
+clientName: "COS - VAT Refund (Omzetbelasting)"
 metadataMapping:
   objectStore: "OS_BTE_PROD"
   documentClass: "BTE_Aangifte"
   fields:
-    - sourceField: "//ecmid"
+    # ECM_ID -> BBM1 (BerichtId)
+    - sourceField: "//ECM_ID"
       targetProperty: "BBM1"
       dataType: "string"
       required: true
-    - sourceField: "//value[@key='Eigenaar_L1']"
+    # Eigenaar_Niveau_1 -> BBM2 (Bedrijfsonderdeel)
+    - sourceField: "//Eigenaar_Niveau_1"
       targetProperty: "BBM2"
       dataType: "string"
       required: true
-    - sourceField: "//value[@key='Eigenaar_L2']"
+    # Eigenaar_Niveau_2 -> BBM3 (Systeem/Stroom)
+    - sourceField: "//Eigenaar_Niveau_2"
       targetProperty: "BBM3"
       dataType: "string"
       required: true
-    - sourceField: "//value[@key='Eigenaar_L3']"
+    # Eigenaar_Niveau_3 -> BBM4 (Keuzelijst)
+    - sourceField: "//Eigenaar_Niveau_3"
       targetProperty: "BBM4"
       dataType: "string"
       required: true
-    - sourceField: "//value[@key='KenmerkInhoud']"
+    # Kenmerk_Inhoud -> BBM6 (KenmerkInhoud)
+    - sourceField: "//Kenmerk_Inhoud"
       targetProperty: "BBM6"
       dataType: "string"
       required: true
-    - sourceField: "//value[@key='KenmerkType']"
+    # Kenmerk_Type -> BBM10 (KenmerkType)
+    - sourceField: "//Kenmerk_Type"
       targetProperty: "BBM10"
       dataType: "string"
       required: true
-    - sourceField: "//value[@key='Documentsoort']"
+    # Documentsoort
+    - sourceField: "//Documentsoort"
       targetProperty: "Documentsoort"
       dataType: "string"
       required: true
-    - sourceField: "//value[@key='Kanaal']"
+    # Kanaal
+    - sourceField: "//Kanaal"
       targetProperty: "Kanaal"
       dataType: "string"
       required: true
-    - sourceField: "//value[@key='Middel']"
+    # Berichtstroom -> Middel
+    - sourceField: "//Berichtstroom"
       targetProperty: "Middel"
       dataType: "string"
       required: true
       multiValue: true
-    - sourceField: "//value[@key='Richting']"
+    # Richting
+    - sourceField: "//Richting"
       targetProperty: "Richting"
       dataType: "string"
       required: true
+    # Bestandsnaam -> DocumentTitle
     - sourceField: "//Bestandsnaam"
       targetProperty: "DocumentTitle"
       dataType: "string"
       required: true
-    - sourceField: "//value[@key='DekkingBeginDatum']"
+    # Dekking_Begin -> DekkingBeginDatum
+    - sourceField: "//Dekking_Begin"
       targetProperty: "DekkingBeginDatum"
       dataType: "date"
       required: false
       format: "yyyy-MM-dd"
-    - sourceField: "//value[@key='DekkingEindDatum']"
+    # Dekking_Eind -> DekkingEindDatum
+    - sourceField: "//Dekking_Eind"
       targetProperty: "DekkingEindDatum"
       dataType: "date"
       required: false
       format: "yyyy-MM-dd"
-    - sourceField: "//value[@key='Taal']"
+    # Taal
+    - sourceField: "//Taal"
       targetProperty: "Taal"
       dataType: "string"
       required: false
       multiValue: true
-    - sourceField: "//value[@key='Referentiecode']"
+    # Referentiecode
+    - sourceField: "//Referentiecode"
       targetProperty: "Referentiecode"
+      dataType: "string"
+      required: false
+    # Archief_Start -> StartArchiefwaardigheid
+    - sourceField: "//Archief_Start"
+      targetProperty: "StartArchiefwaardigheid"
+      dataType: "date"
+      required: false
+      format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+    # Activiteit
+    - sourceField: "//Activiteit"
+      targetProperty: "Activiteit"
+      dataType: "string"
+      required: false
+    # Berichtstroom
+    - sourceField: "//Berichtstroom"
+      targetProperty: "Berichtstroom"
       dataType: "string"
       required: false
 businessInfo:

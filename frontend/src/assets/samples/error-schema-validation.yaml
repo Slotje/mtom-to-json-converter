@@ -1,12 +1,12 @@
 # DEMO: Schema Validatie Fouten (Laag 1)
-# Ontbrekende verplichte velden en ongeldige datatypes
+# Ontbrekende verplichte velden, lege waarden en ongeldige datatypes
 clientId: ""
 clientName: ""
 metadataMapping:
   objectStore: ""
   documentClass: ""
   fields:
-    - sourceField: "//ecmid"
+    - sourceField: "//ECM_ID"
       targetProperty: "BBM1"
       dataType: "ongeldig_type"
       required: true

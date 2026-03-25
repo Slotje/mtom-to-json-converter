@@ -6,28 +6,33 @@ metadataMapping:
   objectStore: "OS_BTE_TEST"
   documentClass: "BTE_Document"
   fields:
-    - sourceField: "//ecmid"
+    # Eerste mapping naar BBM1
+    - sourceField: "//ECM_ID"
       targetProperty: "BBM1"
       dataType: "string"
       required: true
-    - sourceField: "//value[@key='Eigenaar_L1']"
+    # FOUT: Dubbele targetProperty BBM1
+    - sourceField: "//Eigenaar_Niveau_1"
       targetProperty: "BBM1"
       dataType: "string"
       required: true
-    - sourceField: "//value[@key='Eigenaar_L2']"
+    - sourceField: "//Eigenaar_Niveau_2"
       targetProperty: "BBM3"
       dataType: "string"
       required: true
-    - sourceField: "//value[@key='DekkingBeginDatum']"
+    # FOUT: Ongeldig datumformaat
+    - sourceField: "//Dekking_Begin"
       targetProperty: "DekkingBeginDatum"
       dataType: "date"
       required: false
       format: "XXXXX-ongeldig-formaat"
-    - sourceField: "//value[@key='DekkingEindDatum']"
+    # FOUT: Nog een ongeldig datumformaat
+    - sourceField: "//Dekking_Eind"
       targetProperty: "DekkingEindDatum"
       dataType: "date"
       required: false
       format: "QQ/ZZ/JJJJ"
+    # Te weinig velden (5 ipv aanbevolen 11+)
 businessInfo:
   contactEmail: "team@belastingdienst.nl"
   supportGroup: "BB ECM"
