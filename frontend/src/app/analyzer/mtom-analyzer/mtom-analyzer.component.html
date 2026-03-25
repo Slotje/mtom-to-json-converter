@@ -15,9 +15,57 @@
     <p *ngIf="suggestion" class="suggestion">Suggestie: {{ suggestion }}</p>
   </div>
 
-  <div *ngIf="payloadContent" class="payload-section">
-    <h3>MTOM Payload</h3>
-    <pre class="payload-content"><code>{{ payloadContent }}</code></pre>
+  <!-- Parsed payload structure -->
+  <div *ngIf="payloadSections.length > 0" class="payload-structure">
+    <h3>MTOM Payload Structuur</h3>
+    <p class="info-text">De volgende secties en velden zijn gevonden in het MTOM bericht:</p>
+
+    <div *ngFor="let section of payloadSections" class="payload-section">
+      <div class="section-header">
+        <strong>{{ section.name }}</strong>
+        <span *ngIf="section.description" class="section-desc">{{ section.description }}</span>
+      </div>
+
+      <!-- Direct fields in this section -->
+      <table *ngIf="section.fields.length > 0" class="section-fields">
+        <tr *ngFor="let field of section.fields">
+          <td class="field-name">{{ field.name }}</td>
+          <td class="field-value">{{ field.value }}</td>
+          <td class="field-path"><code>{{ field.path }}</code></td>
+        </tr>
+      </table>
+
+      <!-- Subsections -->
+      <div *ngFor="let sub of section.subsections" class="subsection">
+        <div class="subsection-header">
+          <strong>{{ sub.name }}</strong>
+          <span *ngIf="sub.description" class="section-desc">{{ sub.description }}</span>
+        </div>
+
+        <table *ngIf="sub.fields.length > 0" class="section-fields">
+          <tr *ngFor="let field of sub.fields">
+            <td class="field-name">{{ field.name }}</td>
+            <td class="field-value">{{ field.value }}</td>
+            <td class="field-path"><code>{{ field.path }}</code></td>
+          </tr>
+        </table>
+
+        <!-- Nested subsections (3rd level) -->
+        <div *ngFor="let nested of sub.subsections" class="subsection nested">
+          <div class="subsection-header">
+            <strong>{{ nested.name }}</strong>
+            <span *ngIf="nested.description" class="section-desc">{{ nested.description }}</span>
+          </div>
+          <table *ngIf="nested.fields.length > 0" class="section-fields">
+            <tr *ngFor="let field of nested.fields">
+              <td class="field-name">{{ field.name }}</td>
+              <td class="field-value">{{ field.value }}</td>
+              <td class="field-path"><code>{{ field.path }}</code></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div *ngIf="fields.length > 0" class="detected-fields">
