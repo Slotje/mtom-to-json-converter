@@ -1,0 +1,23 @@
+# DEMO: Schema Validatie Fouten (Laag 1)
+# Ontbrekende verplichte velden en ongeldige datatypes
+clientId: ""
+clientName: ""
+metadataMapping:
+  objectStore: ""
+  documentClass: ""
+  fields:
+    - sourceField: "//ecmid"
+      targetProperty: "BBM1"
+      dataType: "ongeldig_type"
+      required: true
+    - sourceField: ""
+      targetProperty: ""
+      dataType: "string"
+      required: true
+businessInfo:
+  contactEmail: "dit-is-geen-email"
+  supportGroup: ""
+processingRules:
+  retentionDays: 30
+  autoRetryEnabled: true
+  processingEnabled: true

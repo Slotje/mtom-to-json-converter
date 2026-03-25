@@ -1,0 +1,37 @@
+# DEMO: Business Rule Validatie Fouten (Laag 2)
+# Dubbele targetProperties, ongeldig datumformaat, te weinig velden
+clientId: "550e8400-e29b-41d4-a716-446655440001"
+clientName: "Test Client - Business Rule Fouten"
+metadataMapping:
+  objectStore: "OS_BTE_TEST"
+  documentClass: "BTE_Document"
+  fields:
+    - sourceField: "//ecmid"
+      targetProperty: "BBM1"
+      dataType: "string"
+      required: true
+    - sourceField: "//value[@key='Eigenaar_L1']"
+      targetProperty: "BBM1"
+      dataType: "string"
+      required: true
+    - sourceField: "//value[@key='Eigenaar_L2']"
+      targetProperty: "BBM3"
+      dataType: "string"
+      required: true
+    - sourceField: "//value[@key='DekkingBeginDatum']"
+      targetProperty: "DekkingBeginDatum"
+      dataType: "date"
+      required: false
+      format: "XXXXX-ongeldig-formaat"
+    - sourceField: "//value[@key='DekkingEindDatum']"
+      targetProperty: "DekkingEindDatum"
+      dataType: "date"
+      required: false
+      format: "QQ/ZZ/JJJJ"
+businessInfo:
+  contactEmail: "team@belastingdienst.nl"
+  supportGroup: "BB ECM"
+processingRules:
+  retentionDays: 30
+  autoRetryEnabled: true
+  processingEnabled: true

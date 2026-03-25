@@ -1,0 +1,79 @@
+clientId: "550e8400-e29b-41d4-a716-446655440000"
+clientName: "Belastingdienst - Inkomensheffing"
+metadataMapping:
+  objectStore: "OS_BTE_PROD"
+  documentClass: "BTE_Aangifte"
+  fields:
+    - sourceField: "//ecmid"
+      targetProperty: "BBM1"
+      dataType: "string"
+      required: true
+    - sourceField: "//value[@key='Eigenaar_L1']"
+      targetProperty: "BBM2"
+      dataType: "string"
+      required: true
+    - sourceField: "//value[@key='Eigenaar_L2']"
+      targetProperty: "BBM3"
+      dataType: "string"
+      required: true
+    - sourceField: "//value[@key='Eigenaar_L3']"
+      targetProperty: "BBM4"
+      dataType: "string"
+      required: true
+    - sourceField: "//value[@key='KenmerkInhoud']"
+      targetProperty: "BBM6"
+      dataType: "string"
+      required: true
+    - sourceField: "//value[@key='KenmerkType']"
+      targetProperty: "BBM10"
+      dataType: "string"
+      required: true
+    - sourceField: "//value[@key='Documentsoort']"
+      targetProperty: "Documentsoort"
+      dataType: "string"
+      required: true
+    - sourceField: "//value[@key='Kanaal']"
+      targetProperty: "Kanaal"
+      dataType: "string"
+      required: true
+    - sourceField: "//value[@key='Middel']"
+      targetProperty: "Middel"
+      dataType: "string"
+      required: true
+      multiValue: true
+    - sourceField: "//value[@key='Richting']"
+      targetProperty: "Richting"
+      dataType: "string"
+      required: true
+    - sourceField: "//Bestandsnaam"
+      targetProperty: "DocumentTitle"
+      dataType: "string"
+      required: true
+    - sourceField: "//value[@key='DekkingBeginDatum']"
+      targetProperty: "DekkingBeginDatum"
+      dataType: "date"
+      required: false
+      format: "yyyy-MM-dd"
+    - sourceField: "//value[@key='DekkingEindDatum']"
+      targetProperty: "DekkingEindDatum"
+      dataType: "date"
+      required: false
+      format: "yyyy-MM-dd"
+    - sourceField: "//value[@key='Taal']"
+      targetProperty: "Taal"
+      dataType: "string"
+      required: false
+      multiValue: true
+    - sourceField: "//value[@key='Referentiecode']"
+      targetProperty: "Referentiecode"
+      dataType: "string"
+      required: false
+businessInfo:
+  contactEmail: "bte-support@belastingdienst.nl"
+  supportGroup: "BB ECM Support"
+  maxMessageSize: 52428800
+  maxMessagesPerDay: 10000
+processingRules:
+  retentionDays: 30
+  autoRetryEnabled: true
+  processingEnabled: true

@@ -1,0 +1,67 @@
+# DEMO: Referentie-integriteit Validatie Fouten (Laag 3)
+# Ongeldige XPath expressies en type-incompatibiliteiten
+clientId: "550e8400-e29b-41d4-a716-446655440002"
+clientName: "Test Client - Referentie Fouten"
+metadataMapping:
+  objectStore: "OS_BTE_TEST"
+  documentClass: "BTE_Document"
+  fields:
+    - sourceField: "//ecmid"
+      targetProperty: "BBM1"
+      dataType: "integer"
+      required: true
+    - sourceField: "//value[@key='Eigenaar_L1']"
+      targetProperty: "BBM2"
+      dataType: "boolean"
+      required: true
+    - sourceField: "//value[@key='Eigenaar_L2']"
+      targetProperty: "BBM3"
+      dataType: "string"
+      required: true
+    - sourceField: "//value[@key='Eigenaar_L3']"
+      targetProperty: "BBM4"
+      dataType: "string"
+      required: true
+    - sourceField: "//value[@key='KenmerkInhoud']"
+      targetProperty: "BBM6"
+      dataType: "string"
+      required: true
+    - sourceField: "//value[@key='KenmerkType']"
+      targetProperty: "BBM10"
+      dataType: "string"
+      required: true
+    - sourceField: "//value[@key='Documentsoort']"
+      targetProperty: "Documentsoort"
+      dataType: "string"
+      required: true
+    - sourceField: "//value[@key='Kanaal']"
+      targetProperty: "Kanaal"
+      dataType: "string"
+      required: true
+    - sourceField: "//value[@key='Middel']"
+      targetProperty: "Middel"
+      dataType: "string"
+      required: true
+    - sourceField: "//value[@key='Richting']"
+      targetProperty: "Richting"
+      dataType: "string"
+      required: true
+    - sourceField: "//Bestandsnaam"
+      targetProperty: "DocumentTitle"
+      dataType: "string"
+      required: true
+    - sourceField: "//veld_dat_niet_bestaat"
+      targetProperty: "OnbekendVeld"
+      dataType: "string"
+      required: true
+    - sourceField: "//value[@key='DekkingBeginDatum']"
+      targetProperty: "DekkingBeginDatum"
+      dataType: "integer"
+      required: false
+businessInfo:
+  contactEmail: "team@belastingdienst.nl"
+  supportGroup: "BB ECM"
+processingRules:
+  retentionDays: 30
+  autoRetryEnabled: true
+  processingEnabled: true

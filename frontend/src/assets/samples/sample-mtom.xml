@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ecm="http://belastingdienst.nl/ecm">
+  <soapenv:Header/>
+  <soapenv:Body>
+    <ecm:StoreDocumentRequest>
+      <ecm:Metadata>
+        <ecm:ecmid>ECM-2024-001234</ecm:ecmid>
+        <ecm:BerichtID>MSG-2024-005678</ecm:BerichtID>
+        <ecm:GebeurtenisID>EVT-2024-009012</ecm:GebeurtenisID>
+        <ecm:Bestandsnaam>aangifte_2024_Q1.pdf</ecm:Bestandsnaam>
+        <ecm:Eigenschappen>
+          <ecm:value key="Eigenaar_L1">Directoraat-generaal Belastingdienst</ecm:value>
+          <ecm:value key="Eigenaar_L2">Centrale Administratie</ecm:value>
+          <ecm:value key="Eigenaar_L3">Inkomensheffing</ecm:value>
+          <ecm:value key="KenmerkInhoud">Aangifte IB 2024</ecm:value>
+          <ecm:value key="KenmerkType">Aangifte</ecm:value>
+          <ecm:value key="Documentsoort">Belastingaangifte</ecm:value>
+          <ecm:value key="Kanaal">Digitaal</ecm:value>
+          <ecm:value key="Middel">MijnBelastingdienst</ecm:value>
+          <ecm:value key="Richting">Inkomend</ecm:value>
+          <ecm:value key="DekkingBeginDatum">2024-01-01</ecm:value>
+          <ecm:value key="DekkingEindDatum">2024-03-31</ecm:value>
+          <ecm:value key="Taal">Nederlands</ecm:value>
+          <ecm:value key="Referentiecode">REF-IB-2024-001</ecm:value>
+        </ecm:Eigenschappen>
+      </ecm:Metadata>
+      <ecm:Content>
+        <ecm:BinaryContent>SGVsbG8gV29ybGQgLSBUaGlzIGlzIGEgc2FtcGxlIGJpbmFyeSBjb250ZW50</ecm:BinaryContent>
+      </ecm:Content>
+    </ecm:StoreDocumentRequest>
+  </soapenv:Body>
+</soapenv:Envelope>
