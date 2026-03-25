@@ -38,24 +38,6 @@ interface SampleConfig {
         </div>
       </div>
 
-      <!-- Collapsible file upload -->
-      <div class="upload-toggle" (click)="showUpload = !showUpload">
-        <span>{{ showUpload ? 'Eigen bestand verbergen' : 'Of upload een eigen YAML bestand' }}</span>
-        <span class="toggle-icon">{{ showUpload ? '&#9660;' : '&#9654;' }}</span>
-      </div>
-
-      <div *ngIf="showUpload" class="upload-zone"
-           [class.dragover]="isDragOver"
-           (dragover)="onDragOver($event)"
-           (dragleave)="onDragLeave($event)"
-           (drop)="onDrop($event)">
-        <p>Sleep een YAML bestand hierheen of</p>
-        <label class="upload-btn">
-          Kies bestand
-          <input type="file" accept=".yaml,.yml" (change)="onFileSelect($event)" hidden>
-        </label>
-      </div>
-
       <!-- Loading -->
       <div *ngIf="loading" class="loading-bar">
         <div class="loading-fill"></div>
@@ -152,30 +134,6 @@ interface SampleConfig {
     .sample-label { font-weight: 700; font-size: 0.9rem; color: #333; }
     .sample-desc { font-size: 0.75rem; color: #666; }
 
-    /* Upload toggle */
-    .upload-toggle {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0.6rem 1rem; margin: 1rem 0 0.5rem;
-      background: #f5f5f5; border-radius: 6px;
-      cursor: pointer; font-size: 0.85rem; color: #666;
-      user-select: none; transition: background 0.2s;
-    }
-    .upload-toggle:hover { background: #eeeeee; }
-    .toggle-icon { font-size: 0.8rem; }
-
-    /* Upload zone */
-    .upload-zone {
-      border: 2px dashed #ccc; border-radius: 8px;
-      padding: 1.5rem; text-align: center; transition: all 0.3s; background: #fafafa;
-    }
-    .upload-zone.dragover { border-color: #1976d2; background: #e3f2fd; }
-    .upload-btn {
-      display: inline-block; padding: 0.5rem 1.5rem;
-      background: #1976d2; color: white; border-radius: 4px;
-      cursor: pointer; margin-top: 0.5rem;
-    }
-    .upload-btn:hover { background: #1565c0; }
-
     /* Loading bar */
     .loading-bar {
       height: 4px; background: #e0e0e0; border-radius: 2px; margin-top: 1rem; overflow: hidden;
@@ -259,8 +217,6 @@ export class ConfigUploadComponent {
   ];
 
   selectedSample: SampleConfig | null = null;
-  showUpload = false;
-  isDragOver = false;
   loading = false;
   config: ClientConfig | null = null;
   validation: ValidationResult | null = null;
@@ -288,37 +244,6 @@ export class ConfigUploadComponent {
         this.error = 'Kon sample bestand niet laden: ' + sample.file;
       }
     });
-  }
-
-  onDragOver(event: DragEvent) {
-    event.preventDefault();
-    this.isDragOver = true;
-  }
-
-  onDragLeave(event: DragEvent) {
-    this.isDragOver = false;
-  }
-
-  onDrop(event: DragEvent) {
-    event.preventDefault();
-    this.isDragOver = false;
-    const file = event.dataTransfer?.files[0];
-    if (file) this.processFile(file);
-  }
-
-  onFileSelect(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-    if (file) this.processFile(file);
-  }
-
-  private processFile(file: File) {
-    this.loading = true;
-    this.error = null;
-    this.selectedSample = null;
-    const reader = new FileReader();
-    reader.onload = () => this.uploadYaml(reader.result as string);
-    reader.readAsText(file);
   }
 
   private uploadYaml(content: string) {
