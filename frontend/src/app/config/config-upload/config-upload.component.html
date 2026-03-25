@@ -1,0 +1,88 @@
+<div class="config-upload">
+  <h2>Stap 1: YAML Configuratie Uploaden</h2>
+
+  <!-- Sample configs dropdown -->
+  <div class="sample-section">
+    <h3>Demo Configuraties</h3>
+    <p class="hint">Kies een voorbeeldconfiguratie om de werking te demonstreren:</p>
+    <div class="sample-cards">
+      <div *ngFor="let sample of sampleConfigs"
+           class="sample-card"
+           [class.selected]="selectedSample === sample"
+           [class]="'sample-card type-' + sample.type"
+           (click)="loadSample(sample)">
+        <div class="sample-icon">{{ sample.icon }}</div>
+        <div class="sample-info">
+          <div class="sample-label">{{ sample.label }}</div>
+          <div class="sample-desc">{{ sample.description }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-bar">
+    <div class="loading-fill"></div>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="error-message">
+    <strong>Fout:</strong> {{ error }}
+    <p *ngIf="suggestion" class="suggestion">Suggestie: {{ suggestion }}</p>
+  </div>
+
+  <!-- Config summary -->
+  <div *ngIf="config" class="config-summary">
+    <h3>Configuratie Overzicht</h3>
+    <table class="config-table">
+      <tr><td><strong>Client ID</strong></td><td>{{ config.clientId || '(leeg)' }}</td></tr>
+      <tr><td><strong>Client Naam</strong></td><td>{{ config.clientName || '(leeg)' }}</td></tr>
+      <tr><td><strong>Object Store</strong></td><td>{{ config.metadataMapping?.objectStore || '(leeg)' }}</td></tr>
+      <tr><td><strong>Document Class</strong></td><td>{{ config.metadataMapping?.documentClass || '(leeg)' }}</td></tr>
+      <tr><td><strong>Aantal velden</strong></td><td>{{ config.metadataMapping?.fields?.length || 0 }}</td></tr>
+      <tr><td><strong>Contact Email</strong></td><td>{{ config.businessInfo?.contactEmail || '(leeg)' }}</td></tr>
+      <tr><td><strong>Support Groep</strong></td><td>{{ config.businessInfo?.supportGroup || '(leeg)' }}</td></tr>
+    </table>
+
+    <h4>Veldmappings</h4>
+    <table class="fields-table">
+      <thead>
+        <tr>
+          <th>Bronveld (XPath)</th>
+          <th>Doelveld</th>
+          <th>Type</th>
+          <th>Verplicht</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let field of config.metadataMapping?.fields">
+          <td><code>{{ field.sourceField || '(leeg)' }}</code></td>
+          <td>{{ field.targetProperty || '(leeg)' }}</td>
+          <td><span class="type-badge">{{ field.dataType }}</span></td>
+          <td>
+            <span [class]="field.required ? 'badge required' : 'badge optional'">
+              {{ field.required ? 'Ja' : 'Nee' }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Inline validation result -->
+    <div *ngIf="validation" class="validation-inline">
+      <div [class]="'validation-status ' + (validation.valid ? 'valid' : 'invalid')">
+        {{ validation.valid ? 'Schema validatie geslaagd' : 'Schema validatie: fouten gevonden' }}
+      </div>
+      <div *ngFor="let err of validation.errors" class="validation-error">
+        <span class="error-code">{{ err.code }}</span>
+        <span class="error-msg">{{ err.message }}</span>
+        <div class="error-suggestion">{{ err.suggestion }}</div>
+      </div>
+      <div *ngFor="let warn of (validation.warnings || [])" class="validation-warning">
+        <span class="error-code">{{ warn.code }}</span>
+        <span class="error-msg">{{ warn.message }}</span>
+        <div class="error-suggestion">{{ warn.suggestion }}</div>
+      </div>
+    </div>
+  </div>
+</div>

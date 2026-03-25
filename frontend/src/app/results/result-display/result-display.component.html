@@ -1,0 +1,65 @@
+<div class="result-display" *ngIf="result">
+  <div class="section-header">
+    <h2>Conversie Resultaat: MTOM &#10142; JSON</h2>
+  </div>
+
+  <div class="result-banner" [class.success]="result.success" [class.failure]="!result.success">
+    <div class="banner-icon">{{ result.success ? '&#10004;' : '&#10006;' }}</div>
+    <div class="banner-text">
+      <strong>{{ result.success ? 'MTOM bericht succesvol geconverteerd naar JSON' : 'Conversie voltooid met validatiefouten' }}</strong>
+      <span>{{ extractedFieldEntries.length }} velden geextraheerd uit het MTOM bericht</span>
+    </div>
+    <div class="banner-actions">
+      <button class="action-btn download" (click)="downloadJson()">&#11015; Download JSON</button>
+      <button class="action-btn copy" (click)="copyJson()">&#128203; Kopieer</button>
+    </div>
+  </div>
+
+  <!-- Side by side: MTOM fields -> JSON output -->
+  <div class="comparison">
+    <!-- Left: Extracted from MTOM -->
+    <div class="comparison-panel source-panel">
+      <div class="panel-header source-header">
+        <span class="panel-icon">&#128196;</span>
+        <span>Geextraheerd uit MTOM</span>
+        <span class="panel-count">{{ extractedFieldEntries.length }} velden</span>
+      </div>
+      <div class="panel-body">
+        <div *ngFor="let entry of extractedFieldEntries; let i = index"
+             class="field-row"
+             [class.not-found]="entry[1] === '(niet gevonden)'"
+             [class.has-default]="entry[1].startsWith('(default)')"
+             [style.animation-delay]="(i * 50) + 'ms'">
+          <div class="field-row-left">
+            <code class="field-xpath">{{ entry[0] }}</code>
+          </div>
+          <div class="field-row-right">
+            <span *ngIf="entry[1] === '(niet gevonden)'" class="value-badge missing-value">&#10006; Niet gevonden</span>
+            <span *ngIf="entry[1].startsWith('(default)')" class="value-badge default-value">&#8594; {{ entry[1] }}</span>
+            <span *ngIf="entry[1] !== '(niet gevonden)' && !entry[1].startsWith('(default)')" class="value-badge found-value">{{ entry[1] }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center: Arrow -->
+    <div class="comparison-arrow">
+      <div class="arrow-vertical">
+        <div class="arrow-label">YAML<br>Mapping</div>
+        <div class="arrow-big">&#10142;</div>
+      </div>
+    </div>
+
+    <!-- Right: JSON Output -->
+    <div class="comparison-panel output-panel">
+      <div class="panel-header output-header">
+        <span class="panel-icon">&#128204;</span>
+        <span>JSON Output</span>
+        <span class="panel-count">{{ jsonLineCount }} regels</span>
+      </div>
+      <div class="panel-body json-body">
+        <pre class="json-output"><code>{{ jsonFormatted }}</code></pre>
+      </div>
+    </div>
+  </div>
+</div>

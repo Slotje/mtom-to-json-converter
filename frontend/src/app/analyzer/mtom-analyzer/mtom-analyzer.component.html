@@ -1,0 +1,57 @@
+<div class="mtom-analyzer">
+  <h2>Stap 2: MTOM Bronbestand Uploaden</h2>
+
+  <div class="sample-mtom">
+    <button class="sample-btn" (click)="loadSampleMtom()" [disabled]="loading">
+      &#128196; Gebruik voorbeeld MTOM bericht
+    </button>
+    <span class="sample-hint">Laadt een voorbeeldbericht met alle standaard Belastingdienst velden</span>
+  </div>
+
+  <div class="divider"><span>of upload een eigen bestand</span></div>
+
+  <div class="upload-zone"
+       [class.dragover]="isDragOver"
+       (dragover)="onDragOver($event)"
+       (dragleave)="onDragLeave($event)"
+       (drop)="onDrop($event)">
+    <p>Sleep een MTOM/XML bestand hierheen of</p>
+    <label class="upload-btn">
+      Kies bestand
+      <input type="file" accept=".xml,.msg,.mtom,.mime" (change)="onFileSelect($event)" hidden>
+    </label>
+  </div>
+
+  <div *ngIf="loading" class="loading">Bestand analyseren...</div>
+
+  <div *ngIf="error" class="error-message">
+    <strong>Fout:</strong> {{ error }}
+    <p *ngIf="suggestion" class="suggestion">Suggestie: {{ suggestion }}</p>
+  </div>
+
+  <div *ngIf="fields.length > 0" class="detected-fields">
+    <h3>Automatisch Gedetecteerde Velden ({{ fields.length }})</h3>
+    <p class="info-text">
+      Onderstaande velden zijn automatisch gedetecteerd in het MTOM bericht.
+      U hoeft geen XPath expressies te kennen - de tool detecteert dit automatisch.
+    </p>
+    <table class="fields-table">
+      <thead>
+        <tr>
+          <th>Veldnaam</th>
+          <th>XPath Pad</th>
+          <th>Voorbeeldwaarde</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let field of fields">
+          <td><strong>{{ field.fieldName }}</strong></td>
+          <td><code class="xpath">{{ field.xpathExpression }}</code></td>
+          <td class="sample-value">{{ field.sampleValue }}</td>
+          <td><span class="type-badge">{{ field.detectedType }}</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

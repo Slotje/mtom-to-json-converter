@@ -1,0 +1,84 @@
+<div class="app-container">
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-content">
+      <div class="header-logo">BTE</div>
+      <div class="header-text">
+        <h1>MTOM-to-JSON Converter</h1>
+        <p class="subtitle">Klantconfiguratie mapping tool voor Bulk Toevoer ECM</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Progress wizard -->
+  <nav class="wizard-nav">
+    <div *ngFor="let step of steps; let i = index; let last = last"
+         class="wizard-step-wrapper">
+      <div class="wizard-step"
+           [class.active]="currentStep === i"
+           [class.completed]="currentStep > i"
+           [class.upcoming]="currentStep < i">
+        <div class="step-circle">
+          <span *ngIf="currentStep <= i">{{ i + 1 }}</span>
+          <span *ngIf="currentStep > i">&#10004;</span>
+        </div>
+        <div class="step-info">
+          <div class="step-label">{{ step.label }}</div>
+          <div class="step-desc">{{ step.desc }}</div>
+        </div>
+      </div>
+      <div *ngIf="!last" class="step-connector" [class.done]="currentStep > i"></div>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <main class="app-main">
+    <!-- Step 1: YAML Config -->
+    <section class="step-section" [class.active-section]="currentStep === 0">
+      <app-config-upload (configLoaded)="onConfigLoaded($event)"></app-config-upload>
+    </section>
+
+    <!-- Step 2: MTOM Upload & Analysis -->
+    <section *ngIf="currentStep >= 1" class="step-section" [class.active-section]="currentStep === 1">
+      <app-mtom-analyzer
+        (fieldsDetected)="onFieldsDetected($event)"
+        (fileSelected)="onMtomFileSelected($event)">
+      </app-mtom-analyzer>
+    </section>
+
+    <!-- Step 3: Visual Mapping -->
+    <section *ngIf="currentStep >= 2" class="step-section" [class.active-section]="currentStep === 2">
+      <app-visual-mapping
+        [detectedFields]="detectedFields"
+        [configFields]="config?.metadataMapping?.fields || []">
+      </app-visual-mapping>
+
+      <div class="convert-action">
+        <button class="convert-btn" (click)="convert()" [disabled]="converting">
+          <span *ngIf="!converting">&#9654; Start Conversie &amp; Validatie</span>
+          <span *ngIf="converting">&#8987; Bezig met converteren...</span>
+        </button>
+        <p class="convert-hint">Voert de MTOM-naar-JSON conversie uit met drielaagse validatie</p>
+      </div>
+    </section>
+
+    <!-- Step 4: Validation -->
+    <section *ngIf="conversionResult" class="step-section" [class.active-section]="currentStep === 3">
+      <app-validation-panel
+        [validationResults]="conversionResult.validationResults || []">
+      </app-validation-panel>
+    </section>
+
+    <!-- Step 5: Result -->
+    <section *ngIf="conversionResult" class="step-section" [class.active-section]="currentStep === 4">
+      <app-result-display [result]="conversionResult"></app-result-display>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <span>BTE POC &mdash; MTOM-to-JSON Converter</span>
+    <span class="footer-sep">|</span>
+    <span>Belastingdienst &mdash; Bulk Toevoer ECM</span>
+  </footer>
+</div>
