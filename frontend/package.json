@@ -23,6 +23,9 @@
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"
   },
+  "overrides": {
+    "@types/express-serve-static-core": "4.19.6"
+  },
   "devDependencies": {
     "@angular-devkit/build-angular": "^17.3.17",
     "@angular/cli": "^17.3.17",
