@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DetectedField, FieldMapping } from '../../services/converter.service';
 
@@ -12,7 +12,8 @@ interface MappingConnection {
   selector: 'app-visual-mapping',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './visual-mapping.component.html'
+  templateUrl: './visual-mapping.component.html',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class VisualMappingComponent implements OnChanges {
   @Input() detectedFields: DetectedField[] = [];

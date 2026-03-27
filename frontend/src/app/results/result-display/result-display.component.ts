@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConversionResult } from '../../services/converter.service';
 
@@ -6,7 +6,8 @@ import { ConversionResult } from '../../services/converter.service';
   selector: 'app-result-display',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './result-display.component.html'
+  templateUrl: './result-display.component.html',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ResultDisplayComponent {
   @Input() result: ConversionResult | null = null;

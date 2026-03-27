@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConfigUploadComponent } from './config/config-upload/config-upload.component';
 import { MtomAnalyzerComponent } from './analyzer/mtom-analyzer/mtom-analyzer.component';
@@ -18,7 +18,8 @@ import { ConverterService, ClientConfig, DetectedField, ConversionResult } from 
     ValidationPanelComponent,
     ResultDisplayComponent
   ],
-  templateUrl: './app.component.html'
+  templateUrl: './app.component.html',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppComponent {
   @ViewChild(MtomAnalyzerComponent) mtomAnalyzer?: MtomAnalyzerComponent;

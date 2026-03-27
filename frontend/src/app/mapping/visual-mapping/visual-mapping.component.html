@@ -1,159 +1,122 @@
-<div class="visual-mapping" *ngIf="detectedFields.length > 0 && configFields.length > 0">
-  <div class="section-header">
-    <h2>Visuele Mapping: MTOM naar JSON</h2>
-    <p class="subtitle">Hieronder ziet u hoe bronvelden uit het MTOM bericht worden gemapped naar de JSON doelvelden via de YAML configuratie.</p>
-  </div>
+<bldc-container *ngIf="detectedFields.length > 0 && configFields.length > 0">
+  <bldc-heading level="2">Visuele Mapping: MTOM naar JSON</bldc-heading>
+  <bldc-paragraph>Hieronder ziet u hoe bronvelden uit het MTOM bericht worden gemapped naar de JSON doelvelden via de YAML configuratie.</bldc-paragraph>
 
   <!-- Mapping stats banner -->
-  <div class="stats-banner">
+  <bldc-card class="stats-banner">
     <div class="stat">
       <div class="stat-number">{{ detectedFields.length }}</div>
-      <div class="stat-label">Bronvelden (MTOM)</div>
+      <bldc-label>Bronvelden (MTOM)</bldc-label>
     </div>
-    <div class="stat-arrow">&#10142;</div>
+    <bldc-icon name="arrow-right"></bldc-icon>
     <div class="stat">
       <div class="stat-number">{{ connections.length }}</div>
-      <div class="stat-label">Gemapte Velden</div>
+      <bldc-label>Gemapte Velden</bldc-label>
     </div>
-    <div class="stat-arrow">&#10142;</div>
+    <bldc-icon name="arrow-right"></bldc-icon>
     <div class="stat">
       <div class="stat-number">{{ configFields.length }}</div>
-      <div class="stat-label">Doelvelden (JSON)</div>
+      <bldc-label>Doelvelden (JSON)</bldc-label>
     </div>
-    <div class="stat-separator"></div>
+    <bldc-divider></bldc-divider>
     <div class="stat" [class.stat-ok]="unmappedRequired.length === 0" [class.stat-warn]="unmappedRequired.length > 0">
       <div class="stat-number">{{ unmappedRequired.length }}</div>
-      <div class="stat-label">Ontbrekend (verplicht)</div>
+      <bldc-label>Ontbrekend (verplicht)</bldc-label>
     </div>
-  </div>
+  </bldc-card>
 
   <!-- Main mapping visualization -->
-  <div class="mapping-table">
-    <div class="mapping-header">
-      <div class="col-source">MTOM Bronveld</div>
-      <div class="col-arrow"></div>
-      <div class="col-target">JSON Doelveld</div>
-      <div class="col-value">Waarde uit MTOM</div>
-      <div class="col-type">Type</div>
-      <div class="col-status">Status</div>
-    </div>
+  <bldc-table>
+    <thead>
+      <tr>
+        <th>MTOM Bronveld</th>
+        <th></th>
+        <th>JSON Doelveld</th>
+        <th>Waarde uit MTOM</th>
+        <th>Type</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Matched connections -->
+      <tr *ngFor="let conn of connections; let i = index">
+        <td>
+          <bldc-chip class="source-badge">
+            <bldc-icon name="document"></bldc-icon>
+            {{ conn.source.fieldName }}
+          </bldc-chip>
+          <bldc-label>{{ conn.source.xpathExpression }}</bldc-label>
+        </td>
+        <td>
+          <bldc-icon name="arrow-right"></bldc-icon>
+        </td>
+        <td>
+          <bldc-chip class="target-badge">
+            <bldc-icon name="pin"></bldc-icon>
+            {{ conn.target.targetProperty }}
+          </bldc-chip>
+          <bldc-tag *ngIf="conn.target.required" class="required">VERPLICHT</bldc-tag>
+        </td>
+        <td>{{ conn.source.sampleValue }}</td>
+        <td><bldc-tag [attr.data-type]="conn.target.dataType">{{ conn.target.dataType }}</bldc-tag></td>
+        <td><bldc-tag class="status-ok">Gemapped</bldc-tag></td>
+      </tr>
 
-    <!-- Matched connections -->
-    <div *ngFor="let conn of connections; let i = index"
-         class="mapping-row"
-         [class.animate-in]="true"
-         [style.animation-delay]="(i * 80) + 'ms'">
-      <div class="col-source">
-        <div class="field-badge source-badge">
-          <span class="badge-icon">&#128196;</span>
-          <span class="badge-name">{{ conn.source.fieldName }}</span>
-        </div>
-        <code class="xpath-mini">{{ conn.source.xpathExpression }}</code>
-      </div>
-      <div class="col-arrow">
-        <div class="arrow-line">
-          <div class="arrow-dot start"></div>
-          <div class="arrow-body"></div>
-          <div class="arrow-head">&#9654;</div>
-        </div>
-      </div>
-      <div class="col-target">
-        <div class="field-badge target-badge">
-          <span class="badge-icon">&#128204;</span>
-          <span class="badge-name">{{ conn.target.targetProperty }}</span>
-        </div>
-        <span *ngIf="conn.target.required" class="required-tag">VERPLICHT</span>
-      </div>
-      <div class="col-value">
-        <span class="value-text">{{ conn.source.sampleValue }}</span>
-      </div>
-      <div class="col-type">
-        <span class="type-pill" [attr.data-type]="conn.target.dataType">{{ conn.target.dataType }}</span>
-      </div>
-      <div class="col-status">
-        <span class="status-ok">&#10004; Gemapped</span>
-      </div>
-    </div>
+      <!-- Unmapped required fields -->
+      <tr *ngFor="let field of unmappedRequired" class="unmapped">
+        <td>
+          <bldc-chip class="missing-badge">
+            <bldc-icon name="question"></bldc-icon>
+            Niet gevonden
+          </bldc-chip>
+          <bldc-label>{{ field.sourceField }}</bldc-label>
+        </td>
+        <td>
+          <bldc-icon name="close" class="broken"></bldc-icon>
+        </td>
+        <td>
+          <bldc-chip class="target-badge-warn">
+            <bldc-icon name="warning"></bldc-icon>
+            {{ field.targetProperty }}
+          </bldc-chip>
+          <bldc-tag class="required">VERPLICHT</bldc-tag>
+        </td>
+        <td>{{ field.defaultValue ? '(default: ' + field.defaultValue + ')' : '- geen waarde -' }}</td>
+        <td><bldc-tag [attr.data-type]="field.dataType">{{ field.dataType }}</bldc-tag></td>
+        <td><bldc-tag class="status-missing">Ontbreekt</bldc-tag></td>
+      </tr>
 
-    <!-- Unmapped required fields -->
-    <div *ngFor="let field of unmappedRequired; let i = index"
-         class="mapping-row unmapped"
-         [style.animation-delay]="((connections.length + i) * 80) + 'ms'">
-      <div class="col-source">
-        <div class="field-badge missing-badge">
-          <span class="badge-icon">&#10067;</span>
-          <span class="badge-name">Niet gevonden</span>
-        </div>
-        <code class="xpath-mini">{{ field.sourceField }}</code>
-      </div>
-      <div class="col-arrow">
-        <div class="arrow-line broken">
-          <div class="arrow-dot start broken"></div>
-          <div class="arrow-body broken"></div>
-          <div class="arrow-head broken">&#10006;</div>
-        </div>
-      </div>
-      <div class="col-target">
-        <div class="field-badge target-badge-warn">
-          <span class="badge-icon">&#9888;</span>
-          <span class="badge-name">{{ field.targetProperty }}</span>
-        </div>
-        <span class="required-tag">VERPLICHT</span>
-      </div>
-      <div class="col-value">
-        <span class="value-missing">{{ field.defaultValue ? '(default: ' + field.defaultValue + ')' : '- geen waarde -' }}</span>
-      </div>
-      <div class="col-type">
-        <span class="type-pill" [attr.data-type]="field.dataType">{{ field.dataType }}</span>
-      </div>
-      <div class="col-status">
-        <span class="status-missing">&#10006; Ontbreekt</span>
-      </div>
-    </div>
-
-    <!-- Unmapped optional fields -->
-    <div *ngFor="let field of unmappedOptional; let i = index"
-         class="mapping-row optional-unmapped"
-         [style.animation-delay]="((connections.length + unmappedRequired.length + i) * 80) + 'ms'">
-      <div class="col-source">
-        <div class="field-badge missing-badge-light">
-          <span class="badge-icon">&#8212;</span>
-          <span class="badge-name">Niet gevonden</span>
-        </div>
-        <code class="xpath-mini">{{ field.sourceField }}</code>
-      </div>
-      <div class="col-arrow">
-        <div class="arrow-line dimmed">
-          <div class="arrow-dot start dimmed"></div>
-          <div class="arrow-body dimmed"></div>
-          <div class="arrow-head dimmed">&#8594;</div>
-        </div>
-      </div>
-      <div class="col-target">
-        <div class="field-badge target-badge-dim">
-          <span class="badge-name">{{ field.targetProperty }}</span>
-        </div>
-        <span class="optional-tag">OPTIONEEL</span>
-      </div>
-      <div class="col-value">
-        <span class="value-missing">{{ field.defaultValue ? '(default: ' + field.defaultValue + ')' : '-' }}</span>
-      </div>
-      <div class="col-type">
-        <span class="type-pill" [attr.data-type]="field.dataType">{{ field.dataType }}</span>
-      </div>
-      <div class="col-status">
-        <span class="status-optional">&#8212; Optioneel</span>
-      </div>
-    </div>
-  </div>
+      <!-- Unmapped optional fields -->
+      <tr *ngFor="let field of unmappedOptional" class="optional-unmapped">
+        <td>
+          <bldc-chip class="missing-badge-light">
+            Niet gevonden
+          </bldc-chip>
+          <bldc-label>{{ field.sourceField }}</bldc-label>
+        </td>
+        <td>
+          <bldc-icon name="arrow-right" class="dimmed"></bldc-icon>
+        </td>
+        <td>
+          <bldc-chip class="target-badge-dim">
+            {{ field.targetProperty }}
+          </bldc-chip>
+          <bldc-tag class="optional">OPTIONEEL</bldc-tag>
+        </td>
+        <td>{{ field.defaultValue ? '(default: ' + field.defaultValue + ')' : '-' }}</td>
+        <td><bldc-tag [attr.data-type]="field.dataType">{{ field.dataType }}</bldc-tag></td>
+        <td><bldc-tag class="status-optional">Optioneel</bldc-tag></td>
+      </tr>
+    </tbody>
+  </bldc-table>
 
   <!-- Extra detected fields not in config -->
-  <div *ngIf="unmappedSourceFields.length > 0" class="extra-fields">
-    <h3>Extra velden in MTOM (niet in configuratie)</h3>
+  <bldc-card *ngIf="unmappedSourceFields.length > 0" class="extra-fields">
+    <bldc-heading level="3">Extra velden in MTOM (niet in configuratie)</bldc-heading>
     <div class="extra-fields-list">
-      <span *ngFor="let field of unmappedSourceFields" class="extra-field-chip">
+      <bldc-chip *ngFor="let field of unmappedSourceFields">
         {{ field.fieldName }}: <em>{{ field.sampleValue }}</em>
-      </span>
+      </bldc-chip>
     </div>
-  </div>
-</div>
+  </bldc-card>
+</bldc-container>

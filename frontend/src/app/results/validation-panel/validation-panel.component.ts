@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ValidationResult } from '../../services/converter.service';
 
@@ -6,7 +6,8 @@ import { ValidationResult } from '../../services/converter.service';
   selector: 'app-validation-panel',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './validation-panel.component.html'
+  templateUrl: './validation-panel.component.html',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ValidationPanelComponent implements OnChanges {
   @Input() validationResults: ValidationResult[] = [];

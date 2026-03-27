@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ConverterService, ConfigUploadResponse, ClientConfig, ValidationResult } from '../../services/converter.service';
@@ -15,7 +15,8 @@ interface SampleConfig {
   selector: 'app-config-upload',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './config-upload.component.html'
+  templateUrl: './config-upload.component.html',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ConfigUploadComponent {
   @Output() configLoaded = new EventEmitter<ClientConfig>();

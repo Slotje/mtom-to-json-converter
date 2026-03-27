@@ -1,17 +1,13 @@
-<div class="app-container">
+<bldc-container>
   <!-- Header -->
-  <header class="app-header">
-    <div class="header-content">
-      <div class="header-logo">BTE</div>
-      <div class="header-text">
-        <h1>MTOM-to-JSON Converter</h1>
-        <p class="subtitle">Klantconfiguratie mapping tool voor Bulk Toevoer ECM</p>
-      </div>
-    </div>
-  </header>
+  <bldc-header>
+    <bldc-logo>BTE</bldc-logo>
+    <bldc-heading level="1">MTOM-to-JSON Converter</bldc-heading>
+    <bldc-paragraph>Klantconfiguratie mapping tool voor Bulk Toevoer ECM</bldc-paragraph>
+  </bldc-header>
 
   <!-- Progress wizard -->
-  <nav class="wizard-nav">
+  <bldc-step-indicator>
     <div *ngFor="let step of steps; let i = index; let last = last"
          class="wizard-step-wrapper">
       <div class="wizard-step"
@@ -20,16 +16,16 @@
            [class.upcoming]="currentStep < i">
         <div class="step-circle">
           <span *ngIf="currentStep <= i">{{ i + 1 }}</span>
-          <span *ngIf="currentStep > i">&#10004;</span>
+          <bldc-icon *ngIf="currentStep > i" name="check"></bldc-icon>
         </div>
         <div class="step-info">
-          <div class="step-label">{{ step.label }}</div>
-          <div class="step-desc">{{ step.desc }}</div>
+          <bldc-label>{{ step.label }}</bldc-label>
+          <bldc-paragraph>{{ step.desc }}</bldc-paragraph>
         </div>
       </div>
-      <div *ngIf="!last" class="step-connector" [class.done]="currentStep > i"></div>
+      <bldc-divider *ngIf="!last" [class.done]="currentStep > i"></bldc-divider>
     </div>
-  </nav>
+  </bldc-step-indicator>
 
   <!-- Main content -->
   <main class="app-main">
@@ -54,11 +50,13 @@
       </app-visual-mapping>
 
       <div class="convert-action">
-        <button class="convert-btn" (click)="convert()" [disabled]="converting">
-          <span *ngIf="!converting">&#9654; Start Conversie &amp; Validatie</span>
-          <span *ngIf="converting">&#8987; Bezig met converteren...</span>
-        </button>
-        <p class="convert-hint">Voert de MTOM-naar-JSON conversie uit met drielaagse validatie</p>
+        <bldc-button (click)="convert()" [disabled]="converting">
+          <bldc-icon *ngIf="!converting" name="play"></bldc-icon>
+          <span *ngIf="!converting">Start Conversie &amp; Validatie</span>
+          <bldc-spinner *ngIf="converting"></bldc-spinner>
+          <span *ngIf="converting">Bezig met converteren...</span>
+        </bldc-button>
+        <bldc-explanation-text>Voert de MTOM-naar-JSON conversie uit met drielaagse validatie</bldc-explanation-text>
       </div>
     </section>
 
@@ -76,9 +74,9 @@
   </main>
 
   <!-- Footer -->
-  <footer class="app-footer">
+  <bldc-footer>
     <span>BTE POC &mdash; MTOM-to-JSON Converter</span>
-    <span class="footer-sep">|</span>
+    <bldc-divider></bldc-divider>
     <span>Belastingdienst &mdash; Bulk Toevoer ECM</span>
-  </footer>
-</div>
+  </bldc-footer>
+</bldc-container>

@@ -1,106 +1,99 @@
-<div class="validation-panel" *ngIf="validationResults.length > 0">
-  <div class="section-header">
-    <h2>Drielaagse Validatie</h2>
-    <p class="subtitle">Elke configuratie wordt gevalideerd op drie niveaus voordat deze in productie mag komen.</p>
-  </div>
+<bldc-container *ngIf="validationResults.length > 0">
+  <bldc-heading level="2">Drielaagse Validatie</bldc-heading>
+  <bldc-paragraph>Elke configuratie wordt gevalideerd op drie niveaus voordat deze in productie mag komen.</bldc-paragraph>
 
   <!-- Overall status -->
-  <div class="overall-status" [class.all-valid]="allValid" [class.has-errors]="!allValid">
-    <div class="overall-icon">{{ allValid ? '&#10004;' : '&#9888;' }}</div>
-    <div class="overall-text">
-      <strong>{{ allValid ? 'Alle validatielagen geslaagd' : 'Validatie niet volledig geslaagd' }}</strong>
-      <span>{{ totalErrors }} fout(en), {{ totalWarnings }} waarschuwing(en) over {{ validationResults.length }} lagen</span>
-    </div>
-  </div>
+  <bldc-notification [type]="allValid ? 'success' : 'error'">
+    <bldc-icon [name]="allValid ? 'check' : 'warning'"></bldc-icon>
+    <strong>{{ allValid ? 'Alle validatielagen geslaagd' : 'Validatie niet volledig geslaagd' }}</strong>
+    <bldc-paragraph>{{ totalErrors }} fout(en), {{ totalWarnings }} waarschuwing(en) over {{ validationResults.length }} lagen</bldc-paragraph>
+  </bldc-notification>
 
   <!-- Three layer cards -->
   <div class="layers-grid">
-    <div *ngFor="let result of validationResults; let i = index"
-         class="layer-card"
+    <bldc-card *ngFor="let result of validationResults; let i = index"
          [class.valid]="result.valid && (result.warnings || []).length === 0"
          [class.warning]="result.valid && (result.warnings || []).length > 0"
          [class.invalid]="!result.valid">
 
       <!-- Layer header -->
       <div class="layer-top">
-        <div class="layer-number">{{ i + 1 }}</div>
+        <bldc-badge>{{ i + 1 }}</bldc-badge>
         <div class="layer-info">
-          <div class="layer-name">{{ getLayerName(result.layer) }}</div>
-          <div class="layer-desc">{{ getLayerDescription(result.layer) }}</div>
+          <bldc-label>{{ getLayerName(result.layer) }}</bldc-label>
+          <bldc-paragraph>{{ getLayerDescription(result.layer) }}</bldc-paragraph>
         </div>
         <div class="layer-badge-container">
-          <div class="layer-badge" *ngIf="result.valid && (result.warnings || []).length === 0">
-            <span class="badge-icon-check">&#10004;</span> GESLAAGD
-          </div>
-          <div class="layer-badge warn-badge" *ngIf="result.valid && (result.warnings || []).length > 0">
-            <span class="badge-icon-warn">&#9888;</span> WAARSCHUWINGEN
-          </div>
-          <div class="layer-badge fail-badge" *ngIf="!result.valid">
-            <span class="badge-icon-fail">&#10006;</span> MISLUKT
-          </div>
+          <bldc-tag *ngIf="result.valid && (result.warnings || []).length === 0" class="success">
+            <bldc-icon name="check"></bldc-icon> GESLAAGD
+          </bldc-tag>
+          <bldc-tag *ngIf="result.valid && (result.warnings || []).length > 0" class="warning">
+            <bldc-icon name="warning"></bldc-icon> WAARSCHUWINGEN
+          </bldc-tag>
+          <bldc-tag *ngIf="!result.valid" class="error">
+            <bldc-icon name="close"></bldc-icon> MISLUKT
+          </bldc-tag>
         </div>
       </div>
 
       <!-- Expandable details -->
-      <div class="layer-toggle" (click)="toggleLayer(result.layer)">
+      <bldc-toggle (click)="toggleLayer(result.layer)">
         <span>{{ expandedLayers[result.layer] ? 'Details verbergen' : 'Details bekijken' }}
           ({{ result.errors.length + (result.warnings || []).length }} items)</span>
-        <span class="toggle-arrow">{{ expandedLayers[result.layer] ? '&#9660;' : '&#9654;' }}</span>
-      </div>
+        <bldc-icon [name]="expandedLayers[result.layer] ? 'chevron-down' : 'chevron-right'"></bldc-icon>
+      </bldc-toggle>
 
       <div class="layer-details" *ngIf="expandedLayers[result.layer]">
         <!-- Errors -->
-        <div *ngFor="let error of result.errors" class="detail-item error-item">
+        <bldc-notification *ngFor="let error of result.errors" type="error">
           <div class="detail-top">
-            <span class="detail-code">{{ error.code }}</span>
-            <span class="detail-severity severity-error">FOUT</span>
+            <bldc-tag>{{ error.code }}</bldc-tag>
+            <bldc-tag class="severity-error">FOUT</bldc-tag>
           </div>
-          <div class="detail-message">{{ error.message }}</div>
-          <div class="detail-suggestion">
-            <span class="suggestion-icon">&#128161;</span>
-            <span>{{ error.suggestion }}</span>
-          </div>
-        </div>
+          <bldc-paragraph>{{ error.message }}</bldc-paragraph>
+          <bldc-help>
+            <bldc-icon name="lightbulb"></bldc-icon>
+            {{ error.suggestion }}
+          </bldc-help>
+        </bldc-notification>
 
         <!-- Warnings -->
-        <div *ngFor="let warning of (result.warnings || [])" class="detail-item warning-item">
+        <bldc-notification *ngFor="let warning of (result.warnings || [])" type="warning">
           <div class="detail-top">
-            <span class="detail-code">{{ warning.code }}</span>
-            <span class="detail-severity severity-warning">WAARSCHUWING</span>
+            <bldc-tag>{{ warning.code }}</bldc-tag>
+            <bldc-tag class="severity-warning">WAARSCHUWING</bldc-tag>
           </div>
-          <div class="detail-message">{{ warning.message }}</div>
-          <div class="detail-suggestion">
-            <span class="suggestion-icon">&#128161;</span>
-            <span>{{ warning.suggestion }}</span>
-          </div>
-        </div>
+          <bldc-paragraph>{{ warning.message }}</bldc-paragraph>
+          <bldc-help>
+            <bldc-icon name="lightbulb"></bldc-icon>
+            {{ warning.suggestion }}
+          </bldc-help>
+        </bldc-notification>
 
         <!-- No issues -->
-        <div *ngIf="result.errors.length === 0 && (result.warnings || []).length === 0" class="no-issues">
-          <span class="no-issues-icon">&#10004;</span>
+        <bldc-notification *ngIf="result.errors.length === 0 && (result.warnings || []).length === 0" type="success">
+          <bldc-icon name="check"></bldc-icon>
           Geen problemen gevonden in deze validatielaag.
-        </div>
+        </bldc-notification>
       </div>
-    </div>
+    </bldc-card>
   </div>
 
   <!-- Validation flow diagram -->
-  <div class="validation-flow">
-    <div class="flow-title">Validatie Proces</div>
-    <div class="flow-steps">
+  <bldc-card class="validation-flow">
+    <bldc-label>Validatie Proces</bldc-label>
+    <bldc-step-indicator>
       <div *ngFor="let result of validationResults; let i = index; let last = last" class="flow-step-group">
         <div class="flow-step" [class.flow-valid]="result.valid" [class.flow-invalid]="!result.valid">
-          <div class="flow-step-num">{{ i + 1 }}</div>
-          <div class="flow-step-name">{{ getLayerShortName(result.layer) }}</div>
-          <div class="flow-step-icon">{{ result.valid ? '&#10004;' : '&#10006;' }}</div>
+          <bldc-badge>{{ i + 1 }}</bldc-badge>
+          <bldc-label>{{ getLayerShortName(result.layer) }}</bldc-label>
+          <bldc-icon [name]="result.valid ? 'check' : 'close'"></bldc-icon>
         </div>
-        <div *ngIf="!last" class="flow-connector" [class.flow-valid]="result.valid" [class.flow-invalid]="!result.valid">
-          &#10142;
-        </div>
+        <bldc-icon *ngIf="!last" name="arrow-right" [class.flow-valid]="result.valid" [class.flow-invalid]="!result.valid"></bldc-icon>
       </div>
       <div class="flow-step flow-result" [class.flow-valid]="allValid" [class.flow-invalid]="!allValid">
-        <div class="flow-step-name">{{ allValid ? 'KLAAR' : 'GEBLOKKEERD' }}</div>
+        <bldc-label>{{ allValid ? 'KLAAR' : 'GEBLOKKEERD' }}</bldc-label>
       </div>
-    </div>
-  </div>
-</div>
+    </bldc-step-indicator>
+  </bldc-card>
+</bldc-container>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ConverterService, DetectedField } from '../../services/converter.service';
@@ -20,7 +20,8 @@ interface PayloadSection {
   selector: 'app-mtom-analyzer',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './mtom-analyzer.component.html'
+  templateUrl: './mtom-analyzer.component.html',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class MtomAnalyzerComponent {
   @Output() fieldsDetected = new EventEmitter<DetectedField[]>();

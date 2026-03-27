@@ -1,80 +1,75 @@
-<div class="mtom-analyzer">
-  <h2>Stap 2: MTOM Bronbestand Uploaden</h2>
+<bldc-container>
+  <bldc-heading level="2">Stap 2: MTOM Bronbestand Uploaden</bldc-heading>
 
   <div class="sample-mtom">
-    <button class="sample-btn" (click)="loadSampleMtom()" [disabled]="loading">
-      &#128196; Gebruik voorbeeld MTOM bericht
-    </button>
-    <span class="sample-hint">Laadt een voorbeeldbericht met alle standaard Belastingdienst velden</span>
+    <bldc-button (click)="loadSampleMtom()" [disabled]="loading">
+      <bldc-icon name="document"></bldc-icon>
+      Gebruik voorbeeld MTOM bericht
+    </bldc-button>
+    <bldc-explanation-text>Laadt een voorbeeldbericht met alle standaard Belastingdienst velden</bldc-explanation-text>
   </div>
 
-  <div *ngIf="loading" class="loading">Bestand analyseren...</div>
+  <bldc-spinner *ngIf="loading"></bldc-spinner>
 
-  <div *ngIf="error" class="error-message">
+  <bldc-notification *ngIf="error" type="error">
     <strong>Fout:</strong> {{ error }}
-    <p *ngIf="suggestion" class="suggestion">Suggestie: {{ suggestion }}</p>
-  </div>
+    <bldc-paragraph *ngIf="suggestion">Suggestie: {{ suggestion }}</bldc-paragraph>
+  </bldc-notification>
 
   <!-- Parsed payload structure -->
   <div *ngIf="payloadSections.length > 0" class="payload-structure">
-    <h3>MTOM Payload Structuur</h3>
-    <p class="info-text">De volgende secties en velden zijn gevonden in het MTOM bericht:</p>
+    <bldc-heading level="3">MTOM Payload Structuur</bldc-heading>
+    <bldc-paragraph>De volgende secties en velden zijn gevonden in het MTOM bericht:</bldc-paragraph>
 
-    <div *ngFor="let section of payloadSections" class="payload-section">
-      <div class="section-header">
-        <strong>{{ section.name }}</strong>
-        <span *ngIf="section.description" class="section-desc">{{ section.description }}</span>
-      </div>
+    <bldc-card *ngFor="let section of payloadSections" class="payload-section">
+      <bldc-heading level="4">{{ section.name }}</bldc-heading>
+      <bldc-explanation-text *ngIf="section.description">{{ section.description }}</bldc-explanation-text>
 
       <!-- Direct fields in this section -->
-      <table *ngIf="section.fields.length > 0" class="section-fields">
+      <bldc-table *ngIf="section.fields.length > 0">
         <tr *ngFor="let field of section.fields">
-          <td class="field-name">{{ field.name }}</td>
-          <td class="field-value">{{ field.value }}</td>
-          <td class="field-path"><code>{{ field.path }}</code></td>
+          <td><bldc-label>{{ field.name }}</bldc-label></td>
+          <td>{{ field.value }}</td>
+          <td><bldc-label>{{ field.path }}</bldc-label></td>
         </tr>
-      </table>
+      </bldc-table>
 
       <!-- Subsections -->
-      <div *ngFor="let sub of section.subsections" class="subsection">
-        <div class="subsection-header">
-          <strong>{{ sub.name }}</strong>
-          <span *ngIf="sub.description" class="section-desc">{{ sub.description }}</span>
-        </div>
+      <bldc-card *ngFor="let sub of section.subsections" class="subsection">
+        <bldc-heading level="5">{{ sub.name }}</bldc-heading>
+        <bldc-explanation-text *ngIf="sub.description">{{ sub.description }}</bldc-explanation-text>
 
-        <table *ngIf="sub.fields.length > 0" class="section-fields">
+        <bldc-table *ngIf="sub.fields.length > 0">
           <tr *ngFor="let field of sub.fields">
-            <td class="field-name">{{ field.name }}</td>
-            <td class="field-value">{{ field.value }}</td>
-            <td class="field-path"><code>{{ field.path }}</code></td>
+            <td><bldc-label>{{ field.name }}</bldc-label></td>
+            <td>{{ field.value }}</td>
+            <td><bldc-label>{{ field.path }}</bldc-label></td>
           </tr>
-        </table>
+        </bldc-table>
 
         <!-- Nested subsections (3rd level) -->
-        <div *ngFor="let nested of sub.subsections" class="subsection nested">
-          <div class="subsection-header">
-            <strong>{{ nested.name }}</strong>
-            <span *ngIf="nested.description" class="section-desc">{{ nested.description }}</span>
-          </div>
-          <table *ngIf="nested.fields.length > 0" class="section-fields">
+        <bldc-card *ngFor="let nested of sub.subsections" class="subsection nested">
+          <bldc-heading level="6">{{ nested.name }}</bldc-heading>
+          <bldc-explanation-text *ngIf="nested.description">{{ nested.description }}</bldc-explanation-text>
+          <bldc-table *ngIf="nested.fields.length > 0">
             <tr *ngFor="let field of nested.fields">
-              <td class="field-name">{{ field.name }}</td>
-              <td class="field-value">{{ field.value }}</td>
-              <td class="field-path"><code>{{ field.path }}</code></td>
+              <td><bldc-label>{{ field.name }}</bldc-label></td>
+              <td>{{ field.value }}</td>
+              <td><bldc-label>{{ field.path }}</bldc-label></td>
             </tr>
-          </table>
-        </div>
-      </div>
-    </div>
+          </bldc-table>
+        </bldc-card>
+      </bldc-card>
+    </bldc-card>
   </div>
 
   <div *ngIf="fields.length > 0" class="detected-fields">
-    <h3>Automatisch Gedetecteerde Velden ({{ fields.length }})</h3>
-    <p class="info-text">
+    <bldc-heading level="3">Automatisch Gedetecteerde Velden ({{ fields.length }})</bldc-heading>
+    <bldc-paragraph>
       Onderstaande velden zijn automatisch gedetecteerd in het MTOM bericht.
       U hoeft geen XPath expressies te kennen - de tool detecteert dit automatisch.
-    </p>
-    <table class="fields-table">
+    </bldc-paragraph>
+    <bldc-table>
       <thead>
         <tr>
           <th>Veldnaam</th>
@@ -86,11 +81,11 @@
       <tbody>
         <tr *ngFor="let field of fields">
           <td><strong>{{ field.fieldName }}</strong></td>
-          <td><code class="xpath">{{ field.xpathExpression }}</code></td>
-          <td class="sample-value">{{ field.sampleValue }}</td>
-          <td><span class="type-badge">{{ field.detectedType }}</span></td>
+          <td><bldc-label>{{ field.xpathExpression }}</bldc-label></td>
+          <td>{{ field.sampleValue }}</td>
+          <td><bldc-tag>{{ field.detectedType }}</bldc-tag></td>
         </tr>
       </tbody>
-    </table>
+    </bldc-table>
   </div>
-</div>
+</bldc-container>

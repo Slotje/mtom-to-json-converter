@@ -1,65 +1,64 @@
-<div class="result-display" *ngIf="result">
-  <div class="section-header">
-    <h2>Conversie Resultaat: MTOM &#10142; JSON</h2>
-  </div>
+<bldc-container *ngIf="result">
+  <bldc-heading level="2">Conversie Resultaat: MTOM &#10142; JSON</bldc-heading>
 
-  <div class="result-banner" [class.success]="result.success" [class.failure]="!result.success">
-    <div class="banner-icon">{{ result.success ? '&#10004;' : '&#10006;' }}</div>
-    <div class="banner-text">
-      <strong>{{ result.success ? 'MTOM bericht succesvol geconverteerd naar JSON' : 'Conversie voltooid met validatiefouten' }}</strong>
-      <span>{{ extractedFieldEntries.length }} velden geextraheerd uit het MTOM bericht</span>
-    </div>
-    <div class="banner-actions">
-      <button class="action-btn download" (click)="downloadJson()">&#11015; Download JSON</button>
-      <button class="action-btn copy" (click)="copyJson()">&#128203; Kopieer</button>
-    </div>
-  </div>
+  <bldc-notification [type]="result.success ? 'success' : 'error'">
+    <bldc-icon [name]="result.success ? 'check' : 'close'"></bldc-icon>
+    <strong>{{ result.success ? 'MTOM bericht succesvol geconverteerd naar JSON' : 'Conversie voltooid met validatiefouten' }}</strong>
+    <bldc-paragraph>{{ extractedFieldEntries.length }} velden geextraheerd uit het MTOM bericht</bldc-paragraph>
+    <bldc-button-bar>
+      <bldc-button (click)="downloadJson()">
+        <bldc-icon name="download"></bldc-icon> Download JSON
+      </bldc-button>
+      <bldc-button (click)="copyJson()">
+        <bldc-icon name="copy"></bldc-icon> Kopieer
+      </bldc-button>
+    </bldc-button-bar>
+  </bldc-notification>
 
   <!-- Side by side: MTOM fields -> JSON output -->
   <div class="comparison">
     <!-- Left: Extracted from MTOM -->
-    <div class="comparison-panel source-panel">
-      <div class="panel-header source-header">
-        <span class="panel-icon">&#128196;</span>
-        <span>Geextraheerd uit MTOM</span>
-        <span class="panel-count">{{ extractedFieldEntries.length }} velden</span>
-      </div>
+    <bldc-card class="source-panel">
+      <bldc-heading level="3">
+        <bldc-icon name="document"></bldc-icon>
+        Geextraheerd uit MTOM
+        <bldc-tag>{{ extractedFieldEntries.length }} velden</bldc-tag>
+      </bldc-heading>
       <div class="panel-body">
         <div *ngFor="let entry of extractedFieldEntries; let i = index"
              class="field-row"
              [class.not-found]="entry[1] === '(niet gevonden)'"
-             [class.has-default]="entry[1].startsWith('(default)')"
-             [style.animation-delay]="(i * 50) + 'ms'">
-          <div class="field-row-left">
-            <code class="field-xpath">{{ entry[0] }}</code>
-          </div>
-          <div class="field-row-right">
-            <span *ngIf="entry[1] === '(niet gevonden)'" class="value-badge missing-value">&#10006; Niet gevonden</span>
-            <span *ngIf="entry[1].startsWith('(default)')" class="value-badge default-value">&#8594; {{ entry[1] }}</span>
-            <span *ngIf="entry[1] !== '(niet gevonden)' && !entry[1].startsWith('(default)')" class="value-badge found-value">{{ entry[1] }}</span>
-          </div>
+             [class.has-default]="entry[1].startsWith('(default)')">
+          <bldc-label>{{ entry[0] }}</bldc-label>
+          <bldc-tag *ngIf="entry[1] === '(niet gevonden)'" class="missing-value">
+            <bldc-icon name="close"></bldc-icon> Niet gevonden
+          </bldc-tag>
+          <bldc-tag *ngIf="entry[1].startsWith('(default)')" class="default-value">
+            {{ entry[1] }}
+          </bldc-tag>
+          <bldc-tag *ngIf="entry[1] !== '(niet gevonden)' && !entry[1].startsWith('(default)')" class="found-value">
+            {{ entry[1] }}
+          </bldc-tag>
         </div>
       </div>
-    </div>
+    </bldc-card>
 
     <!-- Center: Arrow -->
     <div class="comparison-arrow">
-      <div class="arrow-vertical">
-        <div class="arrow-label">YAML<br>Mapping</div>
-        <div class="arrow-big">&#10142;</div>
-      </div>
+      <bldc-label>YAML Mapping</bldc-label>
+      <bldc-icon name="arrow-right"></bldc-icon>
     </div>
 
     <!-- Right: JSON Output -->
-    <div class="comparison-panel output-panel">
-      <div class="panel-header output-header">
-        <span class="panel-icon">&#128204;</span>
-        <span>JSON Output</span>
-        <span class="panel-count">{{ jsonLineCount }} regels</span>
-      </div>
+    <bldc-card class="output-panel">
+      <bldc-heading level="3">
+        <bldc-icon name="pin"></bldc-icon>
+        JSON Output
+        <bldc-tag>{{ jsonLineCount }} regels</bldc-tag>
+      </bldc-heading>
       <div class="panel-body json-body">
         <pre class="json-output"><code>{{ jsonFormatted }}</code></pre>
       </div>
-    </div>
+    </bldc-card>
   </div>
-</div>
+</bldc-container>
