@@ -18,7 +18,7 @@
   <!-- Side by side: MTOM fields -> JSON output -->
   <div class="comparison">
     <!-- Left: Extracted from MTOM -->
-    <bldc-card class="source-panel">
+    <div class="source-panel">
       <bldc-heading level="3">
         <bldc-icon name="document"></bldc-icon>
         Geextraheerd uit MTOM
@@ -41,16 +41,16 @@
           </bldc-tag>
         </div>
       </div>
-    </bldc-card>
+    </div>
 
     <!-- Center: Arrow -->
     <div class="comparison-arrow">
-      <bldc-label>YAML Mapping</bldc-label>
+      <bldc-heading level="4">YAML Mapping</bldc-heading>
       <bldc-icon name="arrow-right"></bldc-icon>
     </div>
 
     <!-- Right: JSON Output -->
-    <bldc-card class="output-panel">
+    <div class="output-panel">
       <bldc-heading level="3">
         <bldc-icon name="pin"></bldc-icon>
         JSON Output
@@ -59,6 +59,6 @@
       <div class="panel-body json-body">
         <pre class="json-output"><code>{{ jsonFormatted }}</code></pre>
       </div>
-    </bldc-card>
+    </div>
   </div>
 </bldc-container>

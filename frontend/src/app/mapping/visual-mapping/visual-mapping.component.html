@@ -3,125 +3,105 @@
   <bldc-paragraph>Hieronder ziet u hoe bronvelden uit het MTOM bericht worden gemapped naar de JSON doelvelden via de YAML configuratie.</bldc-paragraph>
 
   <!-- Mapping stats banner -->
-  <bldc-card class="stats-banner">
+  <div class="stats-banner">
     <div class="stat">
       <div class="stat-number">{{ detectedFields.length }}</div>
-      <bldc-label>Bronvelden (MTOM)</bldc-label>
+      <bldc-heading level="4">Bronvelden (MTOM)</bldc-heading>
     </div>
     <bldc-icon name="arrow-right"></bldc-icon>
     <div class="stat">
       <div class="stat-number">{{ connections.length }}</div>
-      <bldc-label>Gemapte Velden</bldc-label>
+      <bldc-heading level="4">Gemapte Velden</bldc-heading>
     </div>
     <bldc-icon name="arrow-right"></bldc-icon>
     <div class="stat">
       <div class="stat-number">{{ configFields.length }}</div>
-      <bldc-label>Doelvelden (JSON)</bldc-label>
+      <bldc-heading level="4">Doelvelden (JSON)</bldc-heading>
     </div>
     <bldc-divider></bldc-divider>
     <div class="stat" [class.stat-ok]="unmappedRequired.length === 0" [class.stat-warn]="unmappedRequired.length > 0">
       <div class="stat-number">{{ unmappedRequired.length }}</div>
-      <bldc-label>Ontbrekend (verplicht)</bldc-label>
+      <bldc-heading level="4">Ontbrekend (verplicht)</bldc-heading>
     </div>
-  </bldc-card>
+  </div>
 
   <!-- Main mapping visualization -->
-  <bldc-table>
-    <thead>
-      <tr>
-        <th>MTOM Bronveld</th>
-        <th></th>
-        <th>JSON Doelveld</th>
-        <th>Waarde uit MTOM</th>
-        <th>Type</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Matched connections -->
-      <tr *ngFor="let conn of connections; let i = index">
-        <td>
-          <bldc-chip class="source-badge">
-            <bldc-icon name="document"></bldc-icon>
-            {{ conn.source.fieldName }}
-          </bldc-chip>
-          <bldc-label>{{ conn.source.xpathExpression }}</bldc-label>
-        </td>
-        <td>
-          <bldc-icon name="arrow-right"></bldc-icon>
-        </td>
-        <td>
-          <bldc-chip class="target-badge">
-            <bldc-icon name="pin"></bldc-icon>
-            {{ conn.target.targetProperty }}
-          </bldc-chip>
-          <bldc-tag *ngIf="conn.target.required" class="required">VERPLICHT</bldc-tag>
-        </td>
-        <td>{{ conn.source.sampleValue }}</td>
-        <td><bldc-tag [attr.data-type]="conn.target.dataType">{{ conn.target.dataType }}</bldc-tag></td>
-        <td><bldc-tag class="status-ok">Gemapped</bldc-tag></td>
-      </tr>
+  <bldc-table zebra="true">
+    <bldc-table-row>
+      <bldc-table-header>MTOM Bronveld</bldc-table-header>
+      <bldc-table-header></bldc-table-header>
+      <bldc-table-header>JSON Doelveld</bldc-table-header>
+      <bldc-table-header>Waarde uit MTOM</bldc-table-header>
+      <bldc-table-header>Type</bldc-table-header>
+      <bldc-table-header>Status</bldc-table-header>
+    </bldc-table-row>
+    <!-- Matched connections -->
+    <bldc-table-row *ngFor="let conn of connections">
+      <bldc-table-data>
+        <strong>{{ conn.source.fieldName }}</strong><br/>
+        <small>{{ conn.source.xpathExpression }}</small>
+      </bldc-table-data>
+      <bldc-table-data>
+        <bldc-icon name="arrow-right"></bldc-icon>
+      </bldc-table-data>
+      <bldc-table-data>
+        <strong>{{ conn.target.targetProperty }}</strong>
+        <bldc-tag *ngIf="conn.target.required">VERPLICHT</bldc-tag>
+      </bldc-table-data>
+      <bldc-table-data>{{ conn.source.sampleValue }}</bldc-table-data>
+      <bldc-table-data><bldc-tag>{{ conn.target.dataType }}</bldc-tag></bldc-table-data>
+      <bldc-table-data><bldc-tag class="status-ok">Gemapped</bldc-tag></bldc-table-data>
+    </bldc-table-row>
 
-      <!-- Unmapped required fields -->
-      <tr *ngFor="let field of unmappedRequired" class="unmapped">
-        <td>
-          <bldc-chip class="missing-badge">
-            <bldc-icon name="question"></bldc-icon>
-            Niet gevonden
-          </bldc-chip>
-          <bldc-label>{{ field.sourceField }}</bldc-label>
-        </td>
-        <td>
-          <bldc-icon name="close" class="broken"></bldc-icon>
-        </td>
-        <td>
-          <bldc-chip class="target-badge-warn">
-            <bldc-icon name="warning"></bldc-icon>
-            {{ field.targetProperty }}
-          </bldc-chip>
-          <bldc-tag class="required">VERPLICHT</bldc-tag>
-        </td>
-        <td>{{ field.defaultValue ? '(default: ' + field.defaultValue + ')' : '- geen waarde -' }}</td>
-        <td><bldc-tag [attr.data-type]="field.dataType">{{ field.dataType }}</bldc-tag></td>
-        <td><bldc-tag class="status-missing">Ontbreekt</bldc-tag></td>
-      </tr>
+    <!-- Unmapped required fields -->
+    <bldc-table-row *ngFor="let field of unmappedRequired">
+      <bldc-table-data>
+        <em>Niet gevonden</em><br/>
+        <small>{{ field.sourceField }}</small>
+      </bldc-table-data>
+      <bldc-table-data>
+        <bldc-icon name="close"></bldc-icon>
+      </bldc-table-data>
+      <bldc-table-data>
+        <strong>{{ field.targetProperty }}</strong>
+        <bldc-tag>VERPLICHT</bldc-tag>
+      </bldc-table-data>
+      <bldc-table-data>{{ field.defaultValue ? '(default: ' + field.defaultValue + ')' : '- geen waarde -' }}</bldc-table-data>
+      <bldc-table-data><bldc-tag>{{ field.dataType }}</bldc-tag></bldc-table-data>
+      <bldc-table-data><bldc-tag class="status-missing">Ontbreekt</bldc-tag></bldc-table-data>
+    </bldc-table-row>
 
-      <!-- Unmapped optional fields -->
-      <tr *ngFor="let field of unmappedOptional" class="optional-unmapped">
-        <td>
-          <bldc-chip class="missing-badge-light">
-            Niet gevonden
-          </bldc-chip>
-          <bldc-label>{{ field.sourceField }}</bldc-label>
-        </td>
-        <td>
-          <bldc-icon name="arrow-right" class="dimmed"></bldc-icon>
-        </td>
-        <td>
-          <bldc-chip class="target-badge-dim">
-            {{ field.targetProperty }}
-          </bldc-chip>
-          <bldc-tag class="optional">OPTIONEEL</bldc-tag>
-        </td>
-        <td>{{ field.defaultValue ? '(default: ' + field.defaultValue + ')' : '-' }}</td>
-        <td><bldc-tag [attr.data-type]="field.dataType">{{ field.dataType }}</bldc-tag></td>
-        <td><bldc-tag class="status-optional">Optioneel</bldc-tag></td>
-      </tr>
-    </tbody>
+    <!-- Unmapped optional fields -->
+    <bldc-table-row *ngFor="let field of unmappedOptional">
+      <bldc-table-data>
+        <em>Niet gevonden</em><br/>
+        <small>{{ field.sourceField }}</small>
+      </bldc-table-data>
+      <bldc-table-data>
+        <bldc-icon name="arrow-right"></bldc-icon>
+      </bldc-table-data>
+      <bldc-table-data>
+        {{ field.targetProperty }}
+        <bldc-tag>OPTIONEEL</bldc-tag>
+      </bldc-table-data>
+      <bldc-table-data>{{ field.defaultValue ? '(default: ' + field.defaultValue + ')' : '-' }}</bldc-table-data>
+      <bldc-table-data><bldc-tag>{{ field.dataType }}</bldc-tag></bldc-table-data>
+      <bldc-table-data><bldc-tag class="status-optional">Optioneel</bldc-tag></bldc-table-data>
+    </bldc-table-row>
   </bldc-table>
 
   <!-- Extra detected fields not in config -->
-  <bldc-card *ngIf="unmappedSourceFields.length > 0" class="extra-fields">
+  <div *ngIf="unmappedSourceFields.length > 0" class="extra-fields">
     <bldc-heading level="3">Extra velden in MTOM (niet in configuratie)</bldc-heading>
     <div class="extra-fields-list">
-      <bldc-chip *ngFor="let field of unmappedSourceFields">
-        {{ field.fieldName }}: <em>{{ field.sampleValue }}</em>
-      </bldc-chip>
+      <bldc-tag *ngFor="let field of unmappedSourceFields">
+        {{ field.fieldName }}: {{ field.sampleValue }}
+      </bldc-tag>
     </div>
-  </bldc-card>
+  </div>
 
   <!-- Convert action -->
-  <bldc-card class="convert-action">
+  <div class="convert-action">
     <bldc-heading level="3">Conversie starten</bldc-heading>
     <bldc-paragraph *ngIf="unmappedRequired.length === 0">Alle verplichte velden zijn gemapped. U kunt de conversie starten.</bldc-paragraph>
     <bldc-paragraph *ngIf="unmappedRequired.length > 0">Let op: {{ unmappedRequired.length }} verplicht(e) veld(en) ontbre(e)k(en). Default waarden worden gebruikt indien beschikbaar.</bldc-paragraph>
@@ -129,5 +109,5 @@
       <bldc-icon name="arrow-right"></bldc-icon>
       {{ converting ? 'Bezig met converteren...' : 'Converteer naar JSON' }}
     </bldc-button>
-  </bldc-card>
+  </div>
 </bldc-container>

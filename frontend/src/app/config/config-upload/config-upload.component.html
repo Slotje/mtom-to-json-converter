@@ -4,18 +4,18 @@
   <!-- Sample configs -->
   <div class="sample-section">
     <bldc-heading level="3">Demo Configuraties</bldc-heading>
-    <bldc-explanation-text>Kies een voorbeeldconfiguratie om de werking te demonstreren:</bldc-explanation-text>
+    <bldc-paragraph>Kies een voorbeeldconfiguratie om de werking te demonstreren:</bldc-paragraph>
     <div class="sample-cards">
-      <bldc-card *ngFor="let sample of sampleConfigs"
+      <div *ngFor="let sample of sampleConfigs"
            [class.selected]="selectedSample === sample"
            [class]="'sample-card type-' + sample.type"
            (click)="loadSample(sample)">
-        <bldc-icon>{{ sample.icon }}</bldc-icon>
+        <bldc-icon [attr.name]="sample.icon"></bldc-icon>
         <div class="sample-info">
-          <bldc-label>{{ sample.label }}</bldc-label>
+          <bldc-heading level="4">{{ sample.label }}</bldc-heading>
           <bldc-paragraph>{{ sample.description }}</bldc-paragraph>
         </div>
-      </bldc-card>
+      </div>
     </div>
   </div>
 
@@ -31,45 +31,59 @@
   <!-- Config summary -->
   <div *ngIf="config" class="config-summary">
     <bldc-heading level="3">Configuratie Overzicht</bldc-heading>
-    <bldc-description-list>
-      <bldc-label>Client ID</bldc-label>
-      <bldc-paragraph>{{ config.clientId || '(leeg)' }}</bldc-paragraph>
-      <bldc-label>Client Naam</bldc-label>
-      <bldc-paragraph>{{ config.clientName || '(leeg)' }}</bldc-paragraph>
-      <bldc-label>Object Store</bldc-label>
-      <bldc-paragraph>{{ config.metadataMapping?.objectStore || '(leeg)' }}</bldc-paragraph>
-      <bldc-label>Document Class</bldc-label>
-      <bldc-paragraph>{{ config.metadataMapping?.documentClass || '(leeg)' }}</bldc-paragraph>
-      <bldc-label>Aantal velden</bldc-label>
-      <bldc-paragraph>{{ config.metadataMapping?.fields?.length || 0 }}</bldc-paragraph>
-      <bldc-label>Contact Email</bldc-label>
-      <bldc-paragraph>{{ config.businessInfo?.contactEmail || '(leeg)' }}</bldc-paragraph>
-      <bldc-label>Support Groep</bldc-label>
-      <bldc-paragraph>{{ config.businessInfo?.supportGroup || '(leeg)' }}</bldc-paragraph>
-    </bldc-description-list>
+    <bldc-table>
+      <bldc-table-row>
+        <bldc-table-header>Eigenschap</bldc-table-header>
+        <bldc-table-header>Waarde</bldc-table-header>
+      </bldc-table-row>
+      <bldc-table-row>
+        <bldc-table-data>Client ID</bldc-table-data>
+        <bldc-table-data>{{ config.clientId || '(leeg)' }}</bldc-table-data>
+      </bldc-table-row>
+      <bldc-table-row>
+        <bldc-table-data>Client Naam</bldc-table-data>
+        <bldc-table-data>{{ config.clientName || '(leeg)' }}</bldc-table-data>
+      </bldc-table-row>
+      <bldc-table-row>
+        <bldc-table-data>Object Store</bldc-table-data>
+        <bldc-table-data>{{ config.metadataMapping?.objectStore || '(leeg)' }}</bldc-table-data>
+      </bldc-table-row>
+      <bldc-table-row>
+        <bldc-table-data>Document Class</bldc-table-data>
+        <bldc-table-data>{{ config.metadataMapping?.documentClass || '(leeg)' }}</bldc-table-data>
+      </bldc-table-row>
+      <bldc-table-row>
+        <bldc-table-data>Aantal velden</bldc-table-data>
+        <bldc-table-data>{{ config.metadataMapping?.fields?.length || 0 }}</bldc-table-data>
+      </bldc-table-row>
+      <bldc-table-row>
+        <bldc-table-data>Contact Email</bldc-table-data>
+        <bldc-table-data>{{ config.businessInfo?.contactEmail || '(leeg)' }}</bldc-table-data>
+      </bldc-table-row>
+      <bldc-table-row>
+        <bldc-table-data>Support Groep</bldc-table-data>
+        <bldc-table-data>{{ config.businessInfo?.supportGroup || '(leeg)' }}</bldc-table-data>
+      </bldc-table-row>
+    </bldc-table>
 
     <bldc-heading level="4">Veldmappings</bldc-heading>
-    <bldc-table>
-      <thead>
-        <tr>
-          <th>Bronveld (XPath)</th>
-          <th>Doelveld</th>
-          <th>Type</th>
-          <th>Verplicht</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let field of config.metadataMapping?.fields">
-          <td><bldc-label>{{ field.sourceField || '(leeg)' }}</bldc-label></td>
-          <td>{{ field.targetProperty || '(leeg)' }}</td>
-          <td><bldc-tag>{{ field.dataType }}</bldc-tag></td>
-          <td>
-            <bldc-tag [class]="field.required ? 'required' : 'optional'">
-              {{ field.required ? 'Ja' : 'Nee' }}
-            </bldc-tag>
-          </td>
-        </tr>
-      </tbody>
+    <bldc-table zebra="true">
+      <bldc-table-row>
+        <bldc-table-header>Bronveld (XPath)</bldc-table-header>
+        <bldc-table-header>Doelveld</bldc-table-header>
+        <bldc-table-header>Type</bldc-table-header>
+        <bldc-table-header>Verplicht</bldc-table-header>
+      </bldc-table-row>
+      <bldc-table-row *ngFor="let field of config.metadataMapping?.fields">
+        <bldc-table-data>{{ field.sourceField || '(leeg)' }}</bldc-table-data>
+        <bldc-table-data>{{ field.targetProperty || '(leeg)' }}</bldc-table-data>
+        <bldc-table-data><bldc-tag>{{ field.dataType }}</bldc-tag></bldc-table-data>
+        <bldc-table-data>
+          <bldc-tag [class]="field.required ? 'required' : 'optional'">
+            {{ field.required ? 'Ja' : 'Nee' }}
+          </bldc-tag>
+        </bldc-table-data>
+      </bldc-table-row>
     </bldc-table>
 
     <!-- Inline validation result -->
@@ -77,16 +91,16 @@
       <bldc-notification [type]="validation.valid ? 'success' : 'error'">
         {{ validation.valid ? 'Schema validatie geslaagd' : 'Schema validatie: fouten gevonden' }}
       </bldc-notification>
-      <bldc-validation *ngFor="let err of validation.errors" type="error">
+      <div *ngFor="let err of validation.errors" class="validation-item validation-error">
         <bldc-tag>{{ err.code }}</bldc-tag>
         <bldc-paragraph>{{ err.message }}</bldc-paragraph>
-        <bldc-help>{{ err.suggestion }}</bldc-help>
-      </bldc-validation>
-      <bldc-validation *ngFor="let warn of (validation.warnings || [])" type="warning">
+        <bldc-paragraph>{{ err.suggestion }}</bldc-paragraph>
+      </div>
+      <div *ngFor="let warn of (validation.warnings || [])" class="validation-item validation-warning">
         <bldc-tag>{{ warn.code }}</bldc-tag>
         <bldc-paragraph>{{ warn.message }}</bldc-paragraph>
-        <bldc-help>{{ warn.suggestion }}</bldc-help>
-      </bldc-validation>
+        <bldc-paragraph>{{ warn.suggestion }}</bldc-paragraph>
+      </div>
     </div>
   </div>
 </bldc-container>

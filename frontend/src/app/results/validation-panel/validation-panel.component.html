@@ -11,7 +11,8 @@
 
   <!-- Three layer cards -->
   <div class="layers-grid">
-    <bldc-card *ngFor="let result of validationResults; let i = index"
+    <div *ngFor="let result of validationResults; let i = index"
+         class="layer-card"
          [class.valid]="result.valid && (result.warnings || []).length === 0"
          [class.warning]="result.valid && (result.warnings || []).length > 0"
          [class.invalid]="!result.valid">
@@ -76,12 +77,12 @@
           Geen problemen gevonden in deze validatielaag.
         </bldc-notification>
       </div>
-    </bldc-card>
+    </div>
   </div>
 
   <!-- Validation flow diagram -->
-  <bldc-card class="validation-flow">
-    <bldc-label>Validatie Proces</bldc-label>
+  <div class="validation-flow">
+    <bldc-heading level="3">Validatie Proces</bldc-heading>
     <bldc-step-indicator>
       <div *ngFor="let result of validationResults; let i = index; let last = last" class="flow-step-group">
         <div class="flow-step" [class.flow-valid]="result.valid" [class.flow-invalid]="!result.valid">
@@ -95,13 +96,13 @@
         <bldc-label>{{ allValid ? 'KLAAR' : 'GEBLOKKEERD' }}</bldc-label>
       </div>
     </bldc-step-indicator>
-  </bldc-card>
+  </div>
 
   <!-- Navigate to result -->
-  <bldc-card class="next-action">
+  <div class="next-action">
     <bldc-button (click)="wizard.navigateTo('/result')">
       <bldc-icon name="arrow-right"></bldc-icon>
       Bekijk JSON Resultaat
     </bldc-button>
-  </bldc-card>
+  </div>
 </bldc-container>
