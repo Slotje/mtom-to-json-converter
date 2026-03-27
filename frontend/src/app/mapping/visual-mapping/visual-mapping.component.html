@@ -29,7 +29,6 @@
   <bldc-table zebra="true">
     <bldc-table-row>
       <bldc-table-header>MTOM Bronveld</bldc-table-header>
-      <bldc-table-header></bldc-table-header>
       <bldc-table-header>JSON Doelveld</bldc-table-header>
       <bldc-table-header>Waarde uit MTOM</bldc-table-header>
       <bldc-table-header>Type</bldc-table-header>
@@ -42,15 +41,12 @@
         <small>{{ conn.source.xpathExpression }}</small>
       </bldc-table-data>
       <bldc-table-data>
-        <bldc-icon name="arrow-right"></bldc-icon>
-      </bldc-table-data>
-      <bldc-table-data>
         <strong>{{ conn.target.targetProperty }}</strong>
         <bldc-tag *ngIf="conn.target.required">VERPLICHT</bldc-tag>
       </bldc-table-data>
       <bldc-table-data>{{ conn.source.sampleValue }}</bldc-table-data>
-      <bldc-table-data><bldc-tag>{{ conn.target.dataType }}</bldc-tag></bldc-table-data>
-      <bldc-table-data><bldc-tag class="status-ok">Gemapped</bldc-tag></bldc-table-data>
+      <bldc-table-data>{{ conn.target.dataType || '-' }}</bldc-table-data>
+      <bldc-table-data>Gemapped</bldc-table-data>
     </bldc-table-row>
 
     <!-- Unmapped required fields -->
@@ -60,15 +56,12 @@
         <small>{{ field.sourceField }}</small>
       </bldc-table-data>
       <bldc-table-data>
-        <bldc-icon name="close"></bldc-icon>
-      </bldc-table-data>
-      <bldc-table-data>
         <strong>{{ field.targetProperty }}</strong>
         <bldc-tag>VERPLICHT</bldc-tag>
       </bldc-table-data>
       <bldc-table-data>{{ field.defaultValue ? '(default: ' + field.defaultValue + ')' : '- geen waarde -' }}</bldc-table-data>
-      <bldc-table-data><bldc-tag>{{ field.dataType }}</bldc-tag></bldc-table-data>
-      <bldc-table-data><bldc-tag class="status-missing">Ontbreekt</bldc-tag></bldc-table-data>
+      <bldc-table-data>{{ field.dataType || '-' }}</bldc-table-data>
+      <bldc-table-data>Ontbreekt</bldc-table-data>
     </bldc-table-row>
 
     <!-- Unmapped optional fields -->
@@ -78,15 +71,12 @@
         <small>{{ field.sourceField }}</small>
       </bldc-table-data>
       <bldc-table-data>
-        <bldc-icon name="arrow-right"></bldc-icon>
-      </bldc-table-data>
-      <bldc-table-data>
         {{ field.targetProperty }}
         <bldc-tag>OPTIONEEL</bldc-tag>
       </bldc-table-data>
       <bldc-table-data>{{ field.defaultValue ? '(default: ' + field.defaultValue + ')' : '-' }}</bldc-table-data>
-      <bldc-table-data><bldc-tag>{{ field.dataType }}</bldc-tag></bldc-table-data>
-      <bldc-table-data><bldc-tag class="status-optional">Optioneel</bldc-tag></bldc-table-data>
+      <bldc-table-data>{{ field.dataType || '-' }}</bldc-table-data>
+      <bldc-table-data>Optioneel</bldc-table-data>
     </bldc-table-row>
   </bldc-table>
 
