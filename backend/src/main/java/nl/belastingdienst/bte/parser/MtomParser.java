@@ -40,16 +40,17 @@ public class MtomParser {
 
         // Auto-detect MIME multipart from content if content-type doesn't indicate it
         String effectiveContentType = contentType;
-        if (effectiveContentType == null || !effectiveContentType.contains("multipart/related")) {
-            String detectedContentType = detectMimeContentType(mtomContent);
-            if (detectedContentType != null) {
-                effectiveContentType = detectedContentType;
-            }
+        byte[] effectiveContent = mtomContent;
+
+        MimeDetectionResult mimeDetection = detectAndStripMimeHeaders(mtomContent);
+        if (mimeDetection != null) {
+            effectiveContentType = mimeDetection.contentType;
+            effectiveContent = mimeDetection.body;
         }
 
         if (effectiveContentType != null && effectiveContentType.contains("multipart/related")) {
             // MTOM/MIME multipart message
-            ByteArrayDataSource dataSource = new ByteArrayDataSource(mtomContent, effectiveContentType);
+            ByteArrayDataSource dataSource = new ByteArrayDataSource(effectiveContent, effectiveContentType);
             MimeMultipart multipart = new MimeMultipart(dataSource);
 
             for (int i = 0; i < multipart.getCount(); i++) {
@@ -79,7 +80,7 @@ public class MtomParser {
             }
         } else {
             // Plain XML (not MTOM wrapped)
-            String xmlContent = new String(mtomContent, StandardCharsets.UTF_8);
+            String xmlContent = new String(effectiveContent, StandardCharsets.UTF_8);
             result.setRawXml(xmlContent);
             result.setXmlDocument(parseXml(xmlContent));
         }
@@ -90,48 +91,72 @@ public class MtomParser {
         return result;
     }
 
-    /**
-     * Auto-detect MIME multipart format from content.
-     * Parses MIME headers to extract Content-Type with boundary.
-     */
-    private String detectMimeContentType(byte[] content) {
-        String header = new String(content, 0, Math.min(content.length, 1024), StandardCharsets.UTF_8);
+    private static class MimeDetectionResult {
+        String contentType;
+        byte[] body;
+        MimeDetectionResult(String contentType, byte[] body) {
+            this.contentType = contentType;
+            this.body = body;
+        }
+    }
 
-        // Check for MIME-Version header indicating a MIME message
-        if (!header.startsWith("MIME-Version:") && !header.contains("\nMIME-Version:")) {
-            // Also check if content starts directly with a MIME boundary
-            if (!header.startsWith("--")) {
-                return null;
-            }
+    /**
+     * Detect MIME format from content, extract Content-Type header,
+     * and strip envelope headers so MimeMultipart gets only the body.
+     */
+    private MimeDetectionResult detectAndStripMimeHeaders(byte[] content) {
+        String text = new String(content, StandardCharsets.UTF_8);
+
+        // Check if content starts with MIME headers
+        if (!text.startsWith("MIME-Version:") && !text.startsWith("Content-Type:") && !text.startsWith("--")) {
+            return null;
         }
 
-        // Extract Content-Type from MIME headers
+        // If starts with boundary directly, no headers to strip
+        if (text.startsWith("--")) {
+            String firstLine = text.substring(2, text.indexOf('\n')).trim();
+            String ct = "multipart/related; boundary=\"" + firstLine + "\"; type=\"application/xop+xml\"";
+            return new MimeDetectionResult(ct, content);
+        }
+
+        // Parse MIME envelope headers to find Content-Type and the body start
         String contentTypeLine = null;
-        String[] lines = header.split("\r?\n");
+        int bodyStart = -1;
+
+        // Find the blank line separating headers from body
+        int idx = 0;
+        String[] lines = text.split("\n");
+        int charPos = 0;
         for (int i = 0; i < lines.length; i++) {
-            if (lines[i].toLowerCase().startsWith("content-type:")) {
-                StringBuilder ct = new StringBuilder(lines[i].substring("content-type:".length()).trim());
-                // Handle continuation lines (starting with whitespace)
+            String line = lines[i].replace("\r", "");
+
+            if (line.isEmpty()) {
+                // Blank line = end of headers, body starts after
+                bodyStart = charPos + lines[i].length() + 1; // +1 for \n
+                break;
+            }
+
+            if (line.toLowerCase().startsWith("content-type:")) {
+                StringBuilder ct = new StringBuilder(line.substring("content-type:".length()).trim());
+                // Handle continuation lines
                 for (int j = i + 1; j < lines.length; j++) {
-                    if (lines[j].startsWith(" ") || lines[j].startsWith("\t")) {
-                        ct.append(" ").append(lines[j].trim());
+                    String next = lines[j].replace("\r", "");
+                    if (next.startsWith(" ") || next.startsWith("\t")) {
+                        ct.append(" ").append(next.trim());
                     } else {
                         break;
                     }
                 }
                 contentTypeLine = ct.toString();
-                break;
             }
+
+            charPos += lines[i].length() + 1; // +1 for \n
         }
 
-        if (contentTypeLine != null && contentTypeLine.contains("multipart/related")) {
-            return contentTypeLine;
-        }
-
-        // If starts with boundary marker, try to construct content type
-        if (header.startsWith("--")) {
-            String boundary = lines[0].substring(2).trim();
-            return "multipart/related; boundary=\"" + boundary + "\"; type=\"application/xop+xml\"";
+        if (contentTypeLine != null && contentTypeLine.contains("multipart/related") && bodyStart > 0) {
+            byte[] body = new byte[content.length - bodyStart];
+            System.arraycopy(content, bodyStart, body, 0, body.length);
+            return new MimeDetectionResult(contentTypeLine, body);
         }
 
         return null;
