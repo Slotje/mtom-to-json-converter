@@ -69,9 +69,13 @@ export class MtomAnalyzerComponent {
   private parsePayload(file: File) {
     const reader = new FileReader();
     reader.onload = () => {
-      const xmlText = reader.result as string;
+      let text = reader.result as string;
+
+      // Extract XML from MIME multipart if needed
+      const xmlContent = this.extractXmlFromMime(text);
+
       const parser = new DOMParser();
-      const doc = parser.parseFromString(xmlText, 'application/xml');
+      const doc = parser.parseFromString(xmlContent, 'application/xml');
 
       const parseError = doc.querySelector('parsererror');
       if (parseError) {
@@ -81,6 +85,35 @@ export class MtomAnalyzerComponent {
       this.payloadSections = this.extractSections(doc);
     };
     reader.readAsText(file);
+  }
+
+  private extractXmlFromMime(text: string): string {
+    // If it starts with XML declaration or SOAP envelope, return as-is
+    if (text.trimStart().startsWith('<?xml') || text.trimStart().startsWith('<')) {
+      return text;
+    }
+
+    // MIME multipart: find the XML part between boundaries
+    const xmlDeclIndex = text.indexOf('<?xml');
+    if (xmlDeclIndex >= 0) {
+      const xmlStart = xmlDeclIndex;
+      // Find the next MIME boundary after the XML
+      const boundaryMatch = text.match(/^--([^\r\n]+)/m);
+      if (boundaryMatch) {
+        const boundary = boundaryMatch[1].replace(/\s+$/, '');
+        const xmlEnd = text.indexOf('\n--' + boundary, xmlStart);
+        if (xmlEnd > xmlStart) {
+          return text.substring(xmlStart, xmlEnd).trim();
+        }
+      }
+      // Fallback: find the closing envelope tag
+      const envelopeEnd = text.indexOf('</soapenv:Envelope>');
+      if (envelopeEnd > 0) {
+        return text.substring(xmlStart, envelopeEnd + '</soapenv:Envelope>'.length);
+      }
+    }
+
+    return text;
   }
 
   private extractSections(doc: Document): PayloadSection[] {

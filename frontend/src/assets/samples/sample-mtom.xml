@@ -1,3 +1,11 @@
+MIME-Version: 1.0
+Content-Type: multipart/related; boundary="MIMEBoundary48b8d098c1fd4b80927309e72dd41ef6"; type="application/xop+xml"; start="<rootpart@belastingdienst.nl>"
+
+--MIMEBoundary48b8d098c1fd4b80927309e72dd41ef6
+Content-Type: application/xop+xml; charset=UTF-8; type="text/xml"
+Content-Transfer-Encoding: 8bit
+Content-ID: <rootpart@belastingdienst.nl>
+
 <?xml version="1.0" encoding="UTF-8"?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ecm="http://belastingdienst.nl/ecm" xmlns:mhs="http://belastingdienst.nl/mhs">
   <soapenv:Header/>
@@ -56,8 +64,30 @@
       </mhs:MHS_Header>
       <ecm:Content>
         <ecm:Bestandsnaam>message.xml</ecm:Bestandsnaam>
-        <ecm:BinaryContent>UEsDBBQACAgIAByISVwAAAAAAAAAAAAAAAALAAAAbWVzc2FnZS54bWzdmttSo0gYgO99ii7uQ2jOpAyzxKCTWY0pE3Vn7xjoREposg1kdF9pH2NfbLuBJEjIwViTTZyyRu3/0P+pPwhy</ecm:BinaryContent>
+        <ecm:BinaryContent>
+          <xop:Include href="cid:message-content@belastingdienst.nl" xmlns:xop="http://www.w3.org/2004/08/xop/include"/>
+        </ecm:BinaryContent>
       </ecm:Content>
     </ecm:ECM_Bericht>
   </soapenv:Body>
 </soapenv:Envelope>
+
+--MIMEBoundary48b8d098c1fd4b80927309e72dd41ef6
+Content-Type: application/octet-stream
+Content-Transfer-Encoding: base64
+Content-ID: <message-content@belastingdienst.nl>
+Content-Disposition: attachment; filename="message.xml"
+
+UEsDBBQACAgIAByISVwAAAAAAAAAAAAAAAALAAAAbWVzc2FnZS54bWzdmttSo0gYgO99ii7uQ2jO
+pAyzxKCTWY0pE3Vn7xjoREposg1kdF9pH2NfbLuBJEjIwViTTZyyRu3/0P+pPwhy/uUlDMAMkdiP
+cJuDvMABhN3I8/Gkzd2PLhs698U8Ow9R3Lr0Y9cJ/PgGxbEzQYBa4rhFJW0uJbiFXB6lJNo69Fs
+rcV5SrzUuLJgSM2nNIFeYzch2q5mTEDROsVeyc8Ptdm4UhhFmRuYZACAL/ityPESy3+dLt8Sf+Nh
+JaKoXUYoT8mp27PPmGlHZsoviJBNHOBf7KDb717ltrbBsXdSv59HtGg/W6M6+bFiDQUMo/slQlBV
+JyZ0tlcsuRj79P3HCqSkKotoQxIZgjKDSktSWKPCiDv/MrZd6ZetrB09S6tREOFdbLGTlalbqldl0
+Iu8VONNp4LtZaj2vzbHYs/5wC/cz0lqsWkvtubxQKUmoKiJ04lBJpdBaiPpp+IPG0rFZsrRAUFAl
+RVUE6bxZo1bnh0azbOVF5KGsW+tkKx4e8vPxpthqi9ZbFDIvc3kpy+b2NEuVwMnqpn0nrITCBG6Y
+CS4JQmbXBl37e98GV73+7XmzLHrrrVnrLtvf8widsGFCUjep3Y2KEErMa9u+ebSvgASBlW1VrNeZD
+KI4yQppGLqQKS9W6tQv/OTVHPb6o8a1dX9n9/rDzCZbXs1jQ8QsoXIf2WmuLK3o2/cjwia9112NL
+R/mnodw4o+LRuZDBvw4TpHXeW1zHZszBV2Cqq5AUc3Hod6oJpl1u2eRhY4fFNmalEY0fA+9YvTbh
+
+--MIMEBoundary48b8d098c1fd4b80927309e72dd41ef6--

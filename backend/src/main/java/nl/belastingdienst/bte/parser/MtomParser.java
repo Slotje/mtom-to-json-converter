@@ -38,9 +38,18 @@ public class MtomParser {
     public ParsedMtomMessage parse(byte[] mtomContent, String contentType) throws Exception {
         ParsedMtomMessage result = new ParsedMtomMessage();
 
-        if (contentType != null && contentType.contains("multipart/related")) {
+        // Auto-detect MIME multipart from content if content-type doesn't indicate it
+        String effectiveContentType = contentType;
+        if (effectiveContentType == null || !effectiveContentType.contains("multipart/related")) {
+            String detectedContentType = detectMimeContentType(mtomContent);
+            if (detectedContentType != null) {
+                effectiveContentType = detectedContentType;
+            }
+        }
+
+        if (effectiveContentType != null && effectiveContentType.contains("multipart/related")) {
             // MTOM/MIME multipart message
-            ByteArrayDataSource dataSource = new ByteArrayDataSource(mtomContent, contentType);
+            ByteArrayDataSource dataSource = new ByteArrayDataSource(mtomContent, effectiveContentType);
             MimeMultipart multipart = new MimeMultipart(dataSource);
 
             for (int i = 0; i < multipart.getCount(); i++) {
@@ -79,6 +88,53 @@ public class MtomParser {
         resolveXopIncludes(result);
 
         return result;
+    }
+
+    /**
+     * Auto-detect MIME multipart format from content.
+     * Parses MIME headers to extract Content-Type with boundary.
+     */
+    private String detectMimeContentType(byte[] content) {
+        String header = new String(content, 0, Math.min(content.length, 1024), StandardCharsets.UTF_8);
+
+        // Check for MIME-Version header indicating a MIME message
+        if (!header.startsWith("MIME-Version:") && !header.contains("\nMIME-Version:")) {
+            // Also check if content starts directly with a MIME boundary
+            if (!header.startsWith("--")) {
+                return null;
+            }
+        }
+
+        // Extract Content-Type from MIME headers
+        String contentTypeLine = null;
+        String[] lines = header.split("\r?\n");
+        for (int i = 0; i < lines.length; i++) {
+            if (lines[i].toLowerCase().startsWith("content-type:")) {
+                StringBuilder ct = new StringBuilder(lines[i].substring("content-type:".length()).trim());
+                // Handle continuation lines (starting with whitespace)
+                for (int j = i + 1; j < lines.length; j++) {
+                    if (lines[j].startsWith(" ") || lines[j].startsWith("\t")) {
+                        ct.append(" ").append(lines[j].trim());
+                    } else {
+                        break;
+                    }
+                }
+                contentTypeLine = ct.toString();
+                break;
+            }
+        }
+
+        if (contentTypeLine != null && contentTypeLine.contains("multipart/related")) {
+            return contentTypeLine;
+        }
+
+        // If starts with boundary marker, try to construct content type
+        if (header.startsWith("--")) {
+            String boundary = lines[0].substring(2).trim();
+            return "multipart/related; boundary=\"" + boundary + "\"; type=\"application/xop+xml\"";
+        }
+
+        return null;
     }
 
     public String evaluateXPath(Document document, String xpathExpression) {
