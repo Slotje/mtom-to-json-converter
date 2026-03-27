@@ -1,6 +1,7 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConversionResult } from '../../services/converter.service';
+import { WizardStateService } from '../../services/wizard-state.service';
 
 @Component({
   selector: 'app-result-display',
@@ -9,8 +10,14 @@ import { ConversionResult } from '../../services/converter.service';
   templateUrl: './result-display.component.html',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class ResultDisplayComponent {
-  @Input() result: ConversionResult | null = null;
+export class ResultDisplayComponent implements OnInit {
+  result: ConversionResult | null = null;
+
+  constructor(private wizard: WizardStateService) {}
+
+  ngOnInit() {
+    this.result = this.wizard.conversionResult;
+  }
 
   get jsonFormatted(): string {
     return this.result?.jsonOutput ? JSON.stringify(this.result.jsonOutput, null, 2) : '';

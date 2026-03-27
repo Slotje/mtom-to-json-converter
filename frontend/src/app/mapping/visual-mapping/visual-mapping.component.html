@@ -119,4 +119,15 @@
       </bldc-chip>
     </div>
   </bldc-card>
+
+  <!-- Convert action -->
+  <bldc-card class="convert-action">
+    <bldc-heading level="3">Conversie starten</bldc-heading>
+    <bldc-paragraph *ngIf="unmappedRequired.length === 0">Alle verplichte velden zijn gemapped. U kunt de conversie starten.</bldc-paragraph>
+    <bldc-paragraph *ngIf="unmappedRequired.length > 0">Let op: {{ unmappedRequired.length }} verplicht(e) veld(en) ontbre(e)k(en). Default waarden worden gebruikt indien beschikbaar.</bldc-paragraph>
+    <bldc-button (click)="convert()" [attr.disabled]="converting ? true : null">
+      <bldc-icon name="arrow-right"></bldc-icon>
+      {{ converting ? 'Bezig met converteren...' : 'Converteer naar JSON' }}
+    </bldc-button>
+  </bldc-card>
 </bldc-container>

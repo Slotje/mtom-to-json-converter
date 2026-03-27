@@ -1,6 +1,7 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ValidationResult } from '../../services/converter.service';
+import { WizardStateService } from '../../services/wizard-state.service';
 
 @Component({
   selector: 'app-validation-panel',
@@ -9,15 +10,18 @@ import { ValidationResult } from '../../services/converter.service';
   templateUrl: './validation-panel.component.html',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class ValidationPanelComponent implements OnChanges {
-  @Input() validationResults: ValidationResult[] = [];
+export class ValidationPanelComponent implements OnInit {
+  validationResults: ValidationResult[] = [];
 
   expandedLayers: { [key: string]: boolean } = {};
   allValid = true;
   totalErrors = 0;
   totalWarnings = 0;
 
-  ngOnChanges(changes: SimpleChanges) {
+  constructor(public wizard: WizardStateService) {}
+
+  ngOnInit() {
+    this.validationResults = this.wizard.conversionResult?.validationResults || [];
     this.totalErrors = this.validationResults.reduce((sum, r) => sum + r.errors.length, 0);
     this.totalWarnings = this.validationResults.reduce((sum, r) => sum + (r.warnings || []).length, 0);
     this.allValid = this.validationResults.every(r => r.valid);

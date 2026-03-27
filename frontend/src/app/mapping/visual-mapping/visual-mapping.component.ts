@@ -1,6 +1,8 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DetectedField, FieldMapping } from '../../services/converter.service';
+import { WizardStateService } from '../../services/wizard-state.service';
+import { ConverterService } from '../../services/converter.service';
 
 interface MappingConnection {
   source: DetectedField;
@@ -15,17 +17,42 @@ interface MappingConnection {
   templateUrl: './visual-mapping.component.html',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class VisualMappingComponent implements OnChanges {
-  @Input() detectedFields: DetectedField[] = [];
-  @Input() configFields: FieldMapping[] = [];
+export class VisualMappingComponent implements OnInit {
+  detectedFields: DetectedField[] = [];
+  configFields: FieldMapping[] = [];
 
   connections: MappingConnection[] = [];
   unmappedRequired: FieldMapping[] = [];
   unmappedOptional: FieldMapping[] = [];
   unmappedSourceFields: DetectedField[] = [];
+  converting = false;
 
-  ngOnChanges(changes: SimpleChanges) {
+  constructor(
+    public wizard: WizardStateService,
+    private converterService: ConverterService
+  ) {}
+
+  ngOnInit() {
+    this.detectedFields = this.wizard.detectedFields;
+    this.configFields = this.wizard.config?.metadataMapping?.fields || [];
     this.autoMap();
+  }
+
+  convert() {
+    if (!this.wizard.mtomFile) return;
+    this.converting = true;
+
+    this.converterService.convert(this.wizard.mtomFile).subscribe({
+      next: (result) => {
+        this.wizard.conversionResult = result;
+        this.converting = false;
+        this.wizard.navigateTo('/validation');
+      },
+      error: (err) => {
+        this.converting = false;
+        console.error('Conversion error:', err);
+      }
+    });
   }
 
   private autoMap() {
@@ -38,14 +65,11 @@ export class VisualMappingComponent implements OnChanges {
         const normalizedDetected = df.xpathExpression.toLowerCase();
         const fieldName = df.fieldName.toLowerCase();
 
-        // Match XPath directly
         if (normalizedSource === normalizedDetected) return true;
 
-        // Match by key attribute pattern: //value[@key='X'] matches fieldName X
         const keyMatch = normalizedSource.match(/@key='([^']+)'/);
         if (keyMatch && keyMatch[1].toLowerCase() === fieldName) return true;
 
-        // Match by element name: //Bestandsnaam matches fieldName Bestandsnaam
         const elemName = normalizedSource.replace('//', '').toLowerCase();
         if (elemName === fieldName) return true;
 

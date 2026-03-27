@@ -6,71 +6,31 @@
     <bldc-paragraph>Klantconfiguratie mapping tool voor Bulk Toevoer ECM</bldc-paragraph>
   </bldc-header>
 
-  <!-- Progress wizard -->
+  <!-- Progress wizard with Bold routing -->
   <bldc-step-indicator>
-    <div *ngFor="let step of steps; let i = index; let last = last"
+    <div *ngFor="let step of wizard.steps; let i = index; let last = last"
          class="wizard-step-wrapper">
-      <div class="wizard-step"
-           [class.active]="currentStep === i"
-           [class.completed]="currentStep > i"
-           [class.upcoming]="currentStep < i">
+      <bldc-link
+        [bldcRouterLink]="step.route"
+        [class.active]="wizard.currentStepIndex === i"
+        [class.completed]="wizard.currentStepIndex > i"
+        [class.upcoming]="wizard.currentStepIndex < i">
         <div class="step-circle">
-          <span *ngIf="currentStep <= i">{{ i + 1 }}</span>
-          <bldc-icon *ngIf="currentStep > i" name="check"></bldc-icon>
+          <span *ngIf="wizard.currentStepIndex <= i">{{ i + 1 }}</span>
+          <bldc-icon *ngIf="wizard.currentStepIndex > i" name="check"></bldc-icon>
         </div>
         <div class="step-info">
           <bldc-label>{{ step.label }}</bldc-label>
           <bldc-paragraph>{{ step.desc }}</bldc-paragraph>
         </div>
-      </div>
-      <bldc-divider *ngIf="!last" [class.done]="currentStep > i"></bldc-divider>
+      </bldc-link>
+      <bldc-divider *ngIf="!last" [class.done]="wizard.currentStepIndex > i"></bldc-divider>
     </div>
   </bldc-step-indicator>
 
-  <!-- Main content -->
+  <!-- Routed content -->
   <main class="app-main">
-    <!-- Step 1: YAML Config -->
-    <section class="step-section" [class.active-section]="currentStep === 0">
-      <app-config-upload (configLoaded)="onConfigLoaded($event)"></app-config-upload>
-    </section>
-
-    <!-- Step 2: MTOM Upload & Analysis -->
-    <section *ngIf="currentStep >= 1" class="step-section" [class.active-section]="currentStep === 1">
-      <app-mtom-analyzer
-        (fieldsDetected)="onFieldsDetected($event)"
-        (fileSelected)="onMtomFileSelected($event)">
-      </app-mtom-analyzer>
-    </section>
-
-    <!-- Step 3: Visual Mapping -->
-    <section *ngIf="currentStep >= 2" class="step-section" [class.active-section]="currentStep === 2">
-      <app-visual-mapping
-        [detectedFields]="detectedFields"
-        [configFields]="config?.metadataMapping?.fields || []">
-      </app-visual-mapping>
-
-      <div class="convert-action">
-        <bldc-button (click)="convert()" [disabled]="converting">
-          <bldc-icon *ngIf="!converting" name="play"></bldc-icon>
-          <span *ngIf="!converting">Start Conversie &amp; Validatie</span>
-          <bldc-spinner *ngIf="converting"></bldc-spinner>
-          <span *ngIf="converting">Bezig met converteren...</span>
-        </bldc-button>
-        <bldc-explanation-text>Voert de MTOM-naar-JSON conversie uit met drielaagse validatie</bldc-explanation-text>
-      </div>
-    </section>
-
-    <!-- Step 4: Validation -->
-    <section *ngIf="conversionResult" class="step-section" [class.active-section]="currentStep === 3">
-      <app-validation-panel
-        [validationResults]="conversionResult.validationResults || []">
-      </app-validation-panel>
-    </section>
-
-    <!-- Step 5: Result -->
-    <section *ngIf="conversionResult" class="step-section" [class.active-section]="currentStep === 4">
-      <app-result-display [result]="conversionResult"></app-result-display>
-    </section>
+    <router-outlet></router-outlet>
   </main>
 
   <!-- Footer -->

@@ -96,4 +96,12 @@
       </div>
     </bldc-step-indicator>
   </bldc-card>
+
+  <!-- Navigate to result -->
+  <bldc-card class="next-action">
+    <bldc-button (click)="wizard.navigateTo('/result')">
+      <bldc-icon name="arrow-right"></bldc-icon>
+      Bekijk JSON Resultaat
+    </bldc-button>
+  </bldc-card>
 </bldc-container>

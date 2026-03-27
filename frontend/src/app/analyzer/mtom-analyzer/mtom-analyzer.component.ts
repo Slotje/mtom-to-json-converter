@@ -1,7 +1,8 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, Output } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ConverterService, DetectedField } from '../../services/converter.service';
+import { WizardStateService } from '../../services/wizard-state.service';
 
 interface PayloadField {
   name: string;
@@ -24,9 +25,6 @@ interface PayloadSection {
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class MtomAnalyzerComponent {
-  @Output() fieldsDetected = new EventEmitter<DetectedField[]>();
-  @Output() fileSelected = new EventEmitter<File>();
-
   loading = false;
   fields: DetectedField[] = [];
   error: string | null = null;
@@ -36,7 +34,8 @@ export class MtomAnalyzerComponent {
 
   constructor(
     private converterService: ConverterService,
-    private http: HttpClient
+    private http: HttpClient,
+    private wizard: WizardStateService
   ) {}
 
   reset() {
@@ -56,7 +55,7 @@ export class MtomAnalyzerComponent {
       next: (blob) => {
         const file = new File([blob], 'sample-mtom.xml', { type: 'application/xml' });
         this.currentFile = file;
-        this.fileSelected.emit(file);
+        this.wizard.mtomFile = file;
         this.parsePayload(file);
         this.analyzeFile(file);
       },
@@ -87,14 +86,12 @@ export class MtomAnalyzerComponent {
   private extractSections(doc: Document): PayloadSection[] {
     const sections: PayloadSection[] = [];
 
-    // Find the main body content (ECM_Bericht or similar root)
     const body = doc.getElementsByTagNameNS('*', 'Body')[0]
       || doc.getElementsByTagNameNS('*', 'Envelope')[0]
       || doc.documentElement;
 
     if (!body) return sections;
 
-    // Walk the top-level sections inside the body
     const root = this.findFirstElement(body);
     if (!root) return sections;
 
@@ -110,7 +107,6 @@ export class MtomAnalyzerComponent {
   }
 
   private findFirstElement(el: Element): Element {
-    // Drill into wrapper elements (Envelope > Body > ECM_Bericht)
     for (let i = 0; i < el.children.length; i++) {
       const child = el.children[i];
       const localName = child.localName.toLowerCase();
@@ -138,11 +134,9 @@ export class MtomAnalyzerComponent {
     for (let i = 0; i < el.children.length; i++) {
       const child = el.children[i];
       if (child.children.length > 0) {
-        // Has children - recurse as subsection
         const sub = this.buildSection(child, path);
         if (sub) subsections.push(sub);
       } else {
-        // Leaf node - extract as field
         const textContent = child.textContent?.trim() || '';
         fields.push({
           name: child.localName,
@@ -152,7 +146,6 @@ export class MtomAnalyzerComponent {
       }
     }
 
-    // Only return if there's actual content
     if (fields.length === 0 && subsections.length === 0) return null;
 
     return {
@@ -195,7 +188,8 @@ export class MtomAnalyzerComponent {
         this.loading = false;
         if (response.success) {
           this.fields = response.fields;
-          this.fieldsDetected.emit(response.fields);
+          this.wizard.detectedFields = response.fields;
+          this.wizard.navigateTo('/mapping');
         } else {
           this.error = response.error || 'Analyse mislukt';
           this.suggestion = response.suggestion || null;

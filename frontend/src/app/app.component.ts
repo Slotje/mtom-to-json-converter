@@ -1,88 +1,26 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ViewChild } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ConfigUploadComponent } from './config/config-upload/config-upload.component';
-import { MtomAnalyzerComponent } from './analyzer/mtom-analyzer/mtom-analyzer.component';
-import { VisualMappingComponent } from './mapping/visual-mapping/visual-mapping.component';
-import { ValidationPanelComponent } from './results/validation-panel/validation-panel.component';
-import { ResultDisplayComponent } from './results/result-display/result-display.component';
-import { ConverterService, ClientConfig, DetectedField, ConversionResult } from './services/converter.service';
+import { Router, RouterOutlet } from '@angular/router';
+import { WizardStateService } from './services/wizard-state.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     CommonModule,
-    ConfigUploadComponent,
-    MtomAnalyzerComponent,
-    VisualMappingComponent,
-    ValidationPanelComponent,
-    ResultDisplayComponent
+    RouterOutlet
   ],
   templateUrl: './app.component.html',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppComponent {
-  @ViewChild(MtomAnalyzerComponent) mtomAnalyzer?: MtomAnalyzerComponent;
+  constructor(
+    private router: Router,
+    public wizard: WizardStateService
+  ) {}
 
-  steps = [
-    { label: 'YAML Config', desc: 'Upload mapping' },
-    { label: 'MTOM Analyse', desc: 'Bronbestand' },
-    { label: 'Mapping', desc: 'MTOM naar JSON' },
-    { label: 'Validatie', desc: 'Drielaags' },
-    { label: 'Resultaat', desc: 'JSON output' }
-  ];
-  currentStep = 0;
-
-  config: ClientConfig | null = null;
-  detectedFields: DetectedField[] = [];
-  mtomFile: File | null = null;
-  conversionResult: ConversionResult | null = null;
-  converting = false;
-
-  constructor(private converterService: ConverterService) {}
-
-  onConfigLoaded(config: ClientConfig) {
-    // Reset all downstream state when a different config is selected
-    this.detectedFields = [];
-    this.mtomFile = null;
-    this.conversionResult = null;
-    this.converting = false;
-    this.mtomAnalyzer?.reset();
-
-    this.config = config;
-    this.currentStep = 1;
-  }
-
-  onFieldsDetected(fields: DetectedField[]) {
-    this.detectedFields = fields;
-    this.currentStep = 2;
-  }
-
-  onMtomFileSelected(file: File) {
-    this.mtomFile = file;
-  }
-
-  convert() {
-    if (!this.mtomFile) return;
-    this.converting = true;
-    this.conversionResult = null;
-
-    this.converterService.convert(this.mtomFile).subscribe({
-      next: (result) => {
-        this.conversionResult = result;
-        this.converting = false;
-        this.currentStep = 3;
-        // Auto-advance to result after a moment
-        setTimeout(() => {
-          if (this.conversionResult) {
-            this.currentStep = 4;
-          }
-        }, 1500);
-      },
-      error: (err) => {
-        this.converting = false;
-        console.error('Conversion error:', err);
-      }
-    });
+  @HostListener('bldcRouter', ['$event'])
+  handleRoute(event: any): void {
+    this.router.navigateByUrl(event.detail.routerLink);
   }
 }

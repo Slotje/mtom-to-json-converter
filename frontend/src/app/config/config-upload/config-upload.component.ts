@@ -1,7 +1,8 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, Output } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { ConverterService, ConfigUploadResponse, ClientConfig, ValidationResult } from '../../services/converter.service';
+import { ConverterService, ClientConfig, ValidationResult } from '../../services/converter.service';
+import { WizardStateService } from '../../services/wizard-state.service';
 
 interface SampleConfig {
   label: string;
@@ -19,8 +20,6 @@ interface SampleConfig {
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ConfigUploadComponent {
-  @Output() configLoaded = new EventEmitter<ClientConfig>();
-
   sampleConfigs: SampleConfig[] = [
     {
       label: 'Correcte Mapping',
@@ -61,7 +60,8 @@ export class ConfigUploadComponent {
 
   constructor(
     private converterService: ConverterService,
-    private http: HttpClient
+    private http: HttpClient,
+    private wizard: WizardStateService
   ) {}
 
   loadSample(sample: SampleConfig) {
@@ -70,6 +70,7 @@ export class ConfigUploadComponent {
     this.error = null;
     this.config = null;
     this.validation = null;
+    this.wizard.resetFromStep(0);
 
     this.http.get(sample.file, { responseType: 'text' }).subscribe({
       next: (content) => {
@@ -88,8 +89,8 @@ export class ConfigUploadComponent {
         this.loading = false;
         this.config = response.config;
         this.validation = response.validation;
-        // Always emit config (even with validation errors) so we can show the full flow
-        this.configLoaded.emit(response.config);
+        this.wizard.config = response.config;
+        this.wizard.navigateTo('/analyze');
       },
       error: (err) => {
         this.loading = false;
