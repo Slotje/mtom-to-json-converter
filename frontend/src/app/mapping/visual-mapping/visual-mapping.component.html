@@ -42,7 +42,7 @@
       </bldc-table-data>
       <bldc-table-data>
         <strong>{{ conn.target.targetProperty }}</strong>
-        <bldc-tag *ngIf="conn.target.required">VERPLICHT</bldc-tag>
+        <span *ngIf="conn.target.required"> (verplicht)</span>
       </bldc-table-data>
       <bldc-table-data>{{ conn.source.sampleValue }}</bldc-table-data>
       <bldc-table-data>{{ conn.target.dataType || '-' }}</bldc-table-data>
@@ -56,8 +56,7 @@
         <small>{{ field.sourceField }}</small>
       </bldc-table-data>
       <bldc-table-data>
-        <strong>{{ field.targetProperty }}</strong>
-        <bldc-tag>VERPLICHT</bldc-tag>
+        <strong>{{ field.targetProperty }}</strong> (verplicht)
       </bldc-table-data>
       <bldc-table-data>{{ field.defaultValue ? '(default: ' + field.defaultValue + ')' : '- geen waarde -' }}</bldc-table-data>
       <bldc-table-data>{{ field.dataType || '-' }}</bldc-table-data>
@@ -71,8 +70,7 @@
         <small>{{ field.sourceField }}</small>
       </bldc-table-data>
       <bldc-table-data>
-        {{ field.targetProperty }}
-        <bldc-tag>OPTIONEEL</bldc-tag>
+        {{ field.targetProperty }} (optioneel)
       </bldc-table-data>
       <bldc-table-data>{{ field.defaultValue ? '(default: ' + field.defaultValue + ')' : '-' }}</bldc-table-data>
       <bldc-table-data>{{ field.dataType || '-' }}</bldc-table-data>

@@ -73,12 +73,8 @@
       <bldc-table-row *ngFor="let field of config.metadataMapping?.fields">
         <bldc-table-data>{{ field.sourceField || '(leeg)' }}</bldc-table-data>
         <bldc-table-data>{{ field.targetProperty || '(leeg)' }}</bldc-table-data>
-        <bldc-table-data><bldc-tag>{{ field.dataType }}</bldc-tag></bldc-table-data>
-        <bldc-table-data>
-          <bldc-tag [class]="field.required ? 'required' : 'optional'">
-            {{ field.required ? 'Ja' : 'Nee' }}
-          </bldc-tag>
-        </bldc-table-data>
+        <bldc-table-data>{{ field.dataType || '-' }}</bldc-table-data>
+        <bldc-table-data>{{ field.required ? 'Ja' : 'Nee' }}</bldc-table-data>
       </bldc-table-row>
     </bldc-table>
 
