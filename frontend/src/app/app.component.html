@@ -6,26 +6,47 @@
     <bldc-paragraph>Klantconfiguratie mapping tool voor Bulk Toevoer ECM</bldc-paragraph>
   </bldc-header>
 
-  <!-- Progress wizard with Bold routing -->
-  <bldc-step-indicator>
-    <div *ngFor="let step of wizard.steps; let i = index; let last = last"
-         class="wizard-step-wrapper">
-      <bldc-link
-        [bldcRouterLink]="step.route"
-        [class.active]="wizard.currentStepIndex === i"
-        [class.completed]="wizard.currentStepIndex > i"
-        [class.upcoming]="wizard.currentStepIndex < i">
-        <div class="step-circle">
-          <span *ngIf="wizard.currentStepIndex <= i">{{ i + 1 }}</span>
-          <bldc-icon *ngIf="wizard.currentStepIndex > i" name="check"></bldc-icon>
-        </div>
-        <div class="step-info">
-          <bldc-label>{{ step.label }}</bldc-label>
-          <bldc-paragraph>{{ step.desc }}</bldc-paragraph>
-        </div>
-      </bldc-link>
-      <bldc-divider *ngIf="!last" [class.done]="wizard.currentStepIndex > i"></bldc-divider>
-    </div>
+  <!-- Progress wizard with Bold step-indicator -->
+  <bldc-step-indicator type="horizontal">
+    <bldc-step
+      [attr.step-text]="wizard.currentStepIndex > 0 ? null : '1'"
+      [attr.icon]="wizard.currentStepIndex > 0 ? 'check' : null"
+      [attr.circle-aria-label]="'Stap 1'"
+      [attr.bldcRouterLink]="'/config'">
+      <span slot="label">YAML Config</span>
+      <span slot="sublabel">Upload mapping</span>
+    </bldc-step>
+    <bldc-step
+      [attr.step-text]="wizard.currentStepIndex > 1 ? null : '2'"
+      [attr.icon]="wizard.currentStepIndex > 1 ? 'check' : null"
+      [attr.circle-aria-label]="'Stap 2'"
+      [attr.bldcRouterLink]="'/analyze'">
+      <span slot="label">MTOM Analyse</span>
+      <span slot="sublabel">Bronbestand</span>
+    </bldc-step>
+    <bldc-step
+      [attr.step-text]="wizard.currentStepIndex > 2 ? null : '3'"
+      [attr.icon]="wizard.currentStepIndex > 2 ? 'check' : null"
+      [attr.circle-aria-label]="'Stap 3'"
+      [attr.bldcRouterLink]="'/mapping'">
+      <span slot="label">Mapping</span>
+      <span slot="sublabel">MTOM naar JSON</span>
+    </bldc-step>
+    <bldc-step
+      [attr.step-text]="wizard.currentStepIndex > 3 ? null : '4'"
+      [attr.icon]="wizard.currentStepIndex > 3 ? 'check' : null"
+      [attr.circle-aria-label]="'Stap 4'"
+      [attr.bldcRouterLink]="'/validation'">
+      <span slot="label">Validatie</span>
+      <span slot="sublabel">Drielaags</span>
+    </bldc-step>
+    <bldc-step
+      step-text="5"
+      [attr.circle-aria-label]="'Stap 5'"
+      [attr.bldcRouterLink]="'/result'">
+      <span slot="label">Resultaat</span>
+      <span slot="sublabel">JSON output</span>
+    </bldc-step>
   </bldc-step-indicator>
 
   <!-- Routed content -->
