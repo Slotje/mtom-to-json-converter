@@ -25,6 +25,7 @@ export class VisualMappingComponent implements OnInit {
   unmappedRequired: FieldMapping[] = [];
   unmappedOptional: FieldMapping[] = [];
   unmappedSourceFields: DetectedField[] = [];
+  extraFieldsExpanded = false;
   converting = false;
 
   constructor(
