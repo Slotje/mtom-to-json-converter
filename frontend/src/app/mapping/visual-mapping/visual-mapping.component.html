@@ -36,14 +36,8 @@
     </bldc-table-row>
     <!-- Matched connections -->
     <bldc-table-row *ngFor="let conn of connections">
-      <bldc-table-data>
-        <strong>{{ conn.source.fieldName }}</strong><br/>
-        <small>{{ conn.source.xpathExpression }}</small>
-      </bldc-table-data>
-      <bldc-table-data>
-        <strong>{{ conn.target.targetProperty }}</strong>
-        <span *ngIf="conn.target.required"> (verplicht)</span>
-      </bldc-table-data>
+      <bldc-table-data>{{ conn.source.fieldName }} ({{ conn.source.xpathExpression }})</bldc-table-data>
+      <bldc-table-data>{{ conn.target.targetProperty }}{{ conn.target.required ? ' (verplicht)' : '' }}</bldc-table-data>
       <bldc-table-data>{{ conn.source.sampleValue }}</bldc-table-data>
       <bldc-table-data>{{ conn.target.dataType || '-' }}</bldc-table-data>
       <bldc-table-data>Gemapped</bldc-table-data>
@@ -51,13 +45,8 @@
 
     <!-- Unmapped required fields -->
     <bldc-table-row *ngFor="let field of unmappedRequired">
-      <bldc-table-data>
-        <em>Niet gevonden</em><br/>
-        <small>{{ field.sourceField }}</small>
-      </bldc-table-data>
-      <bldc-table-data>
-        <strong>{{ field.targetProperty }}</strong> (verplicht)
-      </bldc-table-data>
+      <bldc-table-data>Niet gevonden ({{ field.sourceField }})</bldc-table-data>
+      <bldc-table-data>{{ field.targetProperty }} (verplicht)</bldc-table-data>
       <bldc-table-data>{{ field.defaultValue ? '(default: ' + field.defaultValue + ')' : '- geen waarde -' }}</bldc-table-data>
       <bldc-table-data>{{ field.dataType || '-' }}</bldc-table-data>
       <bldc-table-data>Ontbreekt</bldc-table-data>
@@ -65,13 +54,8 @@
 
     <!-- Unmapped optional fields -->
     <bldc-table-row *ngFor="let field of unmappedOptional">
-      <bldc-table-data>
-        <em>Niet gevonden</em><br/>
-        <small>{{ field.sourceField }}</small>
-      </bldc-table-data>
-      <bldc-table-data>
-        {{ field.targetProperty }} (optioneel)
-      </bldc-table-data>
+      <bldc-table-data>Niet gevonden ({{ field.sourceField }})</bldc-table-data>
+      <bldc-table-data>{{ field.targetProperty }} (optioneel)</bldc-table-data>
       <bldc-table-data>{{ field.defaultValue ? '(default: ' + field.defaultValue + ')' : '-' }}</bldc-table-data>
       <bldc-table-data>{{ field.dataType || '-' }}</bldc-table-data>
       <bldc-table-data>Optioneel</bldc-table-data>
