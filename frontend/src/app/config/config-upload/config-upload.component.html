@@ -6,16 +6,13 @@
     <bldc-heading level="3">Demo Configuraties</bldc-heading>
     <bldc-paragraph>Kies een voorbeeldconfiguratie om de werking te demonstreren:</bldc-paragraph>
     <div class="sample-cards">
-      <div *ngFor="let sample of sampleConfigs"
-           [class.selected]="selectedSample === sample"
-           [class]="'sample-card type-' + sample.type"
-           (click)="loadSample(sample)">
-        <bldc-icon [attr.name]="sample.icon"></bldc-icon>
-        <div class="sample-info">
-          <bldc-heading level="4">{{ sample.label }}</bldc-heading>
-          <bldc-paragraph>{{ sample.description }}</bldc-paragraph>
-        </div>
-      </div>
+      <bldc-card *ngFor="let sample of sampleConfigs"
+           [attr.heading]="sample.label"
+           href="javascript:void(0)"
+           [attr.icon]="sample.type === 'success' ? 'check' : 'warning'"
+           (bldcClick)="loadSample(sample); $event.preventDefault()">
+        {{ sample.description }}
+      </bldc-card>
     </div>
   </div>
 
