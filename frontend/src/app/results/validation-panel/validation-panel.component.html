@@ -3,9 +3,8 @@
   <bldc-paragraph>Elke configuratie wordt gevalideerd op drie niveaus voordat deze in productie mag komen.</bldc-paragraph>
 
   <!-- Overall status -->
-  <bldc-notification [type]="allValid ? 'success' : 'error'">
-    <bldc-icon [name]="allValid ? 'check' : 'warning'"></bldc-icon>
-    <strong>{{ allValid ? 'Alle validatielagen geslaagd' : 'Validatie niet volledig geslaagd' }}</strong>
+  <bldc-notification [attr.type]="allValid ? 'success' : 'error'"
+    [attr.elem-title]="allValid ? 'Alle validatielagen geslaagd' : 'Validatie niet volledig geslaagd'">
     <bldc-paragraph>{{ totalErrors }} fout(en), {{ totalWarnings }} waarschuwing(en) over {{ validationResults.length }} lagen</bldc-paragraph>
   </bldc-notification>
 
@@ -46,35 +45,22 @@
 
       <div class="layer-details" *ngIf="expandedLayers[result.layer]">
         <!-- Errors -->
-        <bldc-notification *ngFor="let error of result.errors" type="error">
-          <div class="detail-top">
-            <bldc-tag>{{ error.code }}</bldc-tag>
-            <bldc-tag class="severity-error">FOUT</bldc-tag>
-          </div>
-          <bldc-paragraph>{{ error.message }}</bldc-paragraph>
-          <bldc-help>
-            <bldc-icon name="lightbulb"></bldc-icon>
-            {{ error.suggestion }}
-          </bldc-help>
-        </bldc-notification>
+        <div *ngFor="let error of result.errors" class="validation-item">
+          <bldc-notification type="error" [attr.elem-title]="error.code + ': ' + error.message">
+            <bldc-paragraph>{{ error.suggestion }}</bldc-paragraph>
+          </bldc-notification>
+        </div>
 
         <!-- Warnings -->
-        <bldc-notification *ngFor="let warning of (result.warnings || [])" type="warning">
-          <div class="detail-top">
-            <bldc-tag>{{ warning.code }}</bldc-tag>
-            <bldc-tag class="severity-warning">WAARSCHUWING</bldc-tag>
-          </div>
-          <bldc-paragraph>{{ warning.message }}</bldc-paragraph>
-          <bldc-help>
-            <bldc-icon name="lightbulb"></bldc-icon>
-            {{ warning.suggestion }}
-          </bldc-help>
-        </bldc-notification>
+        <div *ngFor="let warning of (result.warnings || [])" class="validation-item">
+          <bldc-notification type="warning" [attr.elem-title]="warning.code + ': ' + warning.message">
+            <bldc-paragraph>{{ warning.suggestion }}</bldc-paragraph>
+          </bldc-notification>
+        </div>
 
         <!-- No issues -->
-        <bldc-notification *ngIf="result.errors.length === 0 && (result.warnings || []).length === 0" type="success">
-          <bldc-icon name="check"></bldc-icon>
-          Geen problemen gevonden in deze validatielaag.
+        <bldc-notification *ngIf="result.errors.length === 0 && (result.warnings || []).length === 0"
+          type="success" elem-title="Geen problemen gevonden in deze validatielaag.">
         </bldc-notification>
       </div>
     </div>
@@ -100,9 +86,8 @@
 
   <!-- Navigate to result -->
   <div class="next-action">
-    <bldc-button (click)="wizard.navigateTo('/result')">
-      <bldc-icon name="arrow-right"></bldc-icon>
-      Bekijk JSON Resultaat
+    <bldc-button type="primary" elem-title="Bekijk JSON Resultaat" icon="volgende" icon-pos="right"
+      (bldcClick)="wizard.navigateTo('/result')">
     </bldc-button>
   </div>
 </bldc-container>

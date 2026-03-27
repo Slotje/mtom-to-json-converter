@@ -20,12 +20,11 @@
   </div>
 
   <!-- Loading -->
-  <bldc-spinner *ngIf="loading"></bldc-spinner>
+  <bldc-spinner *ngIf="loading" size="lg">Configuratie wordt geladen...</bldc-spinner>
 
   <!-- Error -->
-  <bldc-notification *ngIf="error" type="error">
-    <strong>Fout:</strong> {{ error }}
-    <bldc-paragraph *ngIf="suggestion">Suggestie: {{ suggestion }}</bldc-paragraph>
+  <bldc-notification *ngIf="error" type="error" [attr.elem-title]="error">
+    <bldc-paragraph *ngIf="suggestion">{{ suggestion }}</bldc-paragraph>
   </bldc-notification>
 
   <!-- Config summary -->
@@ -88,8 +87,8 @@
 
     <!-- Inline validation result -->
     <div *ngIf="validation" class="validation-inline">
-      <bldc-notification [type]="validation.valid ? 'success' : 'error'">
-        {{ validation.valid ? 'Schema validatie geslaagd' : 'Schema validatie: fouten gevonden' }}
+      <bldc-notification [attr.type]="validation.valid ? 'success' : 'error'"
+        [attr.elem-title]="validation.valid ? 'Schema validatie geslaagd' : 'Schema validatie: fouten gevonden'">
       </bldc-notification>
       <div *ngFor="let err of validation.errors" class="validation-item validation-error">
         <bldc-tag>{{ err.code }}</bldc-tag>

@@ -1,19 +1,19 @@
 <bldc-container *ngIf="result">
   <bldc-heading level="2">Conversie Resultaat: MTOM &#10142; JSON</bldc-heading>
 
-  <bldc-notification [type]="result.success ? 'success' : 'error'">
-    <bldc-icon [name]="result.success ? 'check' : 'close'"></bldc-icon>
-    <strong>{{ result.success ? 'MTOM bericht succesvol geconverteerd naar JSON' : 'Conversie voltooid met validatiefouten' }}</strong>
+  <bldc-notification [attr.type]="result.success ? 'success' : 'error'"
+    [attr.elem-title]="result.success ? 'MTOM bericht succesvol geconverteerd naar JSON' : 'Conversie voltooid met validatiefouten'">
     <bldc-paragraph>{{ extractedFieldEntries.length }} velden geextraheerd uit het MTOM bericht</bldc-paragraph>
-    <bldc-button-bar>
-      <bldc-button (click)="downloadJson()">
-        <bldc-icon name="download"></bldc-icon> Download JSON
-      </bldc-button>
-      <bldc-button (click)="copyJson()">
-        <bldc-icon name="copy"></bldc-icon> Kopieer
-      </bldc-button>
-    </bldc-button-bar>
   </bldc-notification>
+
+  <div class="action-buttons">
+    <bldc-button type="primary" elem-title="Download JSON" icon="download" icon-pos="left"
+      (bldcClick)="downloadJson()">
+    </bldc-button>
+    <bldc-button type="secondary" elem-title="Kopieer" icon="copy" icon-pos="left"
+      (bldcClick)="copyJson()">
+    </bldc-button>
+  </div>
 
   <!-- Side by side: MTOM fields -> JSON output -->
   <div class="comparison">

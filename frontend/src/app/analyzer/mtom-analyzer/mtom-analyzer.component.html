@@ -2,18 +2,16 @@
   <bldc-heading level="2">Stap 2: MTOM Bronbestand Uploaden</bldc-heading>
 
   <div class="sample-mtom">
-    <bldc-button (click)="loadSampleMtom()" [disabled]="loading">
-      <bldc-icon name="document"></bldc-icon>
-      Gebruik voorbeeld MTOM bericht
+    <bldc-button type="primary" elem-title="Gebruik voorbeeld MTOM bericht" icon="document" icon-pos="left"
+      (bldcClick)="loadSampleMtom()" [attr.disabled]="loading ? true : null">
     </bldc-button>
     <bldc-paragraph>Laadt een voorbeeldbericht met alle standaard Belastingdienst velden</bldc-paragraph>
   </div>
 
-  <bldc-spinner *ngIf="loading"></bldc-spinner>
+  <bldc-spinner *ngIf="loading" size="lg">MTOM bericht wordt geanalyseerd...</bldc-spinner>
 
-  <bldc-notification *ngIf="error" type="error">
-    <strong>Fout:</strong> {{ error }}
-    <bldc-paragraph *ngIf="suggestion">Suggestie: {{ suggestion }}</bldc-paragraph>
+  <bldc-notification *ngIf="error" type="error" [attr.elem-title]="error">
+    <bldc-paragraph *ngIf="suggestion">{{ suggestion }}</bldc-paragraph>
   </bldc-notification>
 
   <!-- Parsed payload structure -->
