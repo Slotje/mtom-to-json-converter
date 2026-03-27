@@ -93,7 +93,7 @@
         <bldc-table-data><strong>{{ field.fieldName }}</strong></bldc-table-data>
         <bldc-table-data>{{ field.xpathExpression }}</bldc-table-data>
         <bldc-table-data>{{ field.sampleValue }}</bldc-table-data>
-        <bldc-table-data>{{ field.detectedType || '-' }}</bldc-table-data>
+        <bldc-table-data><bldc-tag [attr.value]="field.detectedType || '-'" size="xs"></bldc-tag></bldc-table-data>
       </bldc-table-row>
     </bldc-table>
   </div>

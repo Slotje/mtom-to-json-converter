@@ -73,8 +73,8 @@
       <bldc-table-row *ngFor="let field of config.metadataMapping?.fields">
         <bldc-table-data>{{ field.sourceField || '(leeg)' }}</bldc-table-data>
         <bldc-table-data>{{ field.targetProperty || '(leeg)' }}</bldc-table-data>
-        <bldc-table-data>{{ field.dataType || '-' }}</bldc-table-data>
-        <bldc-table-data>{{ field.required ? 'Ja' : 'Nee' }}</bldc-table-data>
+        <bldc-table-data><bldc-tag [attr.value]="field.dataType || '-'" size="xs"></bldc-tag></bldc-table-data>
+        <bldc-table-data><bldc-tag [attr.value]="field.required ? 'Ja' : 'Nee'" type="status" [attr.color]="field.required ? 'positive' : 'default'" size="xs"></bldc-tag></bldc-table-data>
       </bldc-table-row>
     </bldc-table>
 
@@ -84,12 +84,12 @@
         [attr.elem-title]="validation.valid ? 'Schema validatie geslaagd' : 'Schema validatie: fouten gevonden'">
       </bldc-notification>
       <div *ngFor="let err of validation.errors" class="validation-item validation-error">
-        <span class="error-code">{{ err.code }}</span>
+        <bldc-tag [attr.value]="err.code" type="status" color="negative" size="xs"></bldc-tag>
         <bldc-paragraph>{{ err.message }}</bldc-paragraph>
         <bldc-paragraph>{{ err.suggestion }}</bldc-paragraph>
       </div>
       <div *ngFor="let warn of (validation.warnings || [])" class="validation-item validation-warning">
-        <span class="error-code">{{ warn.code }}</span>
+        <bldc-tag [attr.value]="warn.code" type="status" size="xs"></bldc-tag>
         <bldc-paragraph>{{ warn.message }}</bldc-paragraph>
         <bldc-paragraph>{{ warn.suggestion }}</bldc-paragraph>
       </div>

@@ -39,8 +39,8 @@
       <bldc-table-data>{{ conn.source.fieldName }} ({{ conn.source.xpathExpression }})</bldc-table-data>
       <bldc-table-data>{{ conn.target.targetProperty }}{{ conn.target.required ? ' (verplicht)' : '' }}</bldc-table-data>
       <bldc-table-data>{{ conn.source.sampleValue }}</bldc-table-data>
-      <bldc-table-data>{{ conn.target.dataType || '-' }}</bldc-table-data>
-      <bldc-table-data>Gemapped</bldc-table-data>
+      <bldc-table-data><bldc-tag [attr.value]="conn.target.dataType || '-'" size="xs"></bldc-tag></bldc-table-data>
+      <bldc-table-data><bldc-tag value="Gemapped" type="status" color="positive" size="xs"></bldc-tag></bldc-table-data>
     </bldc-table-row>
 
     <!-- Unmapped required fields -->
@@ -48,8 +48,8 @@
       <bldc-table-data>Niet gevonden ({{ field.sourceField }})</bldc-table-data>
       <bldc-table-data>{{ field.targetProperty }} (verplicht)</bldc-table-data>
       <bldc-table-data>{{ field.defaultValue ? '(default: ' + field.defaultValue + ')' : '- geen waarde -' }}</bldc-table-data>
-      <bldc-table-data>{{ field.dataType || '-' }}</bldc-table-data>
-      <bldc-table-data>Ontbreekt</bldc-table-data>
+      <bldc-table-data><bldc-tag [attr.value]="field.dataType || '-'" size="xs"></bldc-tag></bldc-table-data>
+      <bldc-table-data><bldc-tag value="Ontbreekt" type="status" color="negative" size="xs"></bldc-tag></bldc-table-data>
     </bldc-table-row>
 
     <!-- Unmapped optional fields -->
@@ -57,8 +57,8 @@
       <bldc-table-data>Niet gevonden ({{ field.sourceField }})</bldc-table-data>
       <bldc-table-data>{{ field.targetProperty }} (optioneel)</bldc-table-data>
       <bldc-table-data>{{ field.defaultValue ? '(default: ' + field.defaultValue + ')' : '-' }}</bldc-table-data>
-      <bldc-table-data>{{ field.dataType || '-' }}</bldc-table-data>
-      <bldc-table-data>Optioneel</bldc-table-data>
+      <bldc-table-data><bldc-tag [attr.value]="field.dataType || '-'" size="xs"></bldc-tag></bldc-table-data>
+      <bldc-table-data><bldc-tag value="Optioneel" type="status" size="xs"></bldc-tag></bldc-table-data>
     </bldc-table-row>
   </bldc-table>
 

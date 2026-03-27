@@ -26,9 +26,9 @@
              [class.not-found]="entry[1] === '(niet gevonden)'"
              [class.has-default]="entry[1].startsWith('(default)')">
           <span class="field-name">{{ entry[0] }}</span>
-          <span *ngIf="entry[1] === '(niet gevonden)'" class="missing-value">Niet gevonden</span>
-          <span *ngIf="entry[1].startsWith('(default)')" class="default-value">{{ entry[1] }}</span>
-          <span *ngIf="entry[1] !== '(niet gevonden)' && !entry[1].startsWith('(default)')" class="found-value">{{ entry[1] }}</span>
+          <bldc-tag *ngIf="entry[1] === '(niet gevonden)'" value="Niet gevonden" type="status" color="negative" size="xs"></bldc-tag>
+          <bldc-tag *ngIf="entry[1].startsWith('(default)')" [attr.value]="entry[1]" type="status" size="xs"></bldc-tag>
+          <bldc-tag *ngIf="entry[1] !== '(niet gevonden)' && !entry[1].startsWith('(default)')" [attr.value]="entry[1]" type="status" color="positive" size="xs"></bldc-tag>
         </div>
       </div>
     </div>
