@@ -84,12 +84,12 @@
         [attr.elem-title]="validation.valid ? 'Schema validatie geslaagd' : 'Schema validatie: fouten gevonden'">
       </bldc-notification>
       <div *ngFor="let err of validation.errors" class="validation-item validation-error">
-        <bldc-tag>{{ err.code }}</bldc-tag>
+        <span class="error-code">{{ err.code }}</span>
         <bldc-paragraph>{{ err.message }}</bldc-paragraph>
         <bldc-paragraph>{{ err.suggestion }}</bldc-paragraph>
       </div>
       <div *ngFor="let warn of (validation.warnings || [])" class="validation-item validation-warning">
-        <bldc-tag>{{ warn.code }}</bldc-tag>
+        <span class="error-code">{{ warn.code }}</span>
         <bldc-paragraph>{{ warn.message }}</bldc-paragraph>
         <bldc-paragraph>{{ warn.suggestion }}</bldc-paragraph>
       </div>

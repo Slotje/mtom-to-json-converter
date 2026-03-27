@@ -24,15 +24,9 @@
           <bldc-paragraph>{{ getLayerDescription(result.layer) }}</bldc-paragraph>
         </div>
         <div class="layer-badge-container">
-          <bldc-tag *ngIf="result.valid && (result.warnings || []).length === 0" class="success">
-            <bldc-icon name="check"></bldc-icon> GESLAAGD
-          </bldc-tag>
-          <bldc-tag *ngIf="result.valid && (result.warnings || []).length > 0" class="warning">
-            <bldc-icon name="warning"></bldc-icon> WAARSCHUWINGEN
-          </bldc-tag>
-          <bldc-tag *ngIf="!result.valid" class="error">
-            <bldc-icon name="close"></bldc-icon> MISLUKT
-          </bldc-tag>
+          <span *ngIf="result.valid && (result.warnings || []).length === 0" class="badge success">&#10003; GESLAAGD</span>
+          <span *ngIf="result.valid && (result.warnings || []).length > 0" class="badge warning">&#9888; WAARSCHUWINGEN</span>
+          <span *ngIf="!result.valid" class="badge error">&#10005; MISLUKT</span>
         </div>
       </div>
 

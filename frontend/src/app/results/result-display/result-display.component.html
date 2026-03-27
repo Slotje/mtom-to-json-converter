@@ -19,26 +19,16 @@
   <div class="comparison">
     <!-- Left: Extracted from MTOM -->
     <div class="source-panel">
-      <bldc-heading level="3">
-        <bldc-icon name="document"></bldc-icon>
-        Geextraheerd uit MTOM
-        <bldc-tag>{{ extractedFieldEntries.length }} velden</bldc-tag>
-      </bldc-heading>
+      <bldc-heading level="3">Geextraheerd uit MTOM ({{ extractedFieldEntries.length }} velden)</bldc-heading>
       <div class="panel-body">
         <div *ngFor="let entry of extractedFieldEntries; let i = index"
              class="field-row"
              [class.not-found]="entry[1] === '(niet gevonden)'"
              [class.has-default]="entry[1].startsWith('(default)')">
-          <bldc-label>{{ entry[0] }}</bldc-label>
-          <bldc-tag *ngIf="entry[1] === '(niet gevonden)'" class="missing-value">
-            <bldc-icon name="close"></bldc-icon> Niet gevonden
-          </bldc-tag>
-          <bldc-tag *ngIf="entry[1].startsWith('(default)')" class="default-value">
-            {{ entry[1] }}
-          </bldc-tag>
-          <bldc-tag *ngIf="entry[1] !== '(niet gevonden)' && !entry[1].startsWith('(default)')" class="found-value">
-            {{ entry[1] }}
-          </bldc-tag>
+          <span class="field-name">{{ entry[0] }}</span>
+          <span *ngIf="entry[1] === '(niet gevonden)'" class="missing-value">Niet gevonden</span>
+          <span *ngIf="entry[1].startsWith('(default)')" class="default-value">{{ entry[1] }}</span>
+          <span *ngIf="entry[1] !== '(niet gevonden)' && !entry[1].startsWith('(default)')" class="found-value">{{ entry[1] }}</span>
         </div>
       </div>
     </div>
@@ -51,11 +41,7 @@
 
     <!-- Right: JSON Output -->
     <div class="output-panel">
-      <bldc-heading level="3">
-        <bldc-icon name="pin"></bldc-icon>
-        JSON Output
-        <bldc-tag>{{ jsonLineCount }} regels</bldc-tag>
-      </bldc-heading>
+      <bldc-heading level="3">JSON Output ({{ jsonLineCount }} regels)</bldc-heading>
       <div class="panel-body json-body">
         <pre class="json-output"><code>{{ jsonFormatted }}</code></pre>
       </div>
