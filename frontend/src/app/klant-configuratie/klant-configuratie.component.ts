@@ -18,7 +18,6 @@ export class KlantConfiguratieComponent implements OnInit {
   filteredKlanten: Klant[] = [];
   searchTerm = '';
   expandedKlantId: string | null = null;
-  showDropdown = false;
   isEditing = false;
   editingKlant: Klant | null = null;
   objectStoreOptions = ['OS_BTE_PROD', 'OS_BTE_TEST', 'OS_BTE_ACC', 'OS_BTE_ONT'];
@@ -51,12 +50,7 @@ export class KlantConfiguratieComponent implements OnInit {
   }
 
   startAddKlant() {
-    this.showDropdown = false;
     this.router.navigateByUrl('/klantconfiguratie/toevoegen');
-  }
-
-  toggleDropdown() {
-    this.showDropdown = !this.showDropdown;
   }
 
   startEdit(klant: Klant) {
@@ -112,7 +106,6 @@ export class KlantConfiguratieComponent implements OnInit {
       }
     };
     reader.readAsText(input.files[0]);
-    this.showDropdown = false;
   }
 
   exportKlant() {
@@ -126,6 +119,5 @@ export class KlantConfiguratieComponent implements OnInit {
     a.download = `klant-${klant.klantnaam.replace(/\s+/g, '-')}.json`;
     a.click();
     URL.revokeObjectURL(url);
-    this.showDropdown = false;
   }
 }

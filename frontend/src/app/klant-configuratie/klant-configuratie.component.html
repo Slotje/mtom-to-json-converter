@@ -1,22 +1,16 @@
 <bldc-container>
   <!-- Toolbar -->
   <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
-    <div style="position: relative;">
-      <div style="display: flex; gap: 4px;">
-        <bldc-button type="primary" elem-title="Toevoegen klant" icon="plus" icon-pos="left"
-          (bldcClick)="startAddKlant()">
-        </bldc-button>
-        <bldc-button type="secondary" [attr.icon]="showDropdown ? 'chevron-up' : 'chevron-down'"
-          (bldcClick)="toggleDropdown()">
-        </bldc-button>
-      </div>
-      <div *ngIf="showDropdown" style="position: absolute; top: 100%; left: 0; z-index: 10; background: white; border: 1px solid #ccc; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); min-width: 180px; margin-top: 4px;">
-        <label style="display: block; padding: 10px 16px; cursor: pointer;">
-          Importeren klant
-          <input type="file" accept=".json" (change)="importKlant($event)" style="display: none;" />
-        </label>
-        <div style="padding: 10px 16px; cursor: pointer;" (click)="exportKlant()">Exporteren klant</div>
-      </div>
+    <div style="display: flex; gap: 4px;">
+      <bldc-button type="primary" elem-title="Toevoegen klant" icon="plus" icon-pos="left"
+        (bldcClick)="startAddKlant()">
+      </bldc-button>
+      <bldc-dropdown>
+        <bldc-button slot="button" type="secondary" icon="chevron-down"></bldc-button>
+        <bldc-dropdown-item (bldcClick)="importInput.click()">Importeren klant</bldc-dropdown-item>
+        <bldc-dropdown-item (bldcClick)="exportKlant()">Exporteren klant</bldc-dropdown-item>
+      </bldc-dropdown>
+      <input #importInput type="file" accept=".json" (change)="importKlant($event)" style="display: none;" />
     </div>
     <input type="text" placeholder="Search" [(ngModel)]="searchTerm" (input)="onSearch()"
       style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; width: 200px;" />
