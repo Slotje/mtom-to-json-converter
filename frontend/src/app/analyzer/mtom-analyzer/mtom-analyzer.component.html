@@ -1,11 +1,26 @@
 <bldc-container>
   <bldc-heading level="2">Stap 2: MTOM Bronbestand Uploaden</bldc-heading>
 
+  <div class="upload-section">
+    <bldc-heading level="3">Bestand uploaden</bldc-heading>
+    <bldc-paragraph>Upload een MTOM/XML bestand zoals aangeleverd door de klant (bijv. Perron Bericht.xml)</bldc-paragraph>
+    <input #fileInput type="file" accept=".xml,.mime,.mtom" style="display:none"
+      (change)="onFileSelected($event)" />
+    <div style="display: flex; gap: 16px; align-items: center;">
+      <bldc-button type="primary" elem-title="Kies bestand" icon="upload" icon-pos="left"
+        (bldcClick)="fileInput.click()" [attr.disabled]="loading ? true : null">
+      </bldc-button>
+      <span *ngIf="currentFile">{{ currentFile.name }}</span>
+    </div>
+  </div>
+
+  <bldc-divider></bldc-divider>
+
   <div class="sample-mtom">
-    <bldc-button type="primary" elem-title="Gebruik voorbeeld MTOM bericht" icon="document" icon-pos="left"
+    <bldc-heading level="3">Of gebruik een voorbeeld</bldc-heading>
+    <bldc-button type="secondary" elem-title="Gebruik voorbeeld MTOM bericht" icon="document" icon-pos="left"
       (bldcClick)="loadSampleMtom()" [attr.disabled]="loading ? true : null">
     </bldc-button>
-    <bldc-paragraph>Laadt een voorbeeldbericht met alle standaard Belastingdienst velden</bldc-paragraph>
   </div>
 
   <bldc-spinner *ngIf="loading" size="lg">MTOM bericht wordt geanalyseerd...</bldc-spinner>

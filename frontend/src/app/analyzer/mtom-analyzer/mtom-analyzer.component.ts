@@ -47,6 +47,17 @@ export class MtomAnalyzerComponent {
     this.loading = false;
   }
 
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+
+    const file = input.files[0];
+    this.currentFile = file;
+    this.wizard.mtomFile = file;
+    this.parsePayload(file);
+    this.analyzeFile(file);
+  }
+
   loadSampleMtom() {
     this.loading = true;
     this.error = null;
