@@ -1,0 +1,19 @@
+{
+  "klantnaam": "Perron - Inkomensbelasting",
+  "domeinKeten": "Inkomensbelasting",
+  "oplosgroep": "BB ECM Perron",
+  "contacten": [
+    {
+      "naam": "Postbus Perron",
+      "email": "perron-ecm@belastingdienst.nl",
+      "telefoon": "0800-0544"
+    },
+    {
+      "naam": "Jan de Vries",
+      "email": "j.devries@belastingdienst.nl",
+      "telefoon": "06-12345678"
+    }
+  ],
+  "objectStore": "OS_BTE_PROD",
+  "klasse": "BTE_Bericht"
+}

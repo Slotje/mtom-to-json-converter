@@ -16,11 +16,11 @@ export class KlantToevoegenComponent implements OnInit {
   klant: Klant = this.emptyKlant();
   step = 1;
   objectStoreOptions = ['OS_BTE_PROD', 'OS_BTE_TEST', 'OS_BTE_ACC', 'OS_BTE_ONT'];
+  validationErrors: string[] = [];
 
   constructor(private klantService: KlantService, private router: Router) {}
 
   ngOnInit() {
-    // Resume pending klant if returning from step 2 back
     if (this.klantService.pendingKlant) {
       this.klant = this.klantService.pendingKlant;
     } else {
@@ -38,7 +38,21 @@ export class KlantToevoegenComponent implements OnInit {
     }
   }
 
+  validate(): boolean {
+    this.validationErrors = [];
+    if (!this.klant.klantnaam.trim()) this.validationErrors.push('Klantnaam is verplicht');
+    if (!this.klant.domeinKeten.trim()) this.validationErrors.push('Domein/keten is verplicht');
+    if (!this.klant.oplosgroep.trim()) this.validationErrors.push('Oplosgroep is verplicht');
+    if (!this.klant.objectStore) this.validationErrors.push('ObjectStore is verplicht');
+    if (!this.klant.klasse.trim()) this.validationErrors.push('Klasse is verplicht');
+    const firstContact = this.klant.contacten[0];
+    if (!firstContact || !firstContact.naam.trim()) this.validationErrors.push('Contactpersoon naam is verplicht');
+    if (!firstContact || !firstContact.email.trim()) this.validationErrors.push('Contactpersoon e-mailadres is verplicht');
+    return this.validationErrors.length === 0;
+  }
+
   goToStep2() {
+    if (!this.validate()) return;
     this.klantService.pendingKlant = this.klant;
     this.step = 2;
   }
@@ -52,7 +66,22 @@ export class KlantToevoegenComponent implements OnInit {
     if (!input.files || input.files.length === 0) return;
     const reader = new FileReader();
     reader.onload = () => {
-      this.klant.configuratieYaml = reader.result as string;
+      const content = reader.result as string;
+      this.klant.configuratieYaml = content;
+      try {
+        const config = JSON.parse(content);
+        if (config.klantnaam) this.klant.klantnaam = config.klantnaam;
+        if (config.domeinKeten) this.klant.domeinKeten = config.domeinKeten;
+        if (config.oplosgroep) this.klant.oplosgroep = config.oplosgroep;
+        if (config.objectStore) this.klant.objectStore = config.objectStore;
+        if (config.klasse) this.klant.klasse = config.klasse;
+        if (config.contacten && Array.isArray(config.contacten) && config.contacten.length > 0) {
+          this.klant.contacten = config.contacten;
+        }
+        this.validationErrors = [];
+      } catch {
+        // Not JSON - store as raw config (YAML)
+      }
     };
     reader.readAsText(input.files[0]);
   }

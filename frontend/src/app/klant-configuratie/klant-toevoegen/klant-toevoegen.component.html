@@ -4,7 +4,7 @@
     <bldc-button type="primary" elem-title="Toevoegen klant" icon="plus" icon-pos="left"
       [attr.disabled]="true">
     </bldc-button>
-    <bldc-input label="Zoeken" input-mode="search" disabled="true" required="false"></bldc-input>
+    <bldc-input label=" " input-mode="search" disabled="true" required="false"></bldc-input>
   </div>
 
   <!-- Accordion: 1 item open -->
@@ -20,12 +20,20 @@
       <div *ngIf="step === 1">
 
         <!-- Upload configuratie -->
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border: 2px dashed #ccc; border-radius: 8px; margin-bottom: 24px;">
-          <span>Klantconfiguratie uploaden</span>
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border: 2px dashed #ccc; border-radius: 8px; margin-bottom: 8px;">
+          <span>Klantconfiguratie uploaden (.json)</span>
           <bldc-button type="secondary" elem-title="Uploaden" (bldcClick)="configInput.click()"></bldc-button>
           <input #configInput type="file" accept=".yaml,.yml,.json" (change)="onConfigUpload($event)" style="display:none" />
         </div>
-        <bldc-notification *ngIf="klant.configuratieYaml" type="success" elem-title="Configuratie geladen"></bldc-notification>
+        <bldc-paragraph>
+          <a href="assets/samples/voorbeeld-klantconfiguratie.json" download>Voorbeeldbestand downloaden</a>
+        </bldc-paragraph>
+        <bldc-notification *ngIf="klant.configuratieYaml" type="success" elem-title="Configuratie geladen - velden zijn ingevuld"></bldc-notification>
+
+        <!-- Validatie fouten -->
+        <div *ngIf="validationErrors.length > 0" style="margin-bottom: 16px;">
+          <bldc-notification *ngFor="let err of validationErrors" type="error" [attr.elem-title]="err"></bldc-notification>
+        </div>
 
         <!-- Formulier -->
         <bldc-table>
@@ -34,28 +42,28 @@
             <bldc-table-data>{{ klant.id }}</bldc-table-data>
           </bldc-table-row>
           <bldc-table-row>
-            <bldc-table-data><strong>Klantnaam</strong></bldc-table-data>
+            <bldc-table-data><strong>Klantnaam *</strong></bldc-table-data>
             <bldc-table-data>
               <bldc-input label=" " [attr.bldc-value]="klant.klantnaam"
                 (bldcValueChange)="klant.klantnaam = $any($event).detail"></bldc-input>
             </bldc-table-data>
           </bldc-table-row>
           <bldc-table-row>
-            <bldc-table-data><strong>Domein/keten</strong></bldc-table-data>
+            <bldc-table-data><strong>Domein/keten *</strong></bldc-table-data>
             <bldc-table-data>
               <bldc-input label=" " [attr.bldc-value]="klant.domeinKeten"
                 (bldcValueChange)="klant.domeinKeten = $any($event).detail"></bldc-input>
             </bldc-table-data>
           </bldc-table-row>
           <bldc-table-row>
-            <bldc-table-data><strong>Oplosgroep</strong></bldc-table-data>
+            <bldc-table-data><strong>Oplosgroep *</strong></bldc-table-data>
             <bldc-table-data>
               <bldc-input label=" " [attr.bldc-value]="klant.oplosgroep"
                 (bldcValueChange)="klant.oplosgroep = $any($event).detail"></bldc-input>
             </bldc-table-data>
           </bldc-table-row>
           <bldc-table-row *ngFor="let contact of klant.contacten; let i = index; let first = first">
-            <bldc-table-data><strong *ngIf="first">Contactinformatie</strong></bldc-table-data>
+            <bldc-table-data><strong *ngIf="first">Contactinformatie *</strong></bldc-table-data>
             <bldc-table-data>
               <div style="display: flex; gap: 8px; align-items: center;">
                 <bldc-input label=" " [attr.bldc-value]="contact.naam"
@@ -76,7 +84,7 @@
             </bldc-table-data>
           </bldc-table-row>
           <bldc-table-row>
-            <bldc-table-data><strong>ObjectStore</strong></bldc-table-data>
+            <bldc-table-data><strong>ObjectStore *</strong></bldc-table-data>
             <bldc-table-data>
               <select [(ngModel)]="klant.objectStore">
                 <option value="" disabled>ObjectStore</option>
@@ -85,7 +93,7 @@
             </bldc-table-data>
           </bldc-table-row>
           <bldc-table-row>
-            <bldc-table-data><strong>Klasse</strong></bldc-table-data>
+            <bldc-table-data><strong>Klasse *</strong></bldc-table-data>
             <bldc-table-data>
               <bldc-input label=" " [attr.bldc-value]="klant.klasse"
                 (bldcValueChange)="klant.klasse = $any($event).detail"></bldc-input>
@@ -95,7 +103,7 @@
 
         <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
           <bldc-button type="primary" elem-title="Stap 2" icon="chevron-right" icon-pos="right"
-            (bldcClick)="goToStep2()" [attr.disabled]="!klant.klantnaam ? true : null">
+            (bldcClick)="goToStep2()">
           </bldc-button>
         </div>
       </div>
