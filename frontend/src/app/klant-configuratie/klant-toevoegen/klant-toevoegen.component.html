@@ -36,21 +36,21 @@
           <bldc-table-row>
             <bldc-table-data><strong>Klantnaam</strong></bldc-table-data>
             <bldc-table-data>
-              <bldc-input label="" [attr.bldc-value]="klant.klantnaam"
+              <bldc-input label=" " [attr.bldc-value]="klant.klantnaam"
                 (bldcValueChange)="klant.klantnaam = $any($event).detail"></bldc-input>
             </bldc-table-data>
           </bldc-table-row>
           <bldc-table-row>
             <bldc-table-data><strong>Domein/keten</strong></bldc-table-data>
             <bldc-table-data>
-              <bldc-input label="" [attr.bldc-value]="klant.domeinKeten"
+              <bldc-input label=" " [attr.bldc-value]="klant.domeinKeten"
                 (bldcValueChange)="klant.domeinKeten = $any($event).detail"></bldc-input>
             </bldc-table-data>
           </bldc-table-row>
           <bldc-table-row>
             <bldc-table-data><strong>Oplosgroep</strong></bldc-table-data>
             <bldc-table-data>
-              <bldc-input label="" [attr.bldc-value]="klant.oplosgroep"
+              <bldc-input label=" " [attr.bldc-value]="klant.oplosgroep"
                 (bldcValueChange)="klant.oplosgroep = $any($event).detail"></bldc-input>
             </bldc-table-data>
           </bldc-table-row>
@@ -58,11 +58,11 @@
             <bldc-table-data><strong *ngIf="first">Contactinformatie</strong></bldc-table-data>
             <bldc-table-data>
               <div style="display: flex; gap: 8px; align-items: center;">
-                <bldc-input label="" [attr.bldc-value]="contact.naam"
+                <bldc-input label=" " [attr.bldc-value]="contact.naam"
                   (bldcValueChange)="contact.naam = $any($event).detail"></bldc-input>
-                <bldc-input label="" [attr.bldc-value]="contact.email" input-mode="email"
+                <bldc-input label=" " [attr.bldc-value]="contact.email" input-mode="email"
                   (bldcValueChange)="contact.email = $any($event).detail"></bldc-input>
-                <bldc-input label="" [attr.bldc-value]="contact.telefoon" input-mode="tel" required="false"
+                <bldc-input label=" " [attr.bldc-value]="contact.telefoon" input-mode="tel" required="false"
                   (bldcValueChange)="contact.telefoon = $any($event).detail"></bldc-input>
                 <bldc-button *ngIf="klant.contacten.length > 1" type="tertiary" icon="close"
                   (bldcClick)="removeContact(i)"></bldc-button>
@@ -87,7 +87,7 @@
           <bldc-table-row>
             <bldc-table-data><strong>Klasse</strong></bldc-table-data>
             <bldc-table-data>
-              <bldc-input label="" [attr.bldc-value]="klant.klasse"
+              <bldc-input label=" " [attr.bldc-value]="klant.klasse"
                 (bldcValueChange)="klant.klasse = $any($event).detail"></bldc-input>
             </bldc-table-data>
           </bldc-table-row>

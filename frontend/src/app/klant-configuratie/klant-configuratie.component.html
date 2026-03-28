@@ -6,13 +6,13 @@
         (bldcClick)="startAddKlant()">
       </bldc-button>
       <bldc-dropdown>
-        <bldc-button slot="button" type="secondary" icon="chevron-down"></bldc-button>
+        <bldc-button slot="button" type="secondary" elem-title="Meer opties" icon="meer" icon-pos="right"></bldc-button>
         <bldc-dropdown-item (bldcClick)="importInput.click()">Importeren klant</bldc-dropdown-item>
         <bldc-dropdown-item (bldcClick)="exportKlant()">Exporteren klant</bldc-dropdown-item>
       </bldc-dropdown>
       <input #importInput type="file" accept=".json" (change)="importKlant($event)" style="display: none;" />
     </div>
-    <bldc-input label="Zoeken" input-mode="search" required="false" [attr.bldc-value]="searchTerm"
+    <bldc-input label=" " input-mode="search" [attr.bldc-value]="searchTerm"
       (bldcInput)="onSearchInput($event)"></bldc-input>
   </div>
 
@@ -35,41 +35,41 @@
         <bldc-table-row>
           <bldc-table-data><strong>Klantnaam</strong></bldc-table-data>
           <bldc-table-data>
-            <bldc-input label="" [attr.bldc-value]="klant.klantnaam" readonly="true"></bldc-input>
+            <bldc-input label=" " [attr.bldc-value]="klant.klantnaam" readonly="true"></bldc-input>
           </bldc-table-data>
         </bldc-table-row>
         <bldc-table-row>
           <bldc-table-data><strong>Domein/keten</strong></bldc-table-data>
           <bldc-table-data>
-            <bldc-input label="" [attr.bldc-value]="klant.domeinKeten" readonly="true"></bldc-input>
+            <bldc-input label=" " [attr.bldc-value]="klant.domeinKeten" readonly="true"></bldc-input>
           </bldc-table-data>
         </bldc-table-row>
         <bldc-table-row>
           <bldc-table-data><strong>Oplosgroep</strong></bldc-table-data>
           <bldc-table-data>
-            <bldc-input label="" [attr.bldc-value]="klant.oplosgroep" readonly="true"></bldc-input>
+            <bldc-input label=" " [attr.bldc-value]="klant.oplosgroep" readonly="true"></bldc-input>
           </bldc-table-data>
         </bldc-table-row>
         <bldc-table-row *ngFor="let contact of klant.contacten; let first = first">
           <bldc-table-data><strong *ngIf="first">Contactinformatie</strong></bldc-table-data>
           <bldc-table-data>
             <div style="display: flex; gap: 8px;">
-              <bldc-input label="" [attr.bldc-value]="contact.naam" readonly="true"></bldc-input>
-              <bldc-input label="" [attr.bldc-value]="contact.email" readonly="true"></bldc-input>
-              <bldc-input label="" [attr.bldc-value]="contact.telefoon" readonly="true" required="false"></bldc-input>
+              <bldc-input label=" " [attr.bldc-value]="contact.naam" readonly="true"></bldc-input>
+              <bldc-input label=" " [attr.bldc-value]="contact.email" readonly="true"></bldc-input>
+              <bldc-input label=" " [attr.bldc-value]="contact.telefoon" readonly="true"></bldc-input>
             </div>
           </bldc-table-data>
         </bldc-table-row>
         <bldc-table-row>
           <bldc-table-data><strong>ObjectStore</strong></bldc-table-data>
           <bldc-table-data>
-            <bldc-input label="" [attr.bldc-value]="klant.objectStore" readonly="true"></bldc-input>
+            <bldc-input label=" " [attr.bldc-value]="klant.objectStore" readonly="true"></bldc-input>
           </bldc-table-data>
         </bldc-table-row>
         <bldc-table-row>
           <bldc-table-data><strong>Klasse</strong></bldc-table-data>
           <bldc-table-data>
-            <bldc-input label="" [attr.bldc-value]="klant.klasse" readonly="true"></bldc-input>
+            <bldc-input label=" " [attr.bldc-value]="klant.klasse" readonly="true"></bldc-input>
           </bldc-table-data>
         </bldc-table-row>
       </bldc-table>
@@ -89,21 +89,21 @@
         <bldc-table-row>
           <bldc-table-data><strong>Klantnaam</strong></bldc-table-data>
           <bldc-table-data>
-            <bldc-input label="" [attr.bldc-value]="editingKlant.klantnaam"
+            <bldc-input label=" " [attr.bldc-value]="editingKlant.klantnaam"
               (bldcValueChange)="editingKlant.klantnaam = $any($event).detail"></bldc-input>
           </bldc-table-data>
         </bldc-table-row>
         <bldc-table-row>
           <bldc-table-data><strong>Domein/keten</strong></bldc-table-data>
           <bldc-table-data>
-            <bldc-input label="" [attr.bldc-value]="editingKlant.domeinKeten"
+            <bldc-input label=" " [attr.bldc-value]="editingKlant.domeinKeten"
               (bldcValueChange)="editingKlant.domeinKeten = $any($event).detail"></bldc-input>
           </bldc-table-data>
         </bldc-table-row>
         <bldc-table-row>
           <bldc-table-data><strong>Oplosgroep</strong></bldc-table-data>
           <bldc-table-data>
-            <bldc-input label="" [attr.bldc-value]="editingKlant.oplosgroep"
+            <bldc-input label=" " [attr.bldc-value]="editingKlant.oplosgroep"
               (bldcValueChange)="editingKlant.oplosgroep = $any($event).detail"></bldc-input>
           </bldc-table-data>
         </bldc-table-row>
@@ -111,11 +111,11 @@
           <bldc-table-data><strong *ngIf="first">Contactinformatie</strong></bldc-table-data>
           <bldc-table-data>
             <div style="display: flex; gap: 8px; align-items: center;">
-              <bldc-input label="" [attr.bldc-value]="contact.naam"
+              <bldc-input label=" " [attr.bldc-value]="contact.naam"
                 (bldcValueChange)="contact.naam = $any($event).detail"></bldc-input>
-              <bldc-input label="" [attr.bldc-value]="contact.email" input-mode="email"
+              <bldc-input label=" " [attr.bldc-value]="contact.email" input-mode="email"
                 (bldcValueChange)="contact.email = $any($event).detail"></bldc-input>
-              <bldc-input label="" [attr.bldc-value]="contact.telefoon" input-mode="tel" required="false"
+              <bldc-input label=" " [attr.bldc-value]="contact.telefoon" input-mode="tel" required="false"
                 (bldcValueChange)="contact.telefoon = $any($event).detail"></bldc-input>
               <bldc-button *ngIf="editingKlant.contacten.length > 1" type="tertiary" icon="close"
                 (bldcClick)="removeEditContact(i)"></bldc-button>
@@ -140,7 +140,7 @@
         <bldc-table-row>
           <bldc-table-data><strong>Klasse</strong></bldc-table-data>
           <bldc-table-data>
-            <bldc-input label="" [attr.bldc-value]="editingKlant.klasse"
+            <bldc-input label=" " [attr.bldc-value]="editingKlant.klasse"
               (bldcValueChange)="editingKlant.klasse = $any($event).detail"></bldc-input>
           </bldc-table-data>
         </bldc-table-row>
