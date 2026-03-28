@@ -1,0 +1,124 @@
+<bldc-container>
+  <!-- Toolbar: alleen toevoegen knop + search (GEEN dropdown op deze pagina) -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+    <bldc-button type="primary" elem-title="Toevoegen klant" icon="plus" icon-pos="left"
+      [attr.disabled]="true">
+    </bldc-button>
+    <input type="text" placeholder="Search" disabled
+      style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; width: 200px; background: #f5f5f5;" />
+  </div>
+
+  <!-- Accordion: 1 item open -->
+  <div style="margin-bottom: 4px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border: 1px solid #ddd; border-radius: 4px 4px 0 0;">
+      <span>{{ klant.klantnaam || 'Nieuwe klant' }}</span>
+      <bldc-icon name="chevron-down"></bldc-icon>
+    </div>
+
+    <div style="border: 1px solid #ddd; border-top: none; padding: 24px;">
+
+      <!-- ==================== STAP 1 ==================== -->
+      <div *ngIf="step === 1">
+
+        <!-- Upload configuratie -->
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border: 2px dashed #ccc; border-radius: 8px; margin-bottom: 24px;">
+          <span>Klantconfiguratie uploaden</span>
+          <bldc-button type="secondary" elem-title="Uploaden" (bldcClick)="configInput.click()"></bldc-button>
+          <input #configInput type="file" accept=".yaml,.yml,.json" (change)="onConfigUpload($event)" style="display:none" />
+        </div>
+        <bldc-notification *ngIf="klant.configuratieYaml" type="success" elem-title="Configuratie geladen"></bldc-notification>
+
+        <!-- Formulier -->
+        <bldc-table>
+          <bldc-table-row>
+            <bldc-table-data><strong>id</strong></bldc-table-data>
+            <bldc-table-data>{{ klant.id }}</bldc-table-data>
+          </bldc-table-row>
+          <bldc-table-row>
+            <bldc-table-data><strong>Klantnaam</strong></bldc-table-data>
+            <bldc-table-data>
+              <input type="text" [(ngModel)]="klant.klantnaam" placeholder="Klantnaam"
+                style="width: 100%; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+            </bldc-table-data>
+          </bldc-table-row>
+          <bldc-table-row>
+            <bldc-table-data><strong>Domein/keten</strong></bldc-table-data>
+            <bldc-table-data>
+              <input type="text" [(ngModel)]="klant.domeinKeten" placeholder="Domein/keten"
+                style="width: 100%; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+            </bldc-table-data>
+          </bldc-table-row>
+          <bldc-table-row>
+            <bldc-table-data><strong>Oplosgroep</strong></bldc-table-data>
+            <bldc-table-data>
+              <input type="text" [(ngModel)]="klant.oplosgroep" placeholder="Oplosgroep"
+                style="width: 100%; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+            </bldc-table-data>
+          </bldc-table-row>
+          <bldc-table-row *ngFor="let contact of klant.contacten; let i = index; let first = first">
+            <bldc-table-data><strong *ngIf="first">Contactinformatie</strong></bldc-table-data>
+            <bldc-table-data>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <input type="text" [(ngModel)]="contact.naam" [attr.placeholder]="first ? 'Naampostbus' : 'Naam'"
+                  style="flex: 1; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+                <input type="email" [(ngModel)]="contact.email" [attr.placeholder]="first ? 'E-mailadrespostbus' : 'E-mailadres'"
+                  style="flex: 1; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+                <input type="tel" [(ngModel)]="contact.telefoon" placeholder="Telefoonnummer"
+                  style="flex: 1; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+                <bldc-button *ngIf="klant.contacten.length > 1" type="tertiary" icon="close"
+                  (bldcClick)="removeContact(i)"></bldc-button>
+              </div>
+            </bldc-table-data>
+          </bldc-table-row>
+          <bldc-table-row>
+            <bldc-table-data></bldc-table-data>
+            <bldc-table-data>
+              <bldc-button type="tertiary" icon="plus" (bldcClick)="addContact()"></bldc-button>
+            </bldc-table-data>
+          </bldc-table-row>
+          <bldc-table-row>
+            <bldc-table-data><strong>ObjectStore</strong></bldc-table-data>
+            <bldc-table-data>
+              <select [(ngModel)]="klant.objectStore"
+                style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;">
+                <option value="" disabled>ObjectStore</option>
+                <option *ngFor="let os of objectStoreOptions" [value]="os">{{ os }}</option>
+              </select>
+            </bldc-table-data>
+          </bldc-table-row>
+          <bldc-table-row>
+            <bldc-table-data><strong>Klasse</strong></bldc-table-data>
+            <bldc-table-data>
+              <input type="text" [(ngModel)]="klant.klasse" placeholder="Klasse"
+                style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+            </bldc-table-data>
+          </bldc-table-row>
+        </bldc-table>
+
+        <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
+          <bldc-button type="primary" elem-title="Stap 2" icon="chevron-right" icon-pos="right"
+            (bldcClick)="goToStep2()" [attr.disabled]="!klant.klantnaam ? true : null">
+          </bldc-button>
+        </div>
+      </div>
+
+      <!-- ==================== STAP 2 ==================== -->
+      <div *ngIf="step === 2">
+
+        <bldc-paragraph>Indien er een conversie bestand beschikbaar is, kan deze hier geupload worden:</bldc-paragraph>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border: 2px dashed #ccc; border-radius: 8px; margin: 24px 0;">
+          <span>Conversie bestand uploaden</span>
+          <bldc-button type="secondary" elem-title="Uploaden" (bldcClick)="conversieInput.click()"></bldc-button>
+          <input #conversieInput type="file" accept=".xml,.json,.yaml,.yml" (change)="onConversieUpload($event)" style="display:none" />
+        </div>
+        <bldc-notification *ngIf="klant.conversieBestand" type="success" elem-title="Conversie bestand geladen"></bldc-notification>
+
+        <div style="display: flex; justify-content: flex-end; margin-top: 24px;">
+          <bldc-button type="primary" elem-title="Toevoegen" (bldcClick)="finishAdd()"></bldc-button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</bldc-container>

@@ -5,6 +5,9 @@ import { Klant } from '../model/klant.model';
 export class KlantService {
   private storageKey = 'bte-klanten';
 
+  // Shared state for add wizard (between step 1 and step 2)
+  pendingKlant: Klant | null = null;
+
   getKlanten(): Klant[] {
     const data = localStorage.getItem(this.storageKey);
     return data ? JSON.parse(data) : this.getDefaultKlanten();

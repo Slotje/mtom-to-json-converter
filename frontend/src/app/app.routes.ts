@@ -5,10 +5,12 @@ import { VisualMappingComponent } from './mapping/visual-mapping/visual-mapping.
 import { ValidationPanelComponent } from './results/validation-panel/validation-panel.component';
 import { ResultDisplayComponent } from './results/result-display/result-display.component';
 import { KlantConfiguratieComponent } from './klant-configuratie/klant-configuratie.component';
+import { KlantToevoegenComponent } from './klant-configuratie/klant-toevoegen/klant-toevoegen.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'klantconfiguratie', pathMatch: 'full' },
   { path: 'klantconfiguratie', component: KlantConfiguratieComponent },
+  { path: 'klantconfiguratie/toevoegen', component: KlantToevoegenComponent },
   { path: 'config', component: ConfigUploadComponent },
   { path: 'analyze', component: MtomAnalyzerComponent },
   { path: 'mapping', component: VisualMappingComponent },
