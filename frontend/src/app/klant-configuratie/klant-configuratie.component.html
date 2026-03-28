@@ -1,233 +1,274 @@
 <bldc-container>
   <bldc-heading level="1">BTE Klantconfiguratie</bldc-heading>
 
-  <!-- Toolbar: add button + search -->
-  <div class="toolbar">
-    <div class="toolbar-left">
-      <div class="dropdown-wrapper">
+  <!-- Toolbar: add button with dropdown + search -->
+  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+    <div style="position: relative;">
+      <div style="display: flex; gap: 4px;">
         <bldc-button type="primary" elem-title="Toevoegen klant" icon="plus" icon-pos="left"
           (bldcClick)="startAddKlant()">
         </bldc-button>
-        <bldc-button type="secondary" [attr.elem-title]="showDropdown ? 'Sluiten' : 'Meer opties'"
-          [attr.icon]="showDropdown ? 'chevron-up' : 'chevron-down'"
+        <bldc-button type="secondary" [attr.icon]="showDropdown ? 'chevron-up' : 'chevron-down'"
           (bldcClick)="toggleDropdown()">
         </bldc-button>
-        <div class="dropdown-menu" *ngIf="showDropdown">
-          <label class="dropdown-item">
-            Importeren klant
-            <input type="file" accept=".json" (change)="importKlant($event)" style="display:none" />
-          </label>
-          <div class="dropdown-item" (click)="exportKlant()">Exporteren klant</div>
-        </div>
+      </div>
+      <div *ngIf="showDropdown" style="position: absolute; top: 100%; left: 0; z-index: 10; background: white; border: 1px solid #ccc; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); min-width: 180px; margin-top: 4px;">
+        <label style="display: block; padding: 10px 16px; cursor: pointer;">
+          Importeren klant
+          <input type="file" accept=".json" (change)="importKlant($event)" style="display: none;" />
+        </label>
+        <div style="padding: 10px 16px; cursor: pointer;" (click)="exportKlant()">Exporteren klant</div>
       </div>
     </div>
-    <div class="toolbar-right">
-      <input type="text" class="search-input" placeholder="Search" [(ngModel)]="searchTerm" (input)="onSearch()" />
-    </div>
+    <input type="text" placeholder="Search" [(ngModel)]="searchTerm" (input)="onSearch()"
+      style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; width: 200px;" />
   </div>
 
-  <!-- Add klant wizard -->
-  <div *ngIf="showAddWizard" class="add-wizard">
-    <div class="accordion-item expanded">
-      <div class="accordion-header">
-        <span>{{ newKlant.klantnaam || 'Nieuwe klant' }}</span>
-        <bldc-button type="tertiary" elem-title="Annuleren" icon="close" (bldcClick)="cancelAdd()"></bldc-button>
-      </div>
-      <div class="accordion-body">
+  <!-- ==================== PAGINA 1: TOEVOEGEN KLANT - STAP 1 ==================== -->
+  <div *ngIf="showAddWizard && addStep === 1">
+    <bldc-card [attr.heading]="newKlant.klantnaam || 'Nieuwe klant'" href="javascript:void(0)">
 
-        <!-- Step 1: Form -->
-        <div *ngIf="addStep === 1">
-          <div class="upload-bar">
-            <span>Klantconfiguratie uploaden</span>
-            <label class="upload-label">
-              <bldc-button type="secondary" elem-title="Uploaden" (bldcClick)="configInput.click()"></bldc-button>
-              <input #configInput type="file" accept=".yaml,.yml,.json" (change)="onConfigUpload($event, 'new')" style="display:none" />
-            </label>
-          </div>
-          <span *ngIf="newKlant.configuratieYaml" class="upload-status">Configuratie geladen</span>
+      <!-- Upload configuratie -->
+      <bldc-card heading="Klantconfiguratie uploaden" href="javascript:void(0)" (bldcClick)="configInput.click(); $event.preventDefault()">
+        <bldc-button type="secondary" elem-title="Uploaden" (bldcClick)="configInput.click()"></bldc-button>
+      </bldc-card>
+      <input #configInput type="file" accept=".yaml,.yml,.json" (change)="onConfigUpload($event, 'new')" style="display:none" />
+      <bldc-notification *ngIf="newKlant.configuratieYaml" type="success" elem-title="Configuratie geladen"></bldc-notification>
 
-          <div class="form-grid">
-            <div class="form-row">
-              <label>id</label>
-              <span class="form-value">{{ newKlant.id }}</span>
-            </div>
-            <div class="form-row">
-              <label>Klantnaam</label>
-              <input type="text" [(ngModel)]="newKlant.klantnaam" placeholder="Klantnaam" />
-            </div>
-            <div class="form-row">
-              <label>Domein/keten</label>
-              <input type="text" [(ngModel)]="newKlant.domeinKeten" placeholder="Domein/keten" />
-            </div>
-            <div class="form-row">
-              <label>Oplosgroep</label>
-              <input type="text" [(ngModel)]="newKlant.oplosgroep" placeholder="Oplosgroep" />
-            </div>
-            <div class="form-row form-row-contacts">
-              <label>Contactinformatie</label>
-              <div class="contacts-list">
-                <div class="contact-row" *ngFor="let contact of newKlant.contacten; let i = index">
-                  <input type="text" [(ngModel)]="contact.naam" placeholder="Naam" />
-                  <input type="email" [(ngModel)]="contact.email" placeholder="E-mailadres" />
-                  <input type="tel" [(ngModel)]="contact.telefoon" placeholder="Telefoonnummer" />
-                  <bldc-button *ngIf="newKlant.contacten.length > 1" type="tertiary" elem-title="Verwijder" icon="close"
-                    (bldcClick)="removeContact(i)"></bldc-button>
-                </div>
-                <bldc-button type="tertiary" elem-title="Contact toevoegen" icon="plus"
-                  (bldcClick)="addContact()"></bldc-button>
-              </div>
-            </div>
-            <div class="form-row">
-              <label>ObjectStore</label>
-              <select [(ngModel)]="newKlant.objectStore">
-                <option value="" disabled>ObjectStore</option>
-                <option *ngFor="let os of objectStoreOptions" [value]="os">{{ os }}</option>
-              </select>
-            </div>
-            <div class="form-row">
-              <label>Klasse</label>
-              <input type="text" [(ngModel)]="newKlant.klasse" placeholder="Klasse" />
-            </div>
-          </div>
+      <bldc-divider></bldc-divider>
 
-          <div class="form-actions">
-            <bldc-button type="primary" elem-title="Stap 2" icon="chevron-right" icon-pos="right"
-              (bldcClick)="goToStep2()"
-              [attr.disabled]="!newKlant.klantnaam ? true : null">
-            </bldc-button>
-          </div>
-        </div>
-
-        <!-- Step 2: Conversie bestand -->
-        <div *ngIf="addStep === 2">
-          <bldc-paragraph>Indien er een conversie bestand beschikbaar is, kan deze hier geupload worden:</bldc-paragraph>
-
-          <div class="upload-bar">
-            <span>Conversie bestand uploaden</span>
-            <label class="upload-label">
-              <bldc-button type="secondary" elem-title="Uploaden" (bldcClick)="conversieInput.click()"></bldc-button>
-              <input #conversieInput type="file" accept=".xml,.json,.yaml,.yml" (change)="onConversieUpload($event)" style="display:none" />
-            </label>
-          </div>
-          <span *ngIf="newKlant.conversieBestand" class="upload-status">Conversie bestand geladen</span>
-
-          <div class="form-actions">
-            <bldc-button type="secondary" elem-title="Vorige" icon="chevron-left" icon-pos="left"
-              (bldcClick)="addStep = 1">
-            </bldc-button>
-            <bldc-button type="primary" elem-title="Toevoegen"
-              (bldcClick)="finishAdd()">
-            </bldc-button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Klanten list -->
-  <div class="klanten-list">
-    <div *ngFor="let klant of filteredKlanten" class="accordion-item" [class.expanded]="isExpanded(klant)">
-      <div class="accordion-header" (click)="toggleKlant(klant)">
-        <span>{{ klant.klantnaam }}</span>
-        <bldc-icon [attr.name]="isExpanded(klant) ? 'chevron-up' : 'chevron-down'"></bldc-icon>
-      </div>
-
-      <div class="accordion-body" *ngIf="isExpanded(klant)">
-        <!-- View mode -->
-        <div *ngIf="!isEditing" class="form-grid readonly">
-          <div class="form-row">
-            <label>id</label>
-            <span class="form-value">{{ klant.id }}</span>
-          </div>
-          <div class="form-row">
-            <label>Klantnaam</label>
-            <span class="form-value">{{ klant.klantnaam }}</span>
-          </div>
-          <div class="form-row">
-            <label>Domein/keten</label>
-            <span class="form-value">{{ klant.domeinKeten }}</span>
-          </div>
-          <div class="form-row">
-            <label>Oplosgroep</label>
-            <span class="form-value">{{ klant.oplosgroep }}</span>
-          </div>
-          <div class="form-row form-row-contacts">
-            <label>Contactinformatie</label>
-            <div class="contacts-list">
-              <div class="contact-row readonly" *ngFor="let contact of klant.contacten">
-                <span>{{ contact.naam }}</span>
-                <span>{{ contact.email }}</span>
-                <span>{{ contact.telefoon }}</span>
-              </div>
+      <!-- Formulier als tabel -->
+      <bldc-table>
+        <bldc-table-row>
+          <bldc-table-data><strong>id</strong></bldc-table-data>
+          <bldc-table-data>{{ newKlant.id }}</bldc-table-data>
+        </bldc-table-row>
+        <bldc-table-row>
+          <bldc-table-data><strong>Klantnaam</strong></bldc-table-data>
+          <bldc-table-data>
+            <input type="text" [(ngModel)]="newKlant.klantnaam" placeholder="Klantnaam"
+              style="width: 100%; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+          </bldc-table-data>
+        </bldc-table-row>
+        <bldc-table-row>
+          <bldc-table-data><strong>Domein/keten</strong></bldc-table-data>
+          <bldc-table-data>
+            <input type="text" [(ngModel)]="newKlant.domeinKeten" placeholder="Domein/keten"
+              style="width: 100%; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+          </bldc-table-data>
+        </bldc-table-row>
+        <bldc-table-row>
+          <bldc-table-data><strong>Oplosgroep</strong></bldc-table-data>
+          <bldc-table-data>
+            <input type="text" [(ngModel)]="newKlant.oplosgroep" placeholder="Oplosgroep"
+              style="width: 100%; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+          </bldc-table-data>
+        </bldc-table-row>
+        <bldc-table-row *ngFor="let contact of newKlant.contacten; let i = index; let first = first">
+          <bldc-table-data><strong *ngIf="first">Contactinformatie</strong></bldc-table-data>
+          <bldc-table-data>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <input type="text" [(ngModel)]="contact.naam" [attr.placeholder]="first ? 'Naampostbus' : 'Naam'"
+                style="flex: 1; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+              <input type="email" [(ngModel)]="contact.email" [attr.placeholder]="first ? 'E-mailadrespostbus' : 'E-mailadres'"
+                style="flex: 1; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+              <input type="tel" [(ngModel)]="contact.telefoon" placeholder="Telefoonnummer"
+                style="flex: 1; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+              <bldc-button *ngIf="newKlant.contacten.length > 1" type="tertiary" icon="close"
+                (bldcClick)="removeContact(i)"></bldc-button>
+              <bldc-button *ngIf="!first" style="visibility: hidden;" type="tertiary" icon="close"></bldc-button>
             </div>
-          </div>
-          <div class="form-row">
-            <label>ObjectStore</label>
-            <span class="form-value">{{ klant.objectStore }}</span>
-          </div>
-          <div class="form-row">
-            <label>Klasse</label>
-            <span class="form-value">{{ klant.klasse }}</span>
-          </div>
-          <div class="form-actions-right">
-            <bldc-button type="tertiary" elem-title="Bewerken" icon="edit" (bldcClick)="startEdit(klant)"></bldc-button>
-            <bldc-button type="tertiary" elem-title="Verwijderen" icon="delete" (bldcClick)="deleteKlant(klant)"></bldc-button>
-          </div>
-        </div>
-
-        <!-- Edit mode -->
-        <div *ngIf="isEditing && editingKlant" class="form-grid">
-          <div class="form-row">
-            <label>id</label>
-            <span class="form-value">{{ editingKlant.id }}</span>
-          </div>
-          <div class="form-row">
-            <label>Klantnaam</label>
-            <input type="text" [(ngModel)]="editingKlant.klantnaam" placeholder="Klantnaam" />
-          </div>
-          <div class="form-row">
-            <label>Domein/keten</label>
-            <input type="text" [(ngModel)]="editingKlant.domeinKeten" placeholder="Domein/keten" />
-          </div>
-          <div class="form-row">
-            <label>Oplosgroep</label>
-            <input type="text" [(ngModel)]="editingKlant.oplosgroep" placeholder="Oplosgroep" />
-          </div>
-          <div class="form-row form-row-contacts">
-            <label>Contactinformatie</label>
-            <div class="contacts-list">
-              <div class="contact-row" *ngFor="let contact of editingKlant.contacten; let i = index">
-                <input type="text" [(ngModel)]="contact.naam" placeholder="Naam" />
-                <input type="email" [(ngModel)]="contact.email" placeholder="E-mailadres" />
-                <input type="tel" [(ngModel)]="contact.telefoon" placeholder="Telefoonnummer" />
-                <bldc-button *ngIf="editingKlant.contacten.length > 1" type="tertiary" elem-title="Verwijder" icon="close"
-                  (bldcClick)="removeEditContact(i)"></bldc-button>
-              </div>
-              <bldc-button type="tertiary" elem-title="Contact toevoegen" icon="plus"
-                (bldcClick)="addEditContact()"></bldc-button>
-            </div>
-          </div>
-          <div class="form-row">
-            <label>ObjectStore</label>
-            <select [(ngModel)]="editingKlant.objectStore">
+          </bldc-table-data>
+        </bldc-table-row>
+        <bldc-table-row>
+          <bldc-table-data></bldc-table-data>
+          <bldc-table-data>
+            <bldc-button type="tertiary" icon="plus" (bldcClick)="addContact()"></bldc-button>
+          </bldc-table-data>
+        </bldc-table-row>
+        <bldc-table-row>
+          <bldc-table-data><strong>ObjectStore</strong></bldc-table-data>
+          <bldc-table-data>
+            <select [(ngModel)]="newKlant.objectStore"
+              style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;">
               <option value="" disabled>ObjectStore</option>
               <option *ngFor="let os of objectStoreOptions" [value]="os">{{ os }}</option>
             </select>
-          </div>
-          <div class="form-row">
-            <label>Klasse</label>
-            <input type="text" [(ngModel)]="editingKlant.klasse" placeholder="Klasse" />
-          </div>
-          <div class="form-actions">
-            <bldc-button type="secondary" elem-title="Annuleren" (bldcClick)="cancelEdit()"></bldc-button>
-            <bldc-button type="primary" elem-title="Opslaan" (bldcClick)="saveEdit()"></bldc-button>
-          </div>
-        </div>
+          </bldc-table-data>
+        </bldc-table-row>
+        <bldc-table-row>
+          <bldc-table-data><strong>Klasse</strong></bldc-table-data>
+          <bldc-table-data>
+            <input type="text" [(ngModel)]="newKlant.klasse" placeholder="Klasse"
+              style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+          </bldc-table-data>
+        </bldc-table-row>
+      </bldc-table>
+
+      <div style="display: flex; justify-content: flex-end; margin-top: 16px; gap: 8px;">
+        <bldc-button type="secondary" elem-title="Annuleren" (bldcClick)="cancelAdd()"></bldc-button>
+        <bldc-button type="primary" elem-title="Stap 2" icon="chevron-right" icon-pos="right"
+          (bldcClick)="goToStep2()" [attr.disabled]="!newKlant.klantnaam ? true : null">
+        </bldc-button>
+      </div>
+    </bldc-card>
+  </div>
+
+  <!-- ==================== PAGINA 2: TOEVOEGEN KLANT - STAP 2 ==================== -->
+  <div *ngIf="showAddWizard && addStep === 2">
+    <bldc-card [attr.heading]="newKlant.klantnaam || 'Nieuwe klant'" href="javascript:void(0)">
+
+      <bldc-paragraph>Indien er een conversie bestand beschikbaar is, kan deze hier geupload worden:</bldc-paragraph>
+
+      <bldc-card heading="Conversie bestand uploaden" href="javascript:void(0)" (bldcClick)="conversieInput.click(); $event.preventDefault()">
+        <bldc-button type="secondary" elem-title="Uploaden" (bldcClick)="conversieInput.click()"></bldc-button>
+      </bldc-card>
+      <input #conversieInput type="file" accept=".xml,.json,.yaml,.yml" (change)="onConversieUpload($event)" style="display:none" />
+      <bldc-notification *ngIf="newKlant.conversieBestand" type="success" elem-title="Conversie bestand geladen"></bldc-notification>
+
+      <div style="display: flex; justify-content: flex-end; margin-top: 24px; gap: 8px;">
+        <bldc-button type="secondary" elem-title="Vorige" icon="chevron-left" icon-pos="left"
+          (bldcClick)="addStep = 1">
+        </bldc-button>
+        <bldc-button type="primary" elem-title="Toevoegen" (bldcClick)="finishAdd()"></bldc-button>
+      </div>
+    </bldc-card>
+  </div>
+
+  <!-- ==================== PAGINA 3: KLANTEN OVERZICHT ==================== -->
+  <div *ngFor="let klant of filteredKlanten" style="margin-bottom: 4px;">
+    <!-- Accordion header -->
+    <div (click)="toggleKlant(klant)"
+      style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; background: #f9f9f9;">
+      <span>{{ klant.klantnaam }}</span>
+      <bldc-icon [attr.name]="isExpanded(klant) ? 'chevron-up' : 'chevron-down'"></bldc-icon>
+    </div>
+
+    <!-- Accordion body: View -->
+    <div *ngIf="isExpanded(klant) && !isEditing"
+      style="border: 1px solid #ddd; border-top: none; border-radius: 0 0 4px 4px; padding: 16px;">
+
+      <bldc-table>
+        <bldc-table-row>
+          <bldc-table-data><strong>id</strong></bldc-table-data>
+          <bldc-table-data>{{ klant.id }}</bldc-table-data>
+        </bldc-table-row>
+        <bldc-table-row>
+          <bldc-table-data><strong>Klantnaam</strong></bldc-table-data>
+          <bldc-table-data>{{ klant.klantnaam }}</bldc-table-data>
+        </bldc-table-row>
+        <bldc-table-row>
+          <bldc-table-data><strong>Domein/keten</strong></bldc-table-data>
+          <bldc-table-data>{{ klant.domeinKeten }}</bldc-table-data>
+        </bldc-table-row>
+        <bldc-table-row>
+          <bldc-table-data><strong>Oplosgroep</strong></bldc-table-data>
+          <bldc-table-data>{{ klant.oplosgroep }}</bldc-table-data>
+        </bldc-table-row>
+        <bldc-table-row *ngFor="let contact of klant.contacten; let first = first">
+          <bldc-table-data><strong *ngIf="first">Contactinformatie</strong></bldc-table-data>
+          <bldc-table-data>
+            <div style="display: flex; gap: 16px;">
+              <span>{{ contact.naam }}</span>
+              <span>{{ contact.email }}</span>
+              <span>{{ contact.telefoon }}</span>
+            </div>
+          </bldc-table-data>
+        </bldc-table-row>
+        <bldc-table-row>
+          <bldc-table-data><strong>ObjectStore</strong></bldc-table-data>
+          <bldc-table-data>{{ klant.objectStore }}</bldc-table-data>
+        </bldc-table-row>
+        <bldc-table-row>
+          <bldc-table-data><strong>Klasse</strong></bldc-table-data>
+          <bldc-table-data>{{ klant.klasse }}</bldc-table-data>
+        </bldc-table-row>
+      </bldc-table>
+
+      <div style="display: flex; justify-content: flex-end; margin-top: 8px; gap: 4px;">
+        <bldc-button type="tertiary" icon="edit" (bldcClick)="startEdit(klant)"></bldc-button>
+        <bldc-button type="tertiary" icon="delete" (bldcClick)="deleteKlant(klant)"></bldc-button>
+      </div>
+    </div>
+
+    <!-- Accordion body: Edit -->
+    <div *ngIf="isExpanded(klant) && isEditing && editingKlant"
+      style="border: 1px solid #ddd; border-top: none; border-radius: 0 0 4px 4px; padding: 16px;">
+
+      <bldc-table>
+        <bldc-table-row>
+          <bldc-table-data><strong>id</strong></bldc-table-data>
+          <bldc-table-data>{{ editingKlant.id }}</bldc-table-data>
+        </bldc-table-row>
+        <bldc-table-row>
+          <bldc-table-data><strong>Klantnaam</strong></bldc-table-data>
+          <bldc-table-data>
+            <input type="text" [(ngModel)]="editingKlant.klantnaam" placeholder="Klantnaam"
+              style="width: 100%; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+          </bldc-table-data>
+        </bldc-table-row>
+        <bldc-table-row>
+          <bldc-table-data><strong>Domein/keten</strong></bldc-table-data>
+          <bldc-table-data>
+            <input type="text" [(ngModel)]="editingKlant.domeinKeten" placeholder="Domein/keten"
+              style="width: 100%; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+          </bldc-table-data>
+        </bldc-table-row>
+        <bldc-table-row>
+          <bldc-table-data><strong>Oplosgroep</strong></bldc-table-data>
+          <bldc-table-data>
+            <input type="text" [(ngModel)]="editingKlant.oplosgroep" placeholder="Oplosgroep"
+              style="width: 100%; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+          </bldc-table-data>
+        </bldc-table-row>
+        <bldc-table-row *ngFor="let contact of editingKlant.contacten; let i = index; let first = first">
+          <bldc-table-data><strong *ngIf="first">Contactinformatie</strong></bldc-table-data>
+          <bldc-table-data>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <input type="text" [(ngModel)]="contact.naam" [attr.placeholder]="first ? 'Naampostbus' : 'Naam'"
+                style="flex: 1; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+              <input type="email" [(ngModel)]="contact.email" [attr.placeholder]="first ? 'E-mailadrespostbus' : 'E-mailadres'"
+                style="flex: 1; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+              <input type="tel" [(ngModel)]="contact.telefoon" placeholder="Telefoonnummer"
+                style="flex: 1; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+              <bldc-button *ngIf="editingKlant.contacten.length > 1" type="tertiary" icon="close"
+                (bldcClick)="removeEditContact(i)"></bldc-button>
+            </div>
+          </bldc-table-data>
+        </bldc-table-row>
+        <bldc-table-row>
+          <bldc-table-data></bldc-table-data>
+          <bldc-table-data>
+            <bldc-button type="tertiary" icon="plus" (bldcClick)="addEditContact()"></bldc-button>
+          </bldc-table-data>
+        </bldc-table-row>
+        <bldc-table-row>
+          <bldc-table-data><strong>ObjectStore</strong></bldc-table-data>
+          <bldc-table-data>
+            <select [(ngModel)]="editingKlant.objectStore"
+              style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;">
+              <option value="" disabled>ObjectStore</option>
+              <option *ngFor="let os of objectStoreOptions" [value]="os">{{ os }}</option>
+            </select>
+          </bldc-table-data>
+        </bldc-table-row>
+        <bldc-table-row>
+          <bldc-table-data><strong>Klasse</strong></bldc-table-data>
+          <bldc-table-data>
+            <input type="text" [(ngModel)]="editingKlant.klasse" placeholder="Klasse"
+              style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+          </bldc-table-data>
+        </bldc-table-row>
+      </bldc-table>
+
+      <div style="display: flex; justify-content: flex-end; margin-top: 16px; gap: 8px;">
+        <bldc-button type="secondary" elem-title="Annuleren" (bldcClick)="cancelEdit()"></bldc-button>
+        <bldc-button type="primary" elem-title="Opslaan" (bldcClick)="saveEdit()"></bldc-button>
       </div>
     </div>
   </div>
 
-  <div *ngIf="filteredKlanten.length === 0 && !showAddWizard" class="empty-state">
-    <bldc-paragraph>Geen klanten gevonden. Voeg een nieuwe klant toe of pas de zoekopdracht aan.</bldc-paragraph>
-  </div>
+  <bldc-paragraph *ngIf="filteredKlanten.length === 0 && !showAddWizard">
+    Geen klanten gevonden. Voeg een nieuwe klant toe of pas de zoekopdracht aan.
+  </bldc-paragraph>
 </bldc-container>
