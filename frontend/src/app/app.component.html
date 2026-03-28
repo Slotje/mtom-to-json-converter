@@ -6,8 +6,16 @@
     <bldc-paragraph>Klantconfiguratie mapping tool voor Bulk Toevoer ECM</bldc-paragraph>
   </bldc-header>
 
-  <!-- Progress wizard with Bold step-indicator -->
-  <bldc-step-indicator type="horizontal" [attr.active-step]="wizard.currentStepIndex + 1">
+  <!-- Navigation -->
+  <nav class="app-nav">
+    <bldc-button [attr.type]="isKlantPage ? 'primary' : 'tertiary'" elem-title="Klantconfiguratie"
+      (bldcClick)="navigateTo('/klantconfiguratie')"></bldc-button>
+    <bldc-button [attr.type]="!isKlantPage ? 'primary' : 'tertiary'" elem-title="Converter"
+      (bldcClick)="navigateTo('/config')"></bldc-button>
+  </nav>
+
+  <!-- Progress wizard (only on converter pages) -->
+  <bldc-step-indicator *ngIf="!isKlantPage" type="horizontal" [attr.active-step]="wizard.currentStepIndex + 1">
     <bldc-step
       step-text="1"
       circle-aria-label="Stap 1"

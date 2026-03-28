@@ -4,9 +4,11 @@ import { MtomAnalyzerComponent } from './analyzer/mtom-analyzer/mtom-analyzer.co
 import { VisualMappingComponent } from './mapping/visual-mapping/visual-mapping.component';
 import { ValidationPanelComponent } from './results/validation-panel/validation-panel.component';
 import { ResultDisplayComponent } from './results/result-display/result-display.component';
+import { KlantConfiguratieComponent } from './klant-configuratie/klant-configuratie.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'config', pathMatch: 'full' },
+  { path: '', redirectTo: 'klantconfiguratie', pathMatch: 'full' },
+  { path: 'klantconfiguratie', component: KlantConfiguratieComponent },
   { path: 'config', component: ConfigUploadComponent },
   { path: 'analyze', component: MtomAnalyzerComponent },
   { path: 'mapping', component: VisualMappingComponent },
