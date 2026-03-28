@@ -1,8 +1,8 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Klant, ContactPersoon } from './klant.model';
-import { KlantService } from './klant.service';
+import { Klant, ContactPersoon } from '../model/klant.model';
+import { KlantService } from '../services/klant.service';
 
 @Component({
   selector: 'app-klant-configuratie',

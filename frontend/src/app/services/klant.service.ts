@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Klant } from './klant.model';
+import { Klant } from '../model/klant.model';
 
 @Injectable({ providedIn: 'root' })
 export class KlantService {
