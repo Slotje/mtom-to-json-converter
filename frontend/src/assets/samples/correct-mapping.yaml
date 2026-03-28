@@ -4,98 +4,79 @@ metadataMapping:
   objectStore: "OS_BTE_PROD"
   documentClass: "BTE_Aangifte"
   fields:
-    # ECM_ID -> BBM1 (BerichtId)
-    - sourceField: "//ECM_ID"
+    # ECM metadata velden (key-value pattern)
+    - sourceField: "//ecmid"
       targetProperty: "BBM1"
       dataType: "string"
       required: true
-    # Eigenaar_Niveau_1 -> BBM2 (Bedrijfsonderdeel)
-    - sourceField: "//Eigenaar_Niveau_1"
+    - sourceField: "//value[@key='Eigenaar_L1']"
       targetProperty: "BBM2"
       dataType: "string"
       required: true
-    # Eigenaar_Niveau_2 -> BBM3 (Systeem/Stroom)
-    - sourceField: "//Eigenaar_Niveau_2"
+    - sourceField: "//value[@key='Eigenaar_L2']"
       targetProperty: "BBM3"
       dataType: "string"
       required: true
-    # Eigenaar_Niveau_3 -> BBM4 (Keuzelijst)
-    - sourceField: "//Eigenaar_Niveau_3"
+    - sourceField: "//value[@key='Eigenaar_L3']"
       targetProperty: "BBM4"
       dataType: "string"
       required: true
-    # Kenmerk_Inhoud -> BBM6 (KenmerkInhoud)
-    - sourceField: "//Kenmerk_Inhoud"
+    - sourceField: "//value[@key='KenmerkInhoud']"
       targetProperty: "BBM6"
       dataType: "string"
       required: true
-    # Kenmerk_Type -> BBM10 (KenmerkType)
-    - sourceField: "//Kenmerk_Type"
+    - sourceField: "//value[@key='KenmerkType']"
       targetProperty: "BBM10"
       dataType: "string"
       required: true
-    # Documentsoort
-    - sourceField: "//Documentsoort"
+    - sourceField: "//value[@key='Documentsoort']"
       targetProperty: "Documentsoort"
       dataType: "string"
       required: true
-    # Kanaal
-    - sourceField: "//Kanaal"
+    - sourceField: "//value[@key='Kanaal']"
       targetProperty: "Kanaal"
       dataType: "string"
       required: true
-    # Berichtstroom -> Middel
-    - sourceField: "//Berichtstroom"
+    - sourceField: "//value[@key='Berichtstroom']"
       targetProperty: "Middel"
       dataType: "string"
       required: true
-      multiValue: true
-    # Richting
-    - sourceField: "//Richting"
+    - sourceField: "//value[@key='Richting']"
       targetProperty: "Richting"
       dataType: "string"
       required: true
-    # Bestandsnaam -> DocumentTitle
-    - sourceField: "//Bestandsnaam"
+    - sourceField: "//value[@key='Bestandsformaat']"
       targetProperty: "DocumentTitle"
       dataType: "string"
       required: true
-    # Dekking_Begin -> DekkingBeginDatum
-    - sourceField: "//Dekking_Begin"
+    - sourceField: "//value[@key='DekkingBeginDatum']"
       targetProperty: "DekkingBeginDatum"
       dataType: "date"
       required: false
       format: "yyyy-MM-dd"
-    # Dekking_Eind -> DekkingEindDatum
-    - sourceField: "//Dekking_Eind"
+    - sourceField: "//value[@key='DekkingEindDatum']"
       targetProperty: "DekkingEindDatum"
       dataType: "date"
       required: false
       format: "yyyy-MM-dd"
-    # Taal
-    - sourceField: "//Taal"
+    - sourceField: "//value[@key='Taal']"
       targetProperty: "Taal"
       dataType: "string"
       required: false
-      multiValue: true
-    # Referentiecode
-    - sourceField: "//Referentiecode"
+    - sourceField: "//value[@key='Referentiecode']"
       targetProperty: "Referentiecode"
       dataType: "string"
       required: false
-    # Archief_Start -> StartArchiefwaardigheid
-    - sourceField: "//Archief_Start"
+    - sourceField: "//value[@key='StartArchiefwaardigheid']"
       targetProperty: "StartArchiefwaardigheid"
       dataType: "date"
       required: false
       format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-    # Activiteit
-    - sourceField: "//Activiteit"
+    - sourceField: "//value[@key='Activiteit']"
       targetProperty: "Activiteit"
       dataType: "string"
       required: false
-    # Berichtstroom
-    - sourceField: "//Berichtstroom"
+    - sourceField: "//value[@key='Berichtstroom']"
       targetProperty: "Berichtstroom"
       dataType: "string"
       required: false

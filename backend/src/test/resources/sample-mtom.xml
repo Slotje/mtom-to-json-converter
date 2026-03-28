@@ -1,63 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ecm="http://belastingdienst.nl/ecm" xmlns:mhs="http://belastingdienst.nl/mhs">
-  <soapenv:Header/>
-  <soapenv:Body>
-    <ecm:ECM_Bericht>
-      <ecm:ECM_Metadata>
-        <ecm:Berichtklasse>ARC</ecm:Berichtklasse>
-        <ecm:Bron_ID>COS-48b8d098c1fd4b80927309e72dd41ef6-2026-02-09T16:00:57.329Z</ecm:Bron_ID>
-        <ecm:Gemaakt_Door>PERRON</ecm:Gemaakt_Door>
-        <ecm:Aangemaakt>2026-02-09T16:00:57.357Z</ecm:Aangemaakt>
-        <ecm:ECM_ID>48b8d098c1fd4b80927309e72dd41ef6</ecm:ECM_ID>
-        <ecm:Eigenschappen>
-          <ecm:Sjabloon_ID>VRAPP</ecm:Sjabloon_ID>
-          <ecm:Kenmerk_Inhoud>000000000</ecm:Kenmerk_Inhoud>
-          <ecm:Kenmerk_Type>Persoon zonder fi-nummer</ecm:Kenmerk_Type>
-          <ecm:Bestandsformaat>xml</ecm:Bestandsformaat>
-          <ecm:Referentiecode>48b8d098c1fd4b80927309e72dd41ef6</ecm:Referentiecode>
-        </ecm:Eigenschappen>
-        <ecm:Periode>
-          <ecm:Dekking_Begin>2026-01-01</ecm:Dekking_Begin>
-          <ecm:Dekking_Eind>2026-12-31</ecm:Dekking_Eind>
-          <ecm:Archief_Start>2026-02-09T16:00:57.000Z</ecm:Archief_Start>
-        </ecm:Periode>
-        <ecm:Classificatie>
-          <ecm:Kanaal>Message</ecm:Kanaal>
-          <ecm:Systeem>COS</ecm:Systeem>
-          <ecm:Berichtstroom>VRF</ecm:Berichtstroom>
-          <ecm:Documentsoort>Gegevenslevering</ecm:Documentsoort>
-          <ecm:Taal>Nederlands</ecm:Taal>
-          <ecm:Richting>Inkomend</ecm:Richting>
-          <ecm:Activiteit>00</ecm:Activiteit>
-        </ecm:Classificatie>
-        <ecm:Organisatie>
-          <ecm:Eigenaar_Niveau_1>Belastingen</ecm:Eigenaar_Niveau_1>
-          <ecm:Eigenaar_Niveau_2>Omzetbelasting</ecm:Eigenaar_Niveau_2>
-          <ecm:Eigenaar_Niveau_3>Verzoek</ecm:Eigenaar_Niveau_3>
-        </ecm:Organisatie>
-      </ecm:ECM_Metadata>
-      <mhs:MHS_Header>
-        <mhs:UUID>48b8d098c1fd4b80927309e72dd41ef6</mhs:UUID>
-        <mhs:Volgnummer>1</mhs:Volgnummer>
-        <mhs:Tijdstippen>
-          <mhs:Ontvangst>2026-02-09T16:00:57Z</mhs:Ontvangst>
-          <mhs:Identificatie>2026-02-09T16:00:57Z</mhs:Identificatie>
-          <mhs:Aflevering>2026-02-09T16:00:57Z</mhs:Aflevering>
-        </mhs:Tijdstippen>
-        <mhs:Berichttype>
-          <mhs:Kanaalcode>CCN</mhs:Kanaalcode>
-          <mhs:Stroomcode>VREFUND</mhs:Stroomcode>
-          <mhs:Soortcode>VRAPP-MES</mhs:Soortcode>
-        </mhs:Berichttype>
-        <mhs:Kenmerken>
-          <mhs:Berichtkenmerk>42452e56523236303230393136333632303238307c86aae2</mhs:Berichtkenmerk>
-          <mhs:Correlatie_Kenmerk>000000000000000000000000000000000000000000000000</mhs:Correlatie_Kenmerk>
-        </mhs:Kenmerken>
-      </mhs:MHS_Header>
-      <ecm:Content>
-        <ecm:Bestandsnaam>message.xml</ecm:Bestandsnaam>
-        <ecm:BinaryContent>UEsDBBQACAgIAByISVwAAAAAAAAAAAAAAAALAAAAbWVzc2FnZS54bWw=</ecm:BinaryContent>
-      </ecm:Content>
-    </ecm:ECM_Bericht>
-  </soapenv:Body>
-</soapenv:Envelope>
+MIME-Version: 1.0
+Content-Type: multipart/related; start="<0_855695f205d011f1bdde0ae9108b0000>"; boundary="MIMEBoundary48b8d098c1fd4b80927309e72dd41ef6"; type="application/xop+xml"
+Content-Description: multipart mime message
+
+--MIMEBoundary48b8d098c1fd4b80927309e72dd41ef6
+Content-Type: application/xop+xml; charset=UTF-8; type="text/xml"
+Content-Transfer-Encoding: 8bit
+Content-ID: <0_855695f205d011f1bdde0ae9108b0000>
+
+<xop xmlns:xop="http://www.w3.org/2004/08/xop/include"><xop:Include href="cid:1_855695f205d011f1bdde0ae9108b0000"/><xop:Include href="cid:2_855695f205d011f1bdde0ae9108b0000"/></xop>
+--MIMEBoundary48b8d098c1fd4b80927309e72dd41ef6
+Content-Type: application/xml; charset=UTF-8; type="text/xml"
+Content-Transfer-Encoding: 8bit
+Content-ID: <1_855695f205d011f1bdde0ae9108b0000>
+
+<bericht><ecm:ecm xmlns:ecm="http://www.belastingdienst.nl/ecm"><header><class>ARC</class><sourceid>COS-48b8d098c1fd4b80927309e72dd41ef6-2026-02-09T16:00:57.329Z</sourceid><created>2026-02-09T16:00:57.357Z</created><createdby>PERRON</createdby></header><metadata><ecmid>48b8d098c1fd4b80927309e72dd41ef6</ecmid><value key="Sjabloon_id">VRAPP</value><value key="KenmerkInhoud">000000000</value><value key="KenmerkType">Persoon zonder fi nr</value><value key="Bestandsformaat">xml</value><value key="DekkingBeginDatum">2026-01-01</value><value key="DekkingEindDatum">2026-12-31</value><value key="Kanaal">Message</value><value key="NaamSysteem">COS</value><value key="Omschrijving">48b8d098-c1fd-4b80-9273-09e72dd41ef6</value><value key="Referentiecode">48b8d098c1fd4b80927309e72dd41ef6</value><value key="StartArchiefwaardigheid">2026-02-09T16:00:57.000Z</value><value key="Taal">Nederlands</value><value key="Activiteit">00</value><value key="Berichtstroom">VRF</value><value key="Documentsoort">Gegevenslevering</value><value key="Eigenaar_L1">Belastingen</value><value key="Eigenaar_L2">Omzetbelasting</value><value key="Eigenaar_L3">Verzoek</value><value key="Richting">Inkomend</value></metadata></ecm:ecm></bericht>
+--MIMEBoundary48b8d098c1fd4b80927309e72dd41ef6
+Content-Type: text/xml
+Content-Transfer-Encoding: 8bit
+Content-ID: <2_855695f205d011f1bdde0ae9108b0000>
+Content-Disposition: attachment; filename="bericht.xml"
+
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><MHS-ONTV:ontvangen xmlns:MHS-ONTV="http://xml.belastingdienst.nl/schemas/mhs/ontvangen/2008/03" xmlns:CSI="http://xml.belastingdienst.nl/schemas/mhs/ontvangen/2008/03" xmlns:mhs="http://xml.belastingdienst.nl/schemas/mhs/mhstypen/2008/03" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><MHS-ONTV:header><mhs:bericht><mhs:uuid>48b8d098c1fd4b80927309e72dd41ef6</mhs:uuid><mhs:ontvangstdatumtijd>2026-02-09T16:00:57Z</mhs:ontvangstdatumtijd><mhs:identificatiedatumtijd>2026-02-09T16:00:57Z</mhs:identificatiedatumtijd><mhs:afleverdatumtijd>2026-02-09T16:00:57Z</mhs:afleverdatumtijd><mhs:volgnummer>1</mhs:volgnummer><mhs:berichttype><mhs:kanaalcode>CCN</mhs:kanaalcode><mhs:stroomcode>VREFUND</mhs:stroomcode><mhs:soortcode>VRAPP-MES</mhs:soortcode></mhs:berichttype><mhs:berichtKenmerk>42452e56523236303230393136333632303238307c86aae2</mhs:berichtKenmerk><mhs:correlatieKenmerk>000000000000000000000000000000000000000000000000</mhs:correlatieKenmerk></mhs:bericht></MHS-ONTV:header><MHS-ONTV:body><MHS-ONTV:bericht>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</MHS-ONTV:bericht></MHS-ONTV:body></MHS-ONTV:ontvangen>
+--MIMEBoundary48b8d098c1fd4b80927309e72dd41ef6--

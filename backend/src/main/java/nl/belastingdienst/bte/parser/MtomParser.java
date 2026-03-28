@@ -49,35 +49,7 @@ public class MtomParser {
         }
 
         if (effectiveContentType != null && effectiveContentType.contains("multipart/related")) {
-            // MTOM/MIME multipart message
-            ByteArrayDataSource dataSource = new ByteArrayDataSource(effectiveContent, effectiveContentType);
-            MimeMultipart multipart = new MimeMultipart(dataSource);
-
-            for (int i = 0; i < multipart.getCount(); i++) {
-                BodyPart part = multipart.getBodyPart(i);
-                String partContentType = part.getContentType();
-
-                if (i == 0 || partContentType.contains("text/xml") || partContentType.contains("application/xop+xml")) {
-                    // SOAP envelope / XML part
-                    String xmlContent = new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
-                    result.setRawXml(xmlContent);
-                    result.setXmlDocument(parseXml(xmlContent));
-                } else {
-                    // Binary attachment
-                    String contentId = part.getHeader("Content-ID") != null ? part.getHeader("Content-ID")[0] : "attachment-" + i;
-                    contentId = contentId.replaceAll("[<>]", "");
-                    byte[] attachmentData = part.getInputStream().readAllBytes();
-
-                    // Try to decode base64 and unzip if applicable
-                    try {
-                        byte[] decoded = Base64.getDecoder().decode(attachmentData);
-                        byte[] unzipped = tryUnzip(decoded);
-                        result.getAttachments().put(contentId, unzipped != null ? unzipped : decoded);
-                    } catch (Exception e) {
-                        result.getAttachments().put(contentId, attachmentData);
-                    }
-                }
-            }
+            parseMultipartMime(effectiveContent, effectiveContentType, result);
         } else {
             // Plain XML (not MTOM wrapped)
             String xmlContent = new String(effectiveContent, StandardCharsets.UTF_8);
@@ -85,10 +57,160 @@ public class MtomParser {
             result.setXmlDocument(parseXml(xmlContent));
         }
 
-        // Resolve XOP includes
-        resolveXopIncludes(result);
-
         return result;
+    }
+
+    private void parseMultipartMime(byte[] content, String contentType, ParsedMtomMessage result) throws Exception {
+        ByteArrayDataSource dataSource = new ByteArrayDataSource(content, contentType);
+        MimeMultipart multipart = new MimeMultipart(dataSource);
+
+        // Extract start parameter to identify XOP root part
+        String startContentId = extractStartContentId(contentType);
+
+        // Collect all parts by content-id
+        List<String> xmlParts = new ArrayList<>();
+        Map<String, byte[]> attachmentsByContentId = new HashMap<>();
+
+        for (int i = 0; i < multipart.getCount(); i++) {
+            BodyPart part = multipart.getBodyPart(i);
+            String partContentType = part.getContentType();
+            String partContentId = getPartContentId(part);
+            byte[] partData = part.getInputStream().readAllBytes();
+
+            // Check if this is the XOP root/manifest part (just contains xop:Include references)
+            if (isXopManifest(partContentId, startContentId, i, partData)) {
+                // Store referenced content-ids but skip the manifest itself
+                continue;
+            }
+
+            boolean isXml = partContentType.contains("xml") || partContentType.contains("xop+xml");
+
+            if (isXml) {
+                String xmlContent = new String(partData, StandardCharsets.UTF_8);
+                // Strip XML declaration for combining
+                xmlContent = xmlContent.replaceFirst("^<\\?xml[^?]*\\?>\\s*", "");
+                xmlParts.add(xmlContent);
+
+                // Also store by content-id so XOP includes can reference it
+                if (partContentId != null) {
+                    attachmentsByContentId.put(partContentId, partData);
+                }
+            } else {
+                // Binary attachment
+                if (partContentId != null) {
+                    attachmentsByContentId.put(partContentId, partData);
+                }
+            }
+        }
+
+        result.setAttachments(attachmentsByContentId);
+
+        // Build combined XML document from all XML parts
+        if (xmlParts.size() == 1) {
+            String xml = xmlParts.get(0);
+            result.setRawXml(xml);
+            result.setXmlDocument(parseXml(xml));
+        } else if (xmlParts.size() > 1) {
+            String combined = "<mtom-bericht>" + String.join("", xmlParts) + "</mtom-bericht>";
+            result.setRawXml(combined);
+            result.setXmlDocument(parseXml(combined));
+        }
+
+        // Try to decode Base64 content in the XML (e.g. MHS body with zipped payload)
+        resolveBase64Payloads(result);
+    }
+
+    private String getPartContentId(BodyPart part) throws Exception {
+        String[] headers = part.getHeader("Content-ID");
+        if (headers == null || headers.length == 0) return null;
+        return headers[0].replaceAll("[<>]", "").trim();
+    }
+
+    private String extractStartContentId(String contentType) {
+        int startIdx = contentType.indexOf("start=\"");
+        if (startIdx < 0) return null;
+        int begin = startIdx + 7;
+        int end = contentType.indexOf("\"", begin);
+        if (end < 0) return null;
+        return contentType.substring(begin, end).replaceAll("[<>]", "").trim();
+    }
+
+    private boolean isXopManifest(String partContentId, String startContentId, int index, byte[] data) {
+        // Match by start parameter content-id
+        if (startContentId != null && partContentId != null && partContentId.equals(startContentId)) {
+            return true;
+        }
+        // Fallback: check if first part is just an XOP container
+        if (index == 0) {
+            String text = new String(data, StandardCharsets.UTF_8).trim();
+            if (text.startsWith("<xop") && text.contains("xop:Include")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Try to find and decode Base64-encoded payloads in the XML document.
+     * For example, the MHS body often contains a Base64-encoded ZIP with the actual message.
+     */
+    private void resolveBase64Payloads(ParsedMtomMessage message) {
+        if (message.getXmlDocument() == null) return;
+
+        // Look for elements with long Base64-like text content
+        resolveBase64Recursive(message.getXmlDocument().getDocumentElement(), message);
+    }
+
+    private void resolveBase64Recursive(Element element, ParsedMtomMessage message) {
+        NodeList children = element.getChildNodes();
+        for (int i = 0; i < children.getLength(); i++) {
+            if (children.item(i) instanceof Element) {
+                resolveBase64Recursive((Element) children.item(i), message);
+            }
+        }
+
+        // Check if this leaf element has long Base64-like content
+        if (!hasChildElements(element)) {
+            String text = element.getTextContent();
+            if (text != null && text.length() > 200 && text.matches("[A-Za-z0-9+/=\\s]+")) {
+                try {
+                    byte[] decoded = Base64.getDecoder().decode(text.replaceAll("\\s", ""));
+                    byte[] unzipped = tryUnzip(decoded);
+                    byte[] payload = unzipped != null ? unzipped : decoded;
+                    String payloadText = new String(payload, StandardCharsets.UTF_8);
+
+                    // If the decoded content is XML, try to parse and embed it
+                    if (payloadText.trim().startsWith("<")) {
+                        try {
+                            Document payloadDoc = parseXml(payloadText);
+                            // Import the payload's root element into our document
+                            Node imported = element.getOwnerDocument().importNode(
+                                payloadDoc.getDocumentElement(), true);
+                            // Replace Base64 text with parsed XML
+                            while (element.hasChildNodes()) {
+                                element.removeChild(element.getFirstChild());
+                            }
+                            element.appendChild(imported);
+                        } catch (Exception e) {
+                            // Not valid XML, store as attachment
+                            message.getAttachments().put("decoded-payload", payload);
+                        }
+                    } else {
+                        message.getAttachments().put("decoded-payload", payload);
+                    }
+                } catch (Exception e) {
+                    // Not Base64, leave as is
+                }
+            }
+        }
+    }
+
+    private boolean hasChildElements(Element element) {
+        NodeList children = element.getChildNodes();
+        for (int i = 0; i < children.getLength(); i++) {
+            if (children.item(i) instanceof Element) return true;
+        }
+        return false;
     }
 
     private static class MimeDetectionResult {
@@ -206,28 +328,6 @@ public class MtomParser {
         factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
         DocumentBuilder builder = factory.newDocumentBuilder();
         return builder.parse(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
-    }
-
-    private void resolveXopIncludes(ParsedMtomMessage message) {
-        if (message.getXmlDocument() == null) return;
-
-        NodeList includes = message.getXmlDocument().getElementsByTagNameNS(
-            "http://www.w3.org/2004/08/xop/include", "Include");
-
-        for (int i = 0; i < includes.getLength(); i++) {
-            Element include = (Element) includes.item(i);
-            String href = include.getAttribute("href");
-            if (href != null && href.startsWith("cid:")) {
-                String contentId = href.substring(4);
-                byte[] data = message.getAttachments().get(contentId);
-                if (data != null) {
-                    String textContent = new String(data, StandardCharsets.UTF_8);
-                    Node parent = include.getParentNode();
-                    parent.removeChild(include);
-                    parent.setTextContent(textContent);
-                }
-            }
-        }
     }
 
     private byte[] tryUnzip(byte[] data) {
