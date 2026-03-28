@@ -4,11 +4,18 @@ import { Klant } from '../model/klant.model';
 @Injectable({ providedIn: 'root' })
 export class KlantService {
   private storageKey = 'bte-klanten';
+  private versionKey = 'bte-klanten-version';
+  private currentVersion = '2';
 
   // Shared state for add wizard (between step 1 and step 2)
   pendingKlant: Klant | null = null;
 
   getKlanten(): Klant[] {
+    const storedVersion = localStorage.getItem(this.versionKey);
+    if (storedVersion !== this.currentVersion) {
+      localStorage.removeItem(this.storageKey);
+      localStorage.setItem(this.versionKey, this.currentVersion);
+    }
     const data = localStorage.getItem(this.storageKey);
     return data ? JSON.parse(data) : this.getDefaultKlanten();
   }
