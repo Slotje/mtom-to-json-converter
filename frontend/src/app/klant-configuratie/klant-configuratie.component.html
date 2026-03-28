@@ -12,8 +12,8 @@
       </bldc-dropdown>
       <input #importInput type="file" accept=".json" (change)="importKlant($event)" style="display: none;" />
     </div>
-    <input type="text" placeholder="Search" [(ngModel)]="searchTerm" (input)="onSearch()"
-      style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; width: 200px;" />
+    <bldc-input label="Zoeken" input-mode="search" [attr.bldc-value]="searchTerm" required="false"
+      (bldcInput)="onSearchInput($event)"></bldc-input>
   </div>
 
   <!-- Klanten accordion list -->
@@ -35,49 +35,41 @@
         <bldc-table-row>
           <bldc-table-data><strong>Klantnaam</strong></bldc-table-data>
           <bldc-table-data>
-            <input type="text" [value]="klant.klantnaam" readonly disabled
-              style="width: 100%; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5; color: #555;" />
+            <bldc-input label="" [attr.bldc-value]="klant.klantnaam" readonly="true" required="false"></bldc-input>
           </bldc-table-data>
         </bldc-table-row>
         <bldc-table-row>
           <bldc-table-data><strong>Domein/keten</strong></bldc-table-data>
           <bldc-table-data>
-            <input type="text" [value]="klant.domeinKeten" readonly disabled
-              style="width: 100%; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5; color: #555;" />
+            <bldc-input label="" [attr.bldc-value]="klant.domeinKeten" readonly="true" required="false"></bldc-input>
           </bldc-table-data>
         </bldc-table-row>
         <bldc-table-row>
           <bldc-table-data><strong>Oplosgroep</strong></bldc-table-data>
           <bldc-table-data>
-            <input type="text" [value]="klant.oplosgroep" readonly disabled
-              style="width: 100%; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5; color: #555;" />
+            <bldc-input label="" [attr.bldc-value]="klant.oplosgroep" readonly="true" required="false"></bldc-input>
           </bldc-table-data>
         </bldc-table-row>
         <bldc-table-row *ngFor="let contact of klant.contacten; let first = first">
           <bldc-table-data><strong *ngIf="first">Contactinformatie</strong></bldc-table-data>
           <bldc-table-data>
             <div style="display: flex; gap: 8px;">
-              <input type="text" [value]="contact.naam" readonly disabled
-                style="flex: 1; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5; color: #555;" />
-              <input type="text" [value]="contact.email" readonly disabled
-                style="flex: 1; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5; color: #555;" />
-              <input type="text" [value]="contact.telefoon" readonly disabled
-                style="flex: 1; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5; color: #555;" />
+              <bldc-input label="" [attr.bldc-value]="contact.naam" readonly="true" required="false"></bldc-input>
+              <bldc-input label="" [attr.bldc-value]="contact.email" readonly="true" required="false"></bldc-input>
+              <bldc-input label="" [attr.bldc-value]="contact.telefoon" readonly="true" required="false"></bldc-input>
             </div>
           </bldc-table-data>
         </bldc-table-row>
         <bldc-table-row>
           <bldc-table-data><strong>ObjectStore</strong></bldc-table-data>
           <bldc-table-data>
-            <input type="text" [value]="klant.objectStore" readonly disabled
-              style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5; color: #555;" />
+            <bldc-input label="" [attr.bldc-value]="klant.objectStore" readonly="true" required="false"></bldc-input>
           </bldc-table-data>
         </bldc-table-row>
         <bldc-table-row>
           <bldc-table-data><strong>Klasse</strong></bldc-table-data>
           <bldc-table-data>
-            <input type="text" [value]="klant.klasse" readonly disabled
-              style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5; color: #555;" />
+            <bldc-input label="" [attr.bldc-value]="klant.klasse" readonly="true" required="false"></bldc-input>
           </bldc-table-data>
         </bldc-table-row>
       </bldc-table>
@@ -97,34 +89,34 @@
         <bldc-table-row>
           <bldc-table-data><strong>Klantnaam</strong></bldc-table-data>
           <bldc-table-data>
-            <input type="text" [(ngModel)]="editingKlant.klantnaam" placeholder="Klantnaam"
-              style="width: 100%; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+            <bldc-input label="" [attr.bldc-value]="editingKlant.klantnaam" required="false"
+              (bldcValueChange)="editingKlant.klantnaam = $any($event).detail"></bldc-input>
           </bldc-table-data>
         </bldc-table-row>
         <bldc-table-row>
           <bldc-table-data><strong>Domein/keten</strong></bldc-table-data>
           <bldc-table-data>
-            <input type="text" [(ngModel)]="editingKlant.domeinKeten" placeholder="Domein/keten"
-              style="width: 100%; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+            <bldc-input label="" [attr.bldc-value]="editingKlant.domeinKeten" required="false"
+              (bldcValueChange)="editingKlant.domeinKeten = $any($event).detail"></bldc-input>
           </bldc-table-data>
         </bldc-table-row>
         <bldc-table-row>
           <bldc-table-data><strong>Oplosgroep</strong></bldc-table-data>
           <bldc-table-data>
-            <input type="text" [(ngModel)]="editingKlant.oplosgroep" placeholder="Oplosgroep"
-              style="width: 100%; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+            <bldc-input label="" [attr.bldc-value]="editingKlant.oplosgroep" required="false"
+              (bldcValueChange)="editingKlant.oplosgroep = $any($event).detail"></bldc-input>
           </bldc-table-data>
         </bldc-table-row>
         <bldc-table-row *ngFor="let contact of editingKlant.contacten; let i = index; let first = first">
           <bldc-table-data><strong *ngIf="first">Contactinformatie</strong></bldc-table-data>
           <bldc-table-data>
             <div style="display: flex; gap: 8px; align-items: center;">
-              <input type="text" [(ngModel)]="contact.naam" [attr.placeholder]="first ? 'Naampostbus' : 'Naam'"
-                style="flex: 1; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
-              <input type="email" [(ngModel)]="contact.email" [attr.placeholder]="first ? 'E-mailadrespostbus' : 'E-mailadres'"
-                style="flex: 1; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
-              <input type="tel" [(ngModel)]="contact.telefoon" placeholder="Telefoonnummer"
-                style="flex: 1; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+              <bldc-input label="" [attr.bldc-value]="contact.naam" required="false"
+                (bldcValueChange)="contact.naam = $any($event).detail"></bldc-input>
+              <bldc-input label="" [attr.bldc-value]="contact.email" input-mode="email" required="false"
+                (bldcValueChange)="contact.email = $any($event).detail"></bldc-input>
+              <bldc-input label="" [attr.bldc-value]="contact.telefoon" input-mode="tel" required="false"
+                (bldcValueChange)="contact.telefoon = $any($event).detail"></bldc-input>
               <bldc-button *ngIf="editingKlant.contacten.length > 1" type="tertiary" icon="close"
                 (bldcClick)="removeEditContact(i)"></bldc-button>
             </div>
@@ -139,8 +131,7 @@
         <bldc-table-row>
           <bldc-table-data><strong>ObjectStore</strong></bldc-table-data>
           <bldc-table-data>
-            <select [(ngModel)]="editingKlant.objectStore"
-              style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;">
+            <select [(ngModel)]="editingKlant.objectStore">
               <option value="" disabled>ObjectStore</option>
               <option *ngFor="let os of objectStoreOptions" [value]="os">{{ os }}</option>
             </select>
@@ -149,8 +140,8 @@
         <bldc-table-row>
           <bldc-table-data><strong>Klasse</strong></bldc-table-data>
           <bldc-table-data>
-            <input type="text" [(ngModel)]="editingKlant.klasse" placeholder="Klasse"
-              style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+            <bldc-input label="" [attr.bldc-value]="editingKlant.klasse" required="false"
+              (bldcValueChange)="editingKlant.klasse = $any($event).detail"></bldc-input>
           </bldc-table-data>
         </bldc-table-row>
       </bldc-table>

@@ -29,6 +29,11 @@ export class KlantConfiguratieComponent implements OnInit {
     this.filteredKlanten = [...this.klanten];
   }
 
+  onSearchInput(event: any) {
+    this.searchTerm = event.detail?.bldcValue || '';
+    this.onSearch();
+  }
+
   onSearch() {
     const term = this.searchTerm.toLowerCase();
     this.filteredKlanten = this.klanten.filter(k =>

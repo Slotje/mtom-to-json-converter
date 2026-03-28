@@ -4,8 +4,7 @@
     <bldc-button type="primary" elem-title="Toevoegen klant" icon="plus" icon-pos="left"
       [attr.disabled]="true">
     </bldc-button>
-    <input type="text" placeholder="Search" disabled
-      style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; width: 200px; background: #f5f5f5;" />
+    <bldc-input label="Zoeken" input-mode="search" disabled="true" required="false"></bldc-input>
   </div>
 
   <!-- Accordion: 1 item open -->
@@ -37,34 +36,34 @@
           <bldc-table-row>
             <bldc-table-data><strong>Klantnaam</strong></bldc-table-data>
             <bldc-table-data>
-              <input type="text" [(ngModel)]="klant.klantnaam" placeholder="Klantnaam"
-                style="width: 100%; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+              <bldc-input label="" [attr.bldc-value]="klant.klantnaam" required="false"
+                (bldcValueChange)="klant.klantnaam = $any($event).detail"></bldc-input>
             </bldc-table-data>
           </bldc-table-row>
           <bldc-table-row>
             <bldc-table-data><strong>Domein/keten</strong></bldc-table-data>
             <bldc-table-data>
-              <input type="text" [(ngModel)]="klant.domeinKeten" placeholder="Domein/keten"
-                style="width: 100%; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+              <bldc-input label="" [attr.bldc-value]="klant.domeinKeten" required="false"
+                (bldcValueChange)="klant.domeinKeten = $any($event).detail"></bldc-input>
             </bldc-table-data>
           </bldc-table-row>
           <bldc-table-row>
             <bldc-table-data><strong>Oplosgroep</strong></bldc-table-data>
             <bldc-table-data>
-              <input type="text" [(ngModel)]="klant.oplosgroep" placeholder="Oplosgroep"
-                style="width: 100%; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+              <bldc-input label="" [attr.bldc-value]="klant.oplosgroep" required="false"
+                (bldcValueChange)="klant.oplosgroep = $any($event).detail"></bldc-input>
             </bldc-table-data>
           </bldc-table-row>
           <bldc-table-row *ngFor="let contact of klant.contacten; let i = index; let first = first">
             <bldc-table-data><strong *ngIf="first">Contactinformatie</strong></bldc-table-data>
             <bldc-table-data>
               <div style="display: flex; gap: 8px; align-items: center;">
-                <input type="text" [(ngModel)]="contact.naam" [attr.placeholder]="first ? 'Naampostbus' : 'Naam'"
-                  style="flex: 1; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
-                <input type="email" [(ngModel)]="contact.email" [attr.placeholder]="first ? 'E-mailadrespostbus' : 'E-mailadres'"
-                  style="flex: 1; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
-                <input type="tel" [(ngModel)]="contact.telefoon" placeholder="Telefoonnummer"
-                  style="flex: 1; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+                <bldc-input label="" [attr.bldc-value]="contact.naam" required="false"
+                  (bldcValueChange)="contact.naam = $any($event).detail"></bldc-input>
+                <bldc-input label="" [attr.bldc-value]="contact.email" input-mode="email" required="false"
+                  (bldcValueChange)="contact.email = $any($event).detail"></bldc-input>
+                <bldc-input label="" [attr.bldc-value]="contact.telefoon" input-mode="tel" required="false"
+                  (bldcValueChange)="contact.telefoon = $any($event).detail"></bldc-input>
                 <bldc-button *ngIf="klant.contacten.length > 1" type="tertiary" icon="close"
                   (bldcClick)="removeContact(i)"></bldc-button>
               </div>
@@ -79,8 +78,7 @@
           <bldc-table-row>
             <bldc-table-data><strong>ObjectStore</strong></bldc-table-data>
             <bldc-table-data>
-              <select [(ngModel)]="klant.objectStore"
-                style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;">
+              <select [(ngModel)]="klant.objectStore">
                 <option value="" disabled>ObjectStore</option>
                 <option *ngFor="let os of objectStoreOptions" [value]="os">{{ os }}</option>
               </select>
@@ -89,8 +87,8 @@
           <bldc-table-row>
             <bldc-table-data><strong>Klasse</strong></bldc-table-data>
             <bldc-table-data>
-              <input type="text" [(ngModel)]="klant.klasse" placeholder="Klasse"
-                style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;" />
+              <bldc-input label="" [attr.bldc-value]="klant.klasse" required="false"
+                (bldcValueChange)="klant.klasse = $any($event).detail"></bldc-input>
             </bldc-table-data>
           </bldc-table-row>
         </bldc-table>
