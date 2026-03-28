@@ -72,7 +72,7 @@
                   (bldcValueChange)="contact.email = $any($event).detail"></bldc-input>
                 <bldc-input label=" " [attr.bldc-value]="contact.telefoon" input-mode="tel"
                   (bldcValueChange)="contact.telefoon = $any($event).detail"></bldc-input>
-                <bldc-button *ngIf="klant.contacten.length > 1" type="tertiary" icon="trash" elem-title="Verwijderen"
+                <bldc-button *ngIf="klant.contacten.length > 1" type="secondary destructive" icon="prullenbak" icon-pos="left" elem-title="Verwijderen"
                   (bldcClick)="removeContact(i)"></bldc-button>
               </div>
             </bldc-table-data>
